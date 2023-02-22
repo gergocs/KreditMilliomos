@@ -1,21 +1,12 @@
-import express from 'express'
-import dotenv from 'dotenv'
 
-dotenv.config()
-const app = express()
-const port = 3000
+import App from './app'
+import UserController from './controller/user_controller'
 
-app.get('/', (req, res) => {
-
-  res.send('main page')
-})
-
-
-//TODO: Kiszervezni a Typescript routingot OOP szerint
-app.post('/', (req, res) => {
-
-  console.log(JSON.stringify(req.headers.tokenkey))
-  res.sendStatus(200)})
-
-
-app.listen(port, () => console.log(`[server]: Server is running at http://localhost:${port}`))
+const app = new App(
+  [
+    new UserController(),
+  ],
+  3000,
+)
+ 
+app.listen()
