@@ -19,14 +19,12 @@ class UserController {
   createUser = (request: express.Request, response: express.Response): void => {
     // TODO: create user in database via sequelize
     // use mvc model!
-    console.log(JSON.stringify(request.headers.tokenkey))
     response.sendStatus(200)
   }
 
   isUserAdmin = (request: express.Request, response: express.Response): void => {
     // TODO: check if user is admin in database via sequelize
     // use mvc model!
-    console.log(JSON.stringify(request.headers.tokenkey))
     response.sendStatus(200)
   }
 }
