@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import firebase from "firebase/compat/app"
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +11,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
   title = 'milliomos';
 
-  constructor(public router: Router) {}
+  constructor() {
+    firebase.initializeApp(environment.firebase);
+  }
 }

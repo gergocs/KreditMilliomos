@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-main',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  constructor(public auth: AuthService, protected router: Router) { }
 
   ngOnInit(): void {
   }
 
+  async onLogoutPress() {
+    await this.auth.logout();
+  }
 }

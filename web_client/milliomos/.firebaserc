@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "kreditmilliomos": {
+      "hosting": {
+        "milliomos": [
+          "kreditmilliomos"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "kreditmilliomos"
+  }
+}

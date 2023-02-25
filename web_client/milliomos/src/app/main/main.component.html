@@ -1,1 +1,3 @@
-<p>main works!</p>
+<p>uuid : <span>{{ auth.user ? auth.user.uid : "" }}</span></p>
+<p>Admin-e? : <span></span></p>
+<button (click)="onLogoutPress()">Kijelentkezés</button>

@@ -10,7 +10,7 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: 'registration',
+    path: 'register',
     component: RegistrationComponent
   },
   {
@@ -19,8 +19,9 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'main',
-    pathMatch: 'full'
+    component: MainComponent
+    //redirectTo: 'main',
+    //pathMatch: 'full'
   }
 ];
 
