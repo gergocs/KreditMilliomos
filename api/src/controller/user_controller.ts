@@ -14,12 +14,25 @@ class UserController {
         this.router.post(this.path + '/isAdmin', this.isUserAdmin)
     }
 
-    getUser = (request: Request, response: Response) => {
-
-        //TODO: get user from database via sequelize
-        //use mvc model!
-        response.send('User Data')
+    getUser = (request: Request, response: Response, next: NextFunction) => {
+      const tokenKey = JSON.stringify(request.headers.tokenkey)
+    
+      sequelize.sync()
+        .then(() => {
+          User.findOne({ where: { tokenKey } })
+            .then(user => {
+              if (!user) {
+                response.status(404).send('User not found')
+              } else {
+                response.send(user);
+              }
+            })
+            .catch(error => next("Error in findOne\n: " + error))
+            
+        })
+        .catch(error => next("Error in sync:\n " + error))
     }
+
 
     createUser(request: Request, response: Response, next: NextFunction) {
 
@@ -39,12 +52,22 @@ class UserController {
             .catch(error => next("Error in sync:\n " + error))
     }
 
-    isUserAdmin = (request: Request, response: Response) => {
-
-        //TODO: check if user is admin in database via sequelize
-        //use mvc model!
-        console.log(JSON.stringify(request.headers.tokenkey))
-        response.sendStatus(200)
+    isUserAdmin = (request: Request, response: Response, next: NextFunction) => {
+      const tokenKey = JSON.stringify(request.headers.tokenkey)
+    
+      sequelize.sync()
+        .then(() => {
+          User.findOne({ where: { tokenKey } })
+            .then(user => {
+              if (user && user.isAdmin) {
+                response.sendStatus(200)
+              } else {
+                response.sendStatus(418)
+              }
+            })
+            .catch(error => next("Error in findOne\n: " + error))
+        })
+        .catch(error => next("Error in sync:\n " + error))
     }
 }
 
