@@ -1,13 +1,10 @@
 import express from 'express'
 import * as bodyParser from 'body-parser'
-<<<<<<< HEAD
 import * as admin from 'firebase-admin'
 import { type Auth, getAuth } from 'firebase-admin/auth'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const serviceAccount = require('../kreditmilliomos-firebase-adminsdk-77e37-136a215381.json')
-=======
 import cors from 'cors'
->>>>>>> d7f3211 (Add cors support for the api)
 
 class App {
   public app: express.Application
