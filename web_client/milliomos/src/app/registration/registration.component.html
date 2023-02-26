@@ -1,1 +1,9 @@
-<p>registration works!</p>
+<input type="text" placeholder="Email" #email>
+<input type="text" placeholder="Felhasználonév" #nickname>
+<input type="text" placeholder="Vezetéknév" #firstname>
+<input type="text" placeholder="Utónév" #lastname>
+<input type="password" placeholder="Jelszó" #password>
+<input type="password" placeholder="Jelszó újra" #passwordagain>
+<button (click)="auth.signup(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value)">Regisztráció</button>
+<button (click)="auth.FacebookAuth()">Bejelentkezés Facebookal</button>
+<a routerLink="/login">Bejelentkezés</a>

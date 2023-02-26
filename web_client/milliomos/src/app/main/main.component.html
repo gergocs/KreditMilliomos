@@ -1,3 +1,4 @@
 <p>uuid : <span>{{ auth.user ? auth.user.uid : "" }}</span></p>
 <p>Admin-e? : <span></span></p>
+<p>Email megerősítés:<span *ngIf="auth.user?.emailVerified">Megerősítve</span><span *ngIf="!auth.user?.emailVerified">Megerősítésre vár</span></p>
 <button (click)="onLogoutPress()">Kijelentkezés</button>
