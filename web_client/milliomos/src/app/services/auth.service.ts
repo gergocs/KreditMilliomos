@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import firebase from 'firebase/compat/app';
+import { FacebookAuthProvider } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -38,10 +39,10 @@ export class AuthService {
     if (!this.user)
       return
 
-    let token = await this.user.getIdToken(); // Itt tokent adtam meg, lehet this.user.uid kellett volna
+    let token = this.user.uid; // Itt tokent adtam meg, lehet this.user.uid kellett volna
     let header = new HttpHeaders()
       .set("tokenkey", token)
-    this.http.get("http://szte-millionaire.fly.dev/user/get", { headers: header })
+    this.http.get("http://146.190.205.69:8080/user/get", { headers: header })
       .subscribe(body => {
         console.log(body);
         // TODO feldolgozni a response-t
@@ -62,4 +63,30 @@ export class AuthService {
   async logout() {
     await this.auth.signOut();
   }
+
+  async FacebookAuth() {
+    return this.AuthLogin(new FacebookAuthProvider());
+  }
+
+  async AuthLogin(provider: any) {
+    try {
+      const result = await this.auth.signInWithPopup(provider);
+
+      if (!this.user)
+      return
+
+      let token = this.user.uid;
+      let header = new HttpHeaders()
+        .set("tokenkey", token).set("isoauth", 'true')
+      this.http.post("http://146.190.205.69:8080/user/create", null, { headers: header })
+        .subscribe(body => {
+        console.log(body);
+    })
+
+      console.log('You have been successfully logged in!');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 }
