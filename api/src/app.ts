@@ -28,6 +28,11 @@ class App {
   }
 
   private initializeMiddlewares (): void {
+
+    this.app.use(cors({
+      origin: '*' // TODO limit for only specific origins
+    }))
+
     this.app.use(bodyParser.json())
     this.app.use((req, res, next): void => {
       if (req.headers.tokenkey === undefined) {
@@ -41,10 +46,6 @@ class App {
         res.status(this.statusUnAuthorized).send('Invalid token')
       })
     })
-
-    this.app.use(cors({
-      origin: '*' // TODO limit for only specific origins
-    }))
   }
 
   private initializeControllers (controllers): void {
