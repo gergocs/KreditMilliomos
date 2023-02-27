@@ -3,7 +3,7 @@ import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http'
 import firebase from 'firebase/compat/app';
-import {FacebookAuthProvider, GoogleAuthProvider} from '@angular/fire/auth';
+import {FacebookAuthProvider, getAdditionalUserInfo, GoogleAuthProvider} from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +71,24 @@ export class AuthService {
     try {
       const result = await this.auth.signInWithPopup(provider);
 
-      console.log(result)
+      console.log(result.additionalUserInfo?.profile)
+
+      //@ts-ignore
+      let email=result.additionalUserInfo?.profile?.email
+      if(!email) {email = "missing@missing.com"}
+      //@ts-ignore
+      let firstname=result.additionalUserInfo?.profile?.family_name
+      if(!firstname) {firstname = "Missing"}
+      //@ts-ignore
+      let lastname=result.additionalUserInfo?.profile?.given_name
+      if(!lastname) {lastname = "Lajos"}
+      //@ts-ignore
+      let nickname=result.additionalUserInfo?.profile?.email.split("@")[0]
+      if(!nickname) {nickname = "missingnickname"}
+
+      console.log(email + " " + firstname + " " +  lastname + " " +  nickname)
+
+
 
       if (!this.user)
         return
@@ -81,7 +98,7 @@ export class AuthService {
 
       let token = this.user.uid;
       let header = new HttpHeaders()
-        .set("tokenkey", token).set("isoauth", 'true')
+        .set("tokenkey", token).set("isoauth", 'true').set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname)
       this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
         .subscribe(body => {
           console.log(body);
