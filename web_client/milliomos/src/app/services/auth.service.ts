@@ -3,7 +3,7 @@ import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http'
 import firebase from 'firebase/compat/app';
-import {FacebookAuthProvider} from '@angular/fire/auth';
+import {FacebookAuthProvider, GoogleAuthProvider} from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -63,13 +63,15 @@ export class AuthService {
     await this.auth.signOut();
   }
 
-  async FacebookAuth() {
-    return this.AuthLogin(new FacebookAuthProvider());
+  async GoogleAuth() {
+    return this.AuthLogin(new GoogleAuthProvider());
   }
 
   async AuthLogin(provider: any) {
     try {
       const result = await this.auth.signInWithPopup(provider);
+
+      console.log(result)
 
       if (!this.user)
         return

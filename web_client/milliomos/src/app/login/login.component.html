@@ -1,5 +1,5 @@
 <input type="text" placeholder="E-mail cím" #email>
 <input type="password" placeholder="Jelszó" #password>
 <button (click)="this.onLoginClicked(email.value, password.value)">Bejelentkezés</button>
-<button (click)="auth.FacebookAuth()">Bejelentkezés Facebookal</button>
+<button (click)="auth.GoogleAuth()">Bejelentkezés Google-el</button>
 <a routerLink="/register">Regisztráció</a>
