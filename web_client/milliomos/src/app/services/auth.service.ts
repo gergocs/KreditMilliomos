@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {Router} from '@angular/router';
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http'
+import {HttpClient, HttpHeaders} from '@angular/common/http'
 import firebase from 'firebase/compat/app';
 import {FacebookAuthProvider} from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
 
   private authStates = {
@@ -18,7 +19,7 @@ export class AuthService {
   user: firebase.User | undefined;
   authState = this.authStates.unknown;
 
-  constructor(protected auth: AngularFireAuth, router: Router, protected http: HttpClient) {
+  constructor(protected auth: AngularFireAuth, protected router: Router, protected http: HttpClient) {
     this.auth.onAuthStateChanged((credential) => {
       if (credential) {
         console.log(credential);
@@ -41,9 +42,9 @@ export class AuthService {
     let token = this.user.uid;
     let header = new HttpHeaders()
       .set("tokenkey", token)
-    this.http.get<HttpResponse<any>>("http://146.190.205.69:8080/user/get", {headers: header})
-      .subscribe(response => {
-        console.log(response);
+    this.http.get("http://146.190.205.69:8080/user/get", {headers: header})
+      .subscribe(body => {
+        console.log(body);
       })
   }
 
@@ -79,12 +80,12 @@ export class AuthService {
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("isoauth", 'true')
-      this.http.post<HttpResponse<any>>("http://146.190.205.69:8080/user/create", null, {headers: header})
-        .subscribe(response => {
-          console.log(response.status);
+      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
+        .subscribe(body => {
+          console.log(body);
         })
 
-      console.log('You have been successfully logged in!');
+      console.log("You have been successfully logged in!");
     } catch (error) {
       console.log(error);
     }
@@ -95,22 +96,24 @@ export class AuthService {
     if (password != passwordagain) {
       return
     }
-
     this.auth.createUserWithEmailAndPassword(email, password).then(cred => {
       if (!this.user)
         return
 
       this.user.sendEmailVerification().then(() => {
-        window.alert('Erősítsd meg az e-mail címedet.');
+        window.alert("Erősítsd meg az e-mail címedet!");
+        this.router.navigate(["/login"]);
       });
 
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname)
-      this.http.post<HttpResponse<any>>("http://146.190.205.69:8080/user/create", null, {headers: header})
-        .subscribe(response => {
-          console.log(response.status);
+      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
+        .subscribe(body => {
+          console.log(body);
         })
     });
+
+
   }
 }

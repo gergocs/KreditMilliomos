@@ -9,7 +9,12 @@ import { AuthService } from '../services/auth.service';
 })
 export class MainComponent implements OnInit {
 
-  constructor(public auth: AuthService, protected router: Router) { }
+  constructor(public auth: AuthService, protected router: Router) {
+    if (!auth.user?.emailVerified && auth.authState == 2) {
+      window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet!");
+      auth.logout();
+    }
+  }
 
   ngOnInit(): void {
   }

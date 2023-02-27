@@ -18,12 +18,12 @@ export class LoginComponent implements OnInit {
 
   async onLoginClicked(email: string, password: string) {
     if (email == "") {
-      console.log("A felhasználónév mező nem lehet üres!");
+      window.alert("Az e-mail cím mező nem lehet üres!");
       return;
     }
 
     if (password == "") {
-      console.log("A jelszó mező nem lehet üres!");
+      window.alert("A jelszó mező nem lehet üres!");
       return;
     }
 
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
       await this.auth.login(email, password);
       this.router.navigate(["/main"]);
     } catch {
-      console.log("Hbás felhasználónév vagy jelszó!")
+      window.alert("Hibás e-mail cím vagy jelszó!");
     }
   }
 }
