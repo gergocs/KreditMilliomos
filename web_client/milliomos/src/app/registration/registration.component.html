@@ -1,9 +1,9 @@
-<input type="text" placeholder="Email" #email>
-<input type="text" placeholder="Felhasználonév" #nickname>
+<input type="text" placeholder="E-mail cím" #email>
+<input type="text" placeholder="Felhasználónév" #nickname>
 <input type="text" placeholder="Vezetéknév" #firstname>
-<input type="text" placeholder="Utónév" #lastname>
+<input type="text" placeholder="Keresztnév" #lastname>
 <input type="password" placeholder="Jelszó" #password>
 <input type="password" placeholder="Jelszó újra" #passwordagain>
-<button (click)="auth.signup(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value)">Regisztráció</button>
+<button (click)="onRegisterClicked(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value)">Regisztráció</button>
 <button (click)="auth.FacebookAuth()">Bejelentkezés Facebookal</button>
 <a routerLink="/login">Bejelentkezés</a>
