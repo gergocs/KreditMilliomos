@@ -8,6 +8,9 @@ import {AuthService} from "../services/auth.service";
 })
 export class RegistrationComponent implements OnInit {
 
+  public error: boolean = false
+  public errorMsg: string = ""
+
   constructor(public auth: AuthService) { }
 
   ngOnInit(): void {
@@ -15,43 +18,53 @@ export class RegistrationComponent implements OnInit {
 
   async onRegisterClicked(email: string, nickname: string, firstname: string, lastname: string, password: string, passwordagain: string) {
     if (email == "") {
-      window.alert("Az e-mail cím mező nem lehet üres!");
+      this.errorMsg = "Az e-mail cím mező nem lehet üres!"
+      this.error = true
       return;
     }
 
     const emailRegex: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     if (!emailRegex.test(email)) {
-      window.alert("Az e-mail cím formátuma nem megfelelő!");
+      this.errorMsg = "Az e-mail cím formátuma nem megfelelő!"
+      this.error = true
       return;
     }
 
     if (nickname == "") {
-      window.alert("A felhasználónév mező nem lehet üres!");
+      this.errorMsg = "A felhasználónév mező nem lehet üres!"
+      this.error = true
       return;
     }
 
     if (firstname == "") {
-      window.alert("A vezetéknév mező nem lehet üres!");
+      this.errorMsg = "A vezetéknév mező nem lehet üres!"
+      this.error = true
       return;
     }
 
     if (lastname == "") {
-      window.alert("A keresztnév mező nem lehet üres!");
+      this.errorMsg = "A keresztnév mező nem lehet üres!"
+      this.error = true
       return;
     }
 
     if (password == "") {
-      window.alert("A jelszó mező nem lehet üres!");
+      this.errorMsg = "A jelszó mező nem lehet üres!"
+      this.error = true
       return;
     }
 
     if (password != passwordagain) {
-      window.alert("A megadott jelszavak nem egyeznek!");
+      this.errorMsg = "A megadott jelszavak nem egyeznek!"
+      this.error = true
       return;
     }
 
     try {
       await this.auth.signup(email, nickname, firstname, lastname, password, passwordagain)
-    } catch { }
+    } catch {
+      this.errorMsg = "A regisztráció sikertelen!"
+      this.error = true
+    }
   }
 }

@@ -7,7 +7,11 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent implements OnInit {
+
+  public error: boolean = false
+  public errorMsg: string = ""
 
   constructor(public auth: AuthService, protected router: Router) {
     console.log(auth.authState)
@@ -17,13 +21,16 @@ export class LoginComponent implements OnInit {
   }
 
   async onLoginClicked(email: string, password: string) {
+    
     if (email == "") {
-      window.alert("Az e-mail cím mező nem lehet üres!");
+      this.errorMsg = "Az e-mail cím mező nem lehet üres!"
+      this.error = true
       return;
     }
 
     if (password == "") {
-      window.alert("A jelszó mező nem lehet üres!");
+      this.errorMsg = "A jelszó mező nem lehet üres!"
+      this.error = true
       return;
     }
 
@@ -31,7 +38,8 @@ export class LoginComponent implements OnInit {
       await this.auth.login(email, password);
       this.router.navigate(["/main"]);
     } catch {
-      window.alert("Hibás e-mail cím vagy jelszó!");
+      this.errorMsg = "Hibás e-mail cím vagy jelszó!"
+      this.error = true
     }
   }
 }

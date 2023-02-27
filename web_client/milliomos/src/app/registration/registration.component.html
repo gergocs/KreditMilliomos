@@ -1,8 +1,44 @@
-<input type="text" placeholder="E-mail cím" #email>
-<input type="text" placeholder="Felhasználónév" #nickname>
-<input type="text" placeholder="Vezetéknév" #firstname>
-<input type="text" placeholder="Keresztnév" #lastname>
-<input type="password" placeholder="Jelszó" #password>
-<input type="password" placeholder="Jelszó újra" #passwordagain>
-<button (click)="onRegisterClicked(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value)">Regisztráció</button>
-<a routerLink="/login">Bejelentkezés</a>
+<div class="container-lg my-5 p-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-primary" style="max-width: 500px;">
+    <h3>Regisztráció</h3>
+    <br>
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+        {{errorMsg}}
+    </div>
+    <div class="form-group">
+        <label for="username"> Felhasználónév:</label>
+        <input id="username" type="text" formControlName="username" class="form-control" #nickname/>
+    </div>
+    <br>
+      <div class="form-group">
+        <label for="email"> Email:</label>
+        <input id="email" type="text" formControlName="email" class="form-control" #email/>
+      </div>
+    <br>
+    <div class="form-group">
+        <label for="lastName"> Vezetéknév:</label>
+        <input id="lastName" type="text" formControlName="lastName" class="form-control" #firstname/>
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="firstName"> Keresztnév:</label>
+        <input id="firstName" type="text" formControlName="firstName" class="form-control" #lastname/>
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="password"> Jelszó:</label>
+        <input id="password" type="password" formControlName="password" class="form-control" #password/>
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="passwordAgain"> Jelszó ismétlése:</label>
+        <input id="passwordAgain" type="password" formControlName="passwordAgain" class="form-control" #passwordagain/>
+    </div>
+    <br>
+<button class="btn btn-success m-2" (click)="this.onRegisterClicked(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value)">Regisztráció</button>
+<button class="btn btn-primary m-2" (click)="auth.GoogleAuth()">Bejelentkezés Google fiókkal</button>
+</div>
+
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-primary" style="max-width: 500px;">
+    <h6>Ha már van felhasználói fiókod kattints ide: </h6>
+    <a class="link-info" routerLink="/login">Bejelentkezés</a>
+</div>
