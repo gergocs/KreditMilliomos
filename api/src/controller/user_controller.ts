@@ -1,6 +1,6 @@
-import { Express, Request, Response, NextFunction, Router } from 'express';
+import {Express, Request, Response, NextFunction, Router} from 'express';
 import User from '../model/user'
-import { sequelize } from '../db/sequelizeConnector'
+import {sequelize} from '../db/sequelizeConnector'
 
 class UserController {
 
@@ -15,22 +15,22 @@ class UserController {
     }
 
     getUser = (request: Request, response: Response, next: NextFunction) => {
-      const tokenKey = JSON.stringify(request.headers.tokenkey)
-    
-      sequelize.sync()
-        .then(() => {
-          User.findOne({ where: { tokenKey } })
-            .then(user => {
-              if (!user) {
-                response.status(404).send('User not found')
-              } else {
-                response.send(user);
-              }
+        const tokenKey = JSON.stringify(request.headers.tokenkey)
+
+        sequelize.sync()
+            .then(() => {
+                User.findOne({where: {tokenKey}})
+                    .then(user => {
+                        if (!user) {
+                            response.status(418).send({ error: 'User not found' })
+                        } else {
+                            response.send(user)
+                        }
+                    })
+                    .catch(error => response.sendStatus(500))
+
             })
-            .catch(error => next("Error in findOne\n: " + error))
-            
-        })
-        .catch(error => next("Error in sync:\n " + error))
+            .catch(error => response.sendStatus(503))
     }
 
 
@@ -45,16 +45,15 @@ class UserController {
                 })
                     .then(user => {
                         response.sendStatus(200)
-
                     })
-                    .catch(error => next("Error in create\n: " + error))
+                    .catch(error => response.sendStatus(500))
             })
-            .catch(error => next("Error in sync:\n " + error))
+            .catch(error => response.sendStatus(503))
     }
 
     isUserAdmin = (request: Request, response: Response, next: NextFunction) => {
       const tokenKey = JSON.stringify(request.headers.tokenkey)
-    
+
       sequelize.sync()
         .then(() => {
           User.findOne({ where: { tokenKey } })
@@ -65,9 +64,9 @@ class UserController {
                 response.sendStatus(418)
               }
             })
-            .catch(error => next("Error in findOne\n: " + error))
+            .catch(error => response.sendStatus(500))
         })
-        .catch(error => next("Error in sync:\n " + error))
+        .catch(error => response.sendStatus(503))
     }
 }
 

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {Router} from '@angular/router';
-import {HttpClient, HttpHeaders} from '@angular/common/http'
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http'
 import firebase from 'firebase/compat/app';
 import {FacebookAuthProvider} from '@angular/fire/auth';
 
@@ -38,13 +38,12 @@ export class AuthService {
     if (!this.user)
       return
 
-    let token = this.user.uid; // Itt tokent adtam meg, lehet this.user.uid kellett volna
+    let token = this.user.uid;
     let header = new HttpHeaders()
       .set("tokenkey", token)
-    this.http.get("http://146.190.205.69:8080/user/get", {headers: header})
-      .subscribe(body => {
-        console.log(body);
-        // TODO feldolgozni a response-t
+    this.http.get<HttpResponse<any>>("http://146.190.205.69:8080/user/get", {headers: header})
+      .subscribe(response => {
+        console.log(response);
       })
   }
 
@@ -80,9 +79,9 @@ export class AuthService {
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("isoauth", 'true')
-      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
-        .subscribe(body => {
-          console.log(body);
+      this.http.post<HttpResponse<any>>("http://146.190.205.69:8080/user/create", null, {headers: header})
+        .subscribe(response => {
+          console.log(response.status);
         })
 
       console.log('You have been successfully logged in!');
@@ -96,6 +95,7 @@ export class AuthService {
     if (password != passwordagain) {
       return
     }
+
     this.auth.createUserWithEmailAndPassword(email, password).then(cred => {
       if (!this.user)
         return
@@ -107,12 +107,10 @@ export class AuthService {
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname)
-      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
-        .subscribe(body => {
-          console.log(body);
+      this.http.post<HttpResponse<any>>("http://146.190.205.69:8080/user/create", null, {headers: header})
+        .subscribe(response => {
+          console.log(response.status);
         })
     });
-
-
   }
 }
