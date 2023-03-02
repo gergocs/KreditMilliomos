@@ -12,13 +12,15 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AdminPageComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegistrationComponent,
     LoginComponent,
-    MainComponent
+    MainComponent,
+    AdminPageComponent
   ],
   imports: [
     BrowserModule,

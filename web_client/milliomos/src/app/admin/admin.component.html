@@ -1,0 +1,77 @@
+<!--TODO! 
+Form for adding a new question
+GIVEN as an administrator
+WHEN I log in and land on the administrator main page
+AND press the "Add new question" button
+THEN I would like to see a "New question" form with 'Save', and 'Cancel' buttons
+Acceptance criteria (AC) The "New question" form contains the following mandatory and optional fields:
+
+Category:Mandatory. Category of the question
+Question:Mandatory: question text
+Level:Mandatory. Identifier of the level on which the question can be raised. The value can be between 1-15
+AnswerA:Mandatory. Answer for choice A
+AnswerB:Mandatory. Answer for choice B
+AnswerC:Mandatory. Answer for choice C
+AnswerC:Mandatory. Answer for choice D
+Correct Answer:Mandatory: Letter in A,B,C,D
+Save button
+-->
+
+<nav id="navbar">
+    <li>Admin oldal</li>
+    <li>Valami</li>
+    <li>Valami</li>
+    <li>Kijelentkezés</li>
+</nav>
+<div id="admin_page">
+    <div id="users_dashboard">
+        <!-- User data management -- Máté -->
+        <p>Felhasználók</p>
+    </div>
+    <div id="questions">
+        <form>
+            <h2>Új kérdés</h2>
+            <div>
+                <label for="category">Kategória *</label>
+                <input type="text" id="category" name="category" required>
+            </div>
+            <div>
+                <label for="question">Kérdés: *</label>
+                <input type="textarea" id="question" name="question" minlength="6" required>
+            </div>
+            <div>
+                <label for="answerA">'A' válasz: *</label>
+                <input type="text" id="answerA" name="answerA" required>
+            </div>
+            <div>
+                <label for="answerB">'B' válasz: *</label>
+                <input type="text" id="answerB" name="answerB" required>
+            </div>
+            <div>
+                <label for="answerC">'C' válasz: *</label>
+                <input type="text" id="answerC" name="answerC" required>
+            </div>
+            <div>
+                <label for="answerD">'D' válasz: *</label>
+                <input type="text" id="answerD" name="answerD" required>
+            </div>
+            <div>
+                <label for="correctAnswer">Helyes válasz: *</label>
+                <select id="correctAnswer" name="correctAnswer" required>
+                    <option value="answerA">A</option>
+                    <option value="answerB">B</option>
+                    <option value="answerC">C</option>
+                    <option value="answerD">D</option>
+                </select>
+            </div>
+            <div className="question_buttons">
+            <button type="submit" className="submit_question_button">Mentés</button>
+            <button type="cancel" className="cancel_question_button">Mégse</button>
+        </div>
+        </form>
+    </div>
+</div>
+<footer>
+    <p>&copy; 2023 Admin Site. All rights reserved.</p>
+</footer>
+
