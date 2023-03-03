@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction, Router} from 'express';
+import {Request, Response, NextFunction, Router} from 'express'
 import User from '../models/user'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
