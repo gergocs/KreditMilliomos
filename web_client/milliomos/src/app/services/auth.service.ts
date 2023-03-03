@@ -126,7 +126,7 @@ export class AuthService {
 
       let token = this.user.uid;
       let header = new HttpHeaders()
-        .set("tokenkey", token).set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname)
+        .set("tokenkey", token).set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname).set("admin", "false")
       this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
         .subscribe(body => {
           console.log(body);
