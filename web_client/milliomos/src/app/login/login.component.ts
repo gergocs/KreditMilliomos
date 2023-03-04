@@ -34,6 +34,12 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    if (email.length > 64 || password.length > 24) {
+      this.errorMsg = "Túl hosszú inputok"
+      this.error = true
+      return;
+    }
+
     try {
       await this.auth.login(email, password);
       this.router.navigate(["/main"]);
