@@ -77,6 +77,54 @@ Save button
         </form>
     </div>
 </div>
+
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark" style="max-width: 640px;">
+    <h4 class="import-label">Importálás fájlból</h4>
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+        {{errorMsg}}
+    </div>
+    <div class="mb-3">
+        <label for="formFileSm" class="form-label">Kérdéseket tartalmazó .csv fájl megnyitása</label>
+        <input class="form-control form-control-sm border border-dark" id="formFileSm" type="file" style="width: 360px; color: black;" (change)="this.fileChanged($event)">
+        <br>
+        <button type="button" class="btn btn-secondary m-2 border border-dark" (click)="this.load()">Betöltés</button>
+        <button type="button" class="btn btn-info m-2 border border-dark" (click)="this.display()">Betöltött kérdések megjelenítése</button>
+    </div>
+</div>
+
+<div *ngIf="visible" class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark">
+    <h4>Betöltött kérdések:</h4>
+    <br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Kategória</th>
+            <th scope="col">Kérdés</th>
+            <th scope="col">Nehézség</th>
+            <th scope="col">Válasz A</th>
+            <th scope="col">Válasz B</th>
+            <th scope="col">Válasz C</th>
+            <th scope="col">Válasz D</th>
+            <th scope="col">Megfejtés</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let item of items">
+            <tr>
+                <th scope="row">{{item.category}}</th>
+                <td>{{item.question}}</td>
+                <td>{{item.level}}</td>
+                <td>{{item.a1}}</td>
+                <td>{{item.a2}}</td>
+                <td>{{item.a3}}</td>
+                <td>{{item.a4}}</td>
+                <td>{{item.correct}}</td>
+            </tr>
+        </tbody>
+      </table>
+    <button type="button" class="btn btn-success m-2 border border-dark" (click)="this.save()">Betöltött kérdések mentése</button>
+    <button type="button" class="btn btn-danger m-2 border border-dark" (click)="this.delete()">Betöltött kérdések törlése</button>
+</div>
+
 <footer>
     <p>&copy; 2023 Admin Site. All rights reserved.</p>
 </footer>
