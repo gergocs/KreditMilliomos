@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core'
+import firebase from 'firebase/compat/app';
 
 @Component({
   selector: 'app-admin',
@@ -7,15 +8,15 @@ import { Component, OnInit } from '@angular/core'
 })
 
 export class AdminPageComponent implements OnInit {
-
+  public userList: Array<firebase.User> | undefined
   public visible: boolean = false
   public error: boolean = false
   public errorMsg: string = ""
-
   public file: any
   public items: any[] = []
 
-  constructor() { }
+  constructor() { 
+  }
 
   ngOnInit(): void {
   }
@@ -88,6 +89,10 @@ export class AdminPageComponent implements OnInit {
     if(this.items.length != 0){
      this.items.splice(0) 
     }
+  }
+
+  loadUsers() : void{
+    //this.userList = this.userService.listAllUsers()
   }
 }
 

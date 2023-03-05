@@ -9,6 +9,7 @@ class UserController {
 
     constructor() {
         this.router.get(this.path + '/get', this.getUser)
+        this.router.get(this.path + '/getAllUsers', this.listAllUsers)
         this.router.post(this.path + '/create', this.createUser)
         this.router.post(this.path + '/isAdmin', this.isUserAdmin)
     }
@@ -94,6 +95,17 @@ class UserController {
                     .catch(error => response.sendStatus(StatusCodes.InternalError))
             })
             .catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+    }
+
+    listAllUsers = (request: Request, response: Response) => {
+        sequelize.sync()
+        .then(() => {
+            User.findAll().then(
+                users => {
+                    response.send(users)
+                }
+            ).catch(error => response.sendStatus(500))
+      }).catch(error => response.sendStatus(503));
     }
 }
 
