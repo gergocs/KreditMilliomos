@@ -5,6 +5,8 @@ import {type Auth, getAuth} from 'firebase-admin/auth'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const serviceAccount = require('../kreditmilliomos-firebase-adminsdk-77e37-136a215381.json')
 import cors from 'cors'
+import {readFileSync} from 'fs'
+import * as https from 'https'
 import {StatusCodes} from "./utilites/StatusCodes";
 
 class App {
@@ -52,10 +54,21 @@ class App {
         })
     }
 
-    public listen(): void {
-        this.app.listen(this.port, () => {
-            console.log(`App listening on the port ${this.port}`)
-        })
+    public listen(isHttps = false): void {
+        if (isHttps) {
+            const options = {
+                key: readFileSync('/etc/letsencrypt/live/kreditmilliomos.mooo.com/privatekey.pem'),
+                cert: readFileSync('/etc/letsencrypt/live/kreditmilliomos.mooo.com/fullchain.pem'),
+            };
+
+            https.createServer(options, this.app).listen(this.port, function () {
+                console.log("Express server listening on port " + this.port);
+            });
+        } else {
+            this.app.listen(this.port, () => {
+                console.log(`App listening on the port ${this.port}`)
+            })
+        }
     }
 }
 
