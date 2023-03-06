@@ -62,9 +62,16 @@ export class AuthService {
       .subscribe(body => {
         console.log("body: ", body)
         this.userdata = body
-        this.zone.run(() => {
-          this.router.navigate(['/main']);
-      });
+        if(body.isAdmin){
+          this.zone.run(() => {
+            this.router.navigate(['/admin']);
+        });
+        }else {
+          this.zone.run(() => {
+            this.router.navigate(['/main']);
+        })
+        }
+        
       })
 
   }
