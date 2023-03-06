@@ -21,8 +21,8 @@ Save button
 <nav id="navbar">
     <li>Admin oldal</li>
     <li (click)="showForm = true">Új kérdés</li>
-    <li>Valami</li>
-    <li>Kijelentkezés</li>
+    <li (click)="this.router.navigate(['/main']);">Főoldal</li>
+    <li (click)="this.authservice.logout()">Kijelentkezés</li>
     
     <div id="dot"></div>
 </nav>

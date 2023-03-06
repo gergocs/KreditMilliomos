@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/compat/auth'
 import { FormControl, FormGroup } from '@angular/forms'
+import { Router } from '@angular/router'
 import { catchError } from 'rxjs'
 import { AppModule } from '../app.module'
 import { Question } from '../models/question'
@@ -41,7 +42,7 @@ export class AdminPageComponent implements OnInit {
     correctAnswer: new FormControl('')
   });
 
-  constructor(protected http: HttpClient, public questionService: QuestionService, protected auth: AngularFireAuth) {
+  constructor(public router: Router,protected http: HttpClient, public questionService: QuestionService, protected auth: AngularFireAuth, public authservice : AuthService) {
     
    }
 
