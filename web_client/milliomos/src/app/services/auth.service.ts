@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http'
 import firebase from 'firebase/compat/app';
 import {FacebookAuthProvider, getAdditionalUserInfo, GoogleAuthProvider} from '@angular/fire/auth';
+import { UserModell } from '../models/usermodell';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,15 @@ export class AuthService {
   user: firebase.User | undefined;
   authState = this.authStates.unknown;
 
+  hostname: string;
+
   constructor(protected auth: AngularFireAuth, protected router: Router, protected http: HttpClient) {
+    if(location.hostname == "localhost"){
+      this.hostname = "http://localhost:8080/";
+    }else{
+      this.hostname = "http://146.190.205.69:8080/"
+    }
+
     this.auth.onAuthStateChanged((credential) => {
       if (credential) {
         console.log(credential);
@@ -39,13 +48,17 @@ export class AuthService {
     if (!this.user)
       return
 
+    console.log(location.hostname)
+
     let token = this.user.uid;
     let header = new HttpHeaders()
       .set("tokenkey", token)
-    this.http.get("http://146.190.205.69:8080/user/get", {headers: header})
+    this.http.get<UserModell>(this.hostname + "user/get", {headers: header})
       .subscribe(body => {
-        console.log(body);
+        console.log(body.email);
+        
       })
+
   }
 
   async isLoggedIn() {
@@ -99,7 +112,7 @@ export class AuthService {
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("isoauth", 'true').set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname)
-      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
+        this.http.post(this.hostname + "user/create", header, {headers: header})
         .subscribe(body => {
           console.log(body);
         })
@@ -127,7 +140,7 @@ export class AuthService {
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname).set("admin", "false")
-      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
+      this.http.post(this.hostname + "user/create", null, {headers: header})
         .subscribe(body => {
           console.log(body);
         })
