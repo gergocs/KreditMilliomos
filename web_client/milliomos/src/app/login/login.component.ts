@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
 
     try {
       await this.auth.login(email, password);
-      this.router.navigate(["/main"]);
+      //this.router.navigate(["/main"]);
     } catch {
       this.errorMsg = "Hibás e-mail cím vagy jelszó!"
       this.error = true
