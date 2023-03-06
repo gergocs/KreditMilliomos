@@ -27,7 +27,7 @@ export class AuthService {
     if(location.hostname == "localhost"){
       this.hostname = "http://localhost:8080/";
     }else{
-      this.hostname = "http://146.190.205.69:8080/"
+      this.hostname = "https://kreditmilliomos.mooo.com:80/"
     }
 
     this.auth.onAuthStateChanged((credential) => {
