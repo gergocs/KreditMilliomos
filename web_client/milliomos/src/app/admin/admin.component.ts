@@ -15,6 +15,7 @@ export class AdminPageComponent implements OnInit {
   public file: any
   public items: any[] = []
 
+  public showForm: boolean = false;
   constructor() { }
 
   ngOnInit(): void {

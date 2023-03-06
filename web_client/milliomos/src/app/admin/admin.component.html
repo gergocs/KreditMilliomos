@@ -19,7 +19,7 @@ Save button
 
 <nav id="navbar">
     <li>Admin oldal</li>
-    <li>Valami</li>
+    <li (click)="showForm = true">Új kérdés</li>
     <li>Valami</li>
     <li>Kijelentkezés</li>
     
@@ -28,15 +28,17 @@ Save button
 <div id="admin_page">
     <div id="users_dashboard">
         <!-- User data management -- Máté -->
-        <p>Felhasználók</p>
+        <h5>Felhasználók</h5>
         <div id="users_dashboard_datas">
-            ide dolgozz fiam
+            <p>Users Dashboard part</p>
         </div>
         
     </div>
     <div id="questions">
-        <form>
+        <form *ngIf="showForm">
+            
             <h2>Új kérdés</h2>
+       
             <div>
                 <label for="category">Kategória: *</label>
                 <input type="text" id="category" placeholder="Elektronika" name="category" required>
@@ -70,10 +72,11 @@ Save button
                     <option value="answerD">D</option>
                 </select>
             </div>
-            <div className="question_buttons">
-            <button type="submit" className="submit_question_button">Mentés</button>
-            <button type="cancel" className="cancel_question_button">Mégse</button>
-        </div>
+            <!-- BUTTONS -->
+            <div id="buttons">
+                <button type="submit" id="submit_question_button">Mentés</button>
+                <button type="reset" id="cancel_question_button" >Mégse</button>
+            </div>
         </form>
     </div>
 </div>
