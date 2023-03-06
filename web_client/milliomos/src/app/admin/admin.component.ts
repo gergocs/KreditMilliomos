@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminPageComponent implements OnInit {
-
+  public showForm: boolean = false;
   constructor() { }
 
   ngOnInit(): void {
