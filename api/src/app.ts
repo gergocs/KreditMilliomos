@@ -57,7 +57,7 @@ class App {
     public listen(isHttps = false): void {
         if (isHttps) {
             const options = {
-                key: readFileSync('/etc/letsencrypt/live/kreditmilliomos.mooo.com/privatekey.pem'),
+                key: readFileSync('/etc/letsencrypt/live/kreditmilliomos.mooo.com/privkey.pem'),
                 cert: readFileSync('/etc/letsencrypt/live/kreditmilliomos.mooo.com/fullchain.pem'),
             };
 
