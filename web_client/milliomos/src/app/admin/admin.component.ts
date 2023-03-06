@@ -8,6 +8,16 @@ import { Component, OnInit } from '@angular/core'
 
 export class AdminPageComponent implements OnInit {
 
+  public showForm: boolean = false;
+
+  public visible: boolean = false
+  public error: boolean = false
+  public errorMsg: string = ""
+
+  public file: any
+  public items: any[] = []
+
+  
   constructor() { }
 
   ngOnInit(): void {
