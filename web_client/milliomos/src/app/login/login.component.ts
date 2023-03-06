@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
 
   public error: boolean = false
   public errorMsg: string = ""
+  public loading: boolean = false
 
   loginForm = new FormGroup({
     email: new FormControl(''),
@@ -24,6 +25,13 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loading = false;
+  }
+  onGoogleLogin(){
+    this.loading = true
+    this.auth.GoogleAuth().catch((error)=>{
+      this.loading=false;
+    })
   }
 
   async onLoginClicked(email: string, password: string) {
@@ -45,13 +53,14 @@ export class LoginComponent implements OnInit {
       this.error = true
       return;
     }
-
+    this.loading = true;
     try {
       await this.auth.login(email, password);
       //this.router.navigate(["/main"]);
     } catch {
       this.errorMsg = "Hibás e-mail cím vagy jelszó!"
-      this.error = true
+      this.error = true;
+      this.loading = false;
     }
   }
 }

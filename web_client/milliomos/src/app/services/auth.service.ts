@@ -77,7 +77,7 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    await this.auth.signInWithEmailAndPassword(email, password);
+    return await this.auth.signInWithEmailAndPassword(email, password);
   }
 
   async logout() {
@@ -128,6 +128,9 @@ export class AuthService {
       console.log("You have been successfully logged in!");
     } catch (error) {
       console.log(error);
+      return new Promise((resolve, reject) => {
+        reject();
+        })
     }
   }
 
