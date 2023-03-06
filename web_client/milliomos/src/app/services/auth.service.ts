@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http'
@@ -18,11 +18,12 @@ export class AuthService {
     loggedIn: 2,
   }
   user: firebase.User | undefined;
+  userdata: UserModell | undefined;
   authState = this.authStates.unknown;
 
   hostname: string;
 
-  constructor(protected auth: AngularFireAuth, protected router: Router, protected http: HttpClient) {
+  constructor(private zone:NgZone, protected auth: AngularFireAuth, protected router: Router, protected http: HttpClient) {
     if(location.hostname == "localhost"){
       this.hostname = "http://localhost:8080/";
     }else{
@@ -35,11 +36,15 @@ export class AuthService {
         this.user = credential;
         this.authState = this.authStates.loggedIn;
         this.getUserData();
-        if (router.url == "/login")
-          router.navigate(["/main"])
+        if (router.url == "/login" || router.url == "/register")
+        this.zone.run(() => {
+          //this.router.navigate(['/main']);
+      });
       } else {
         this.authState = this.authStates.loggedOut;
-        router.navigate(["/login"]);
+        this.zone.run(() => {
+          this.router.navigate(['/login']);
+      });
       }
     })
   }
@@ -55,8 +60,11 @@ export class AuthService {
       .set("tokenkey", token)
     this.http.get<UserModell>(this.hostname + "user/get", {headers: header})
       .subscribe(body => {
-        console.log(body.email);
-        
+        console.log("body: ", body)
+        this.userdata = body
+        this.zone.run(() => {
+          this.router.navigate(['/main']);
+      });
       })
 
   }
@@ -134,7 +142,9 @@ export class AuthService {
 
       this.user.sendEmailVerification().then(() => {
         window.alert("Erősítsd meg az e-mail címedet!");
-        this.router.navigate(["/login"]);
+        this.zone.run(() => {
+          this.router.navigate(['/login']);
+      });
       });
 
       let token = this.user.uid;
@@ -143,6 +153,7 @@ export class AuthService {
       this.http.post(this.hostname + "user/create", null, {headers: header})
         .subscribe(body => {
           console.log(body);
+          this.getUserData();
         })
     });
 
