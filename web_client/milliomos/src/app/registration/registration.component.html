@@ -1,4 +1,4 @@
-<div class="container-lg my-5 p-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-primary" style="max-width: 500px;">
+<div [formGroup]="regForm" class="container-lg my-5 p-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-primary" style="max-width: 500px;">
     <h3>Regisztráció</h3>
     <br>
     <div *ngIf="error" class="alert alert-danger" role="alert">

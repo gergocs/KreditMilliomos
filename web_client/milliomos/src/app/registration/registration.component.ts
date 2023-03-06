@@ -1,4 +1,5 @@
 import { Component, OnInit, Inject} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {AuthService} from "../services/auth.service";
 
@@ -14,6 +15,15 @@ export class RegistrationComponent implements OnInit {
   public errorMsg: string = ""
     
   public animationStarted: boolean = false;
+
+  regForm = new FormGroup({
+    username: new FormControl(''),
+    email: new FormControl(''),
+    lastName: new FormControl(''),
+    firstName: new FormControl(''),
+    password: new FormControl(''),
+    passwordAgain: new FormControl('')
+  });
   
   constructor(public auth: AuthService, @Inject(Router) private router: Router) { }
   

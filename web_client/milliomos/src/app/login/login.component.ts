@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
@@ -12,6 +13,11 @@ export class LoginComponent implements OnInit {
 
   public error: boolean = false
   public errorMsg: string = ""
+
+  loginForm = new FormGroup({
+    email: new FormControl(''),
+    password: new FormControl('')
+  });
 
   constructor(public auth: AuthService, protected router: Router) {
     console.log(auth.authState)
