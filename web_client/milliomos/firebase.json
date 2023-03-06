@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "source": ".",
+    "public": "dist/milliomos",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -9,5 +9,6 @@
     "frameworksBackend": {
       "region": "europe-west1"
     }
-  }
+  },
+  
 }
