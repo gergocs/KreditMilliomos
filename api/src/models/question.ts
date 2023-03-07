@@ -15,11 +15,11 @@ class Question extends Model<InferAttributes<Question>,InferCreationAttributes<Q
 
 Question.init({
         category: {
-            type: new DataTypes.STRING(255),
-            primaryKey: true
+            type: new DataTypes.STRING(255)
         },
         question: {
             type: new DataTypes.STRING(500),
+            primaryKey: true
         },
         level: {
             type: new DataTypes.INTEGER,
