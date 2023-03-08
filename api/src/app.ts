@@ -2,12 +2,14 @@ import express from 'express'
 import * as bodyParser from 'body-parser'
 import * as admin from 'firebase-admin'
 import {type Auth, getAuth} from 'firebase-admin/auth'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
 const serviceAccount = require('../kreditmilliomos-firebase-adminsdk-77e37-136a215381.json')
 import cors from 'cors'
 import {readFileSync} from 'fs'
 import * as https from 'https'
 import {StatusCodes} from "./utilites/StatusCodes";
+import {sequelize} from './db/sequelizeConnector'
+import User from "./models/user";
 
 class App {
     public app: express.Application
@@ -46,6 +48,30 @@ class App {
                 res.status(StatusCodes.Unauthorized).send('Invalid token')
             })
         })
+        this.app.use((req, res, next): void => {
+            if (!req.path.includes('admin')) {
+                next();
+            }
+
+            const tokenKey = req.headers.tokenkey
+
+            sequelize.sync()
+                .then(() => {
+                    User.findOne({where: {tokenKey}})
+                        .then(user => {
+                            if (user && user.isAdmin) {
+                                next()
+                            } else {
+                                next()
+                            }
+                        })
+                        .catch(error => res.sendStatus(StatusCodes.InternalError))
+                })
+                .catch(error => {
+                    res.sendStatus(StatusCodes.ServiceUnavailable)
+                    console.log(error)
+                })
+        })
     }
 
     private initializeControllers(controllers): void {
@@ -61,8 +87,8 @@ class App {
                 cert: readFileSync('/etc/letsencrypt/live/kreditmilliomos.mooo.com/fullchain.pem'),
             };
 
-            https.createServer(options, this.app).listen(this.port, function () {
-                console.log("Express server listening on port " + this.port);
+            https.createServer(options, this.app).listen(80, function () {
+                console.log("Express server listening on port " + 80);
             });
         } else {
             this.app.listen(this.port, () => {
