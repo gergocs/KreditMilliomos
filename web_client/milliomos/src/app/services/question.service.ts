@@ -10,7 +10,7 @@ import { Question } from '../models/question';
 export class QuestionService {
   hostname: string;
 
-  constructor(protected http: HttpClient, protected auth: AngularFireAuth) { 
+  constructor(protected http: HttpClient, protected auth: AngularFireAuth) {
     if(location.hostname == "localhost"){
       this.hostname = "http://localhost:8080/";
     }else{
@@ -20,25 +20,17 @@ export class QuestionService {
 
   getQuestion(q: any, uid: any){
         let header = new HttpHeaders().set("question", q).set("tokenkey", uid);
-        return this.http.get<Question>(this.hostname + "question/get", { headers: header });
+        return this.http.get<Question>(this.hostname + "question/get", { headers: header }); //TODO be working on it
   }
 
   getAllQuestion(uid: any){
-    let header = new HttpHeaders().set("question", "all").set("tokenkey", uid);
-    return this.http.get<Question[]>(this.hostname + "question/get", { headers: header });
+    let header = new HttpHeaders().set("tokenkey", uid);
+    return this.http.get<Question[]>(this.hostname + "question/admin/getAllQuestion", { headers: header });
 }
 
   createQuestion(q: Question, uid: any){
     let header = new HttpHeaders()
     .set("tokenkey", uid)
-    .set("category", q.category)
-    .set("question", q.question)
-    .set("level", q.level)
-    .set("answerA", q.answerA)
-    .set("answerB", q.answerB)
-    .set("answerC", q.answerC)
-    .set("answerD", q.answerD)
-    .set("answerCorrect", q.answerCorrect)
     let body = {
       category: q.category,
       question: q.question,
@@ -49,8 +41,8 @@ export class QuestionService {
       answerD: q.answerD,
       answerCorrect: q.answerCorrect
     }
-   
-    return this.http.post(this.hostname + "question/create", body, {headers: header});
-    
+
+    return this.http.post(this.hostname + "question/admin/create", body, {headers: header});
+
     }
 }

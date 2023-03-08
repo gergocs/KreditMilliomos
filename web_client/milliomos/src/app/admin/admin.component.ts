@@ -43,7 +43,7 @@ export class AdminPageComponent implements OnInit {
   });
 
   constructor(public router: Router,protected http: HttpClient, public questionService: QuestionService, protected auth: AngularFireAuth, public authservice : AuthService) {
-    
+
    }
 
   ngOnInit(){
@@ -51,9 +51,10 @@ export class AdminPageComponent implements OnInit {
     this.auth.onAuthStateChanged((credential) =>{this.userid = credential?.uid;
       this.questionService.getAllQuestion(this.userid).subscribe(body => {
         console.log(body)
-       
+
         this.allquestion = body
         console.log(this.allquestion)
+        this.loading=false
       },(error: any) => {
         let question: Question = {
           category: "Matek",
@@ -72,9 +73,9 @@ export class AdminPageComponent implements OnInit {
         this.loading=false
       })
     })
-      
-    
-    
+
+
+
   }
 
   onCreateQuestion() {
@@ -116,7 +117,7 @@ export class AdminPageComponent implements OnInit {
       this.error = false
       this.readFile(this.file)
     }
-    
+
   }
 
   readFile(inputFile: any): void {
@@ -168,7 +169,7 @@ export class AdminPageComponent implements OnInit {
 
   delete(): void{
     if(this.items.length != 0){
-     this.items.splice(0) 
+     this.items.splice(0)
     }
   }
 

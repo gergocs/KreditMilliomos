@@ -9,11 +9,12 @@ class QuestionController {
     public router = Router()
 
     constructor() {
-        this.router.post(this.path + '/create', this.createQuestion)
+        this.router.post(this.path + '/admin/create', this.createQuestion)
+        this.router.post(this.path + '/admin/import', this.importQuestion)
+        this.router.get(this.path + '/admin/getAllQuestion', this.getAllQuestion)
     }
 
     createQuestion(request: Request, response: Response, next: NextFunction) {
-
         sequelize.sync()
             .then(() => {
                 Question.create({
@@ -32,6 +33,27 @@ class QuestionController {
                     .catch(error => response.sendStatus(StatusCodes.InternalError))
             })
             .catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+    }
+
+    importQuestion(request: Request, response: Response, next: NextFunction) {
+        sequelize.sync()
+            .then(() => {
+                Question.bulkCreate(request.body)
+                    .then(data => {
+                        response.sendStatus(StatusCodes.Ok)
+                    })
+                    .catch(error => response.sendStatus(StatusCodes.InternalError))
+            })
+            .catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+    }
+
+    getAllQuestion(request: Request, response: Response, next: NextFunction) {
+        sequelize.sync().then(() => {
+            Question.findAll().then(data => {
+                response.send(data)
+                next()
+            }).catch(error => response.sendStatus(StatusCodes.InternalError))
+        }).catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
     }
 }
 
