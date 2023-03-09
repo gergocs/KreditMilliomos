@@ -23,8 +23,10 @@ class UserController {
                     .then(user => {
                         if (!user) {
                             response.status(StatusCodes.IAmATeaPod).send({error: 'User not found'})
+                            next()
                         } else {
                             response.send(user)
+                            next()
                         }
                         return;
                     })

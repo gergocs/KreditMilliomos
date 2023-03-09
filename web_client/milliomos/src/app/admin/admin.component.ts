@@ -1,5 +1,13 @@
-import { Component, OnInit } from '@angular/core'
-import firebase from 'firebase/compat/app';
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core'
+import { AngularFireAuth } from '@angular/fire/compat/auth'
+import { FormControl, FormGroup } from '@angular/forms'
+import { Router } from '@angular/router'
+import { catchError } from 'rxjs'
+import { AppModule } from '../app.module'
+import { Question } from '../models/question'
+import { AuthService } from '../services/auth.service'
+import { QuestionService } from '../services/question.service'
 
 @Component({
   selector: 'app-admin',
@@ -8,17 +16,91 @@ import firebase from 'firebase/compat/app';
 })
 
 export class AdminPageComponent implements OnInit {
-  public userList: Array<firebase.User> | undefined
+  loading = true
+  public userid: string | undefined
+
+  public showForm: boolean = false;
+
   public visible: boolean = false
   public error: boolean = false
   public errorMsg: string = ""
+  public hostname: string = "localhost"
+
   public file: any
   public items: any[] = []
 
-  constructor() { 
+  public allquestion: Question[] = []
+
+  questionForm = new FormGroup({
+    category: new FormControl(''),
+    question: new FormControl(''),
+    level: new FormControl(''),
+    answerA: new FormControl(''),
+    answerB: new FormControl(''),
+    answerC: new FormControl(''),
+    answerD: new FormControl(''),
+    correctAnswer: new FormControl('')
+  });
+
+  constructor(public router: Router,protected http: HttpClient, public questionService: QuestionService, protected auth: AngularFireAuth, public authservice : AuthService) {
+
+   }
+
+  ngOnInit(){
+   this.loading=true
+    this.auth.onAuthStateChanged((credential) =>{this.userid = credential?.uid;
+      this.questionService.getAllQuestion(this.userid).subscribe(body => {
+        console.log(body)
+
+        this.allquestion = body
+        console.log(this.allquestion)
+        this.loading=false
+      },(error: any) => {
+        let question: Question = {
+          category: "Matek",
+          question: "Nehez a matek?",
+          level: "3",
+          answerA: "igen  blabla hosszu szöveg teszt asdasdasdasd  blabla hosszu szöveg teszt asdasdasdasd",
+          answerB: "nagyon  blabla hosszu szöveg teszt asdasdasdasd  blabla hosszu szöveg teszt asdasdasdasd",
+          answerC: "nem  blabla hosszu szöveg teszt asdasdasdasd  blabla hosszu szöveg teszt asdasdasdasd",
+          answerD: "SzabóT megment blabla hosszu szöveg teszt asdasdasdasd  blabla hosszu szöveg teszt asdasdasdasd",
+          answerCorrect: "D"
+        }
+        console.log(error)
+        this.allquestion.push(question)
+        this.allquestion.push(question)
+        this.allquestion.push(question)
+        this.loading=false
+      })
+    })
+
+
+
   }
 
-  ngOnInit(): void {
+  onCreateQuestion() {
+    //validity check
+    this.loading=true
+    let newQ: Question = {
+      category: this.questionForm.get('category')?.value,
+      question: this.questionForm.get('question')?.value,
+      level: this.questionForm.get('level')?.value.toString(),
+      answerA: this.questionForm.get('answerA')?.value,
+      answerB: this.questionForm.get('answerB')?.value,
+      answerC: this.questionForm.get('answerC')?.value,
+      answerD: this.questionForm.get('answerD')?.value,
+      answerCorrect: this.questionForm.get('correctAnswer')?.value
+    }
+    this.questionService.createQuestion(newQ, this.userid)
+    .subscribe(body => {
+      console.log("Created question in DB")
+      console.log(body);
+      this.loading=false
+    },(error) => {
+      console.log(error)
+      this.loading=false
+    }
+    );
   }
 
   fileChanged(e: any) {
@@ -35,7 +117,7 @@ export class AdminPageComponent implements OnInit {
       this.error = false
       this.readFile(this.file)
     }
-    
+
   }
 
   readFile(inputFile: any): void {
@@ -87,13 +169,14 @@ export class AdminPageComponent implements OnInit {
 
   delete(): void{
     if(this.items.length != 0){
-     this.items.splice(0) 
+     this.items.splice(0)
     }
   }
 
-  loadUsers() : void{
-    //this.userList = this.userService.listAllUsers()
+  deleteexistingquestion(q: any) {
+    console.log(q)
   }
+
 }
 
 

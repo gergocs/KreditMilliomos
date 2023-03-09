@@ -1,9 +1,10 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http'
 import firebase from 'firebase/compat/app';
 import {FacebookAuthProvider, getAdditionalUserInfo, GoogleAuthProvider} from '@angular/fire/auth';
+import { UserModell } from '../models/usermodell';
 
 @Injectable({
   providedIn: 'root'
@@ -17,20 +18,33 @@ export class AuthService {
     loggedIn: 2,
   }
   user: firebase.User | undefined;
+  userdata: UserModell | undefined;
   authState = this.authStates.unknown;
 
-  constructor(protected auth: AngularFireAuth, protected router: Router, protected http: HttpClient) {
+  hostname: string;
+
+  constructor(private zone:NgZone, protected auth: AngularFireAuth, protected router: Router, protected http: HttpClient) {
+    if(location.hostname == "localhost"){
+      this.hostname = "http://localhost:8080/";
+    }else{
+      this.hostname = "https://kreditmilliomos.mooo.com:80/"
+    }
+
     this.auth.onAuthStateChanged((credential) => {
       if (credential) {
         console.log(credential);
         this.user = credential;
         this.authState = this.authStates.loggedIn;
         this.getUserData();
-        if (router.url == "/login")
-          router.navigate(["/main"])
+        if (router.url == "/login" || router.url == "/register")
+        this.zone.run(() => {
+          //this.router.navigate(['/main']);
+      });
       } else {
         this.authState = this.authStates.loggedOut;
-        router.navigate(["/login"]);
+        this.zone.run(() => {
+          this.router.navigate(['/login']);
+      });
       }
     })
   }
@@ -39,13 +53,27 @@ export class AuthService {
     if (!this.user)
       return
 
+    console.log(location.hostname)
+
     let token = this.user.uid;
     let header = new HttpHeaders()
       .set("tokenkey", token)
-    this.http.get("http://146.190.205.69:8080/user/get", {headers: header})
+    this.http.get<UserModell>(this.hostname + "user/get", {headers: header})
       .subscribe(body => {
-        console.log(body);
+        console.log("body: ", body)
+        this.userdata = body
+        if(body.isAdmin){
+          this.zone.run(() => {
+            this.router.navigate(['/admin']);
+        });
+        }else {
+          this.zone.run(() => {
+            this.router.navigate(['/main']);
+        })
+        }
+        
       })
+
   }
 
   async isLoggedIn() {
@@ -56,7 +84,7 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    await this.auth.signInWithEmailAndPassword(email, password);
+    return await this.auth.signInWithEmailAndPassword(email, password);
   }
 
   async logout() {
@@ -99,7 +127,7 @@ export class AuthService {
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("isoauth", 'true').set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname)
-      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
+        this.http.post(this.hostname + "user/create", header, {headers: header})
         .subscribe(body => {
           console.log(body);
         })
@@ -107,6 +135,9 @@ export class AuthService {
       console.log("You have been successfully logged in!");
     } catch (error) {
       console.log(error);
+      return new Promise((resolve, reject) => {
+        reject();
+        })
     }
   }
 
@@ -121,15 +152,18 @@ export class AuthService {
 
       this.user.sendEmailVerification().then(() => {
         window.alert("Erősítsd meg az e-mail címedet!");
-        this.router.navigate(["/login"]);
+        this.zone.run(() => {
+          this.router.navigate(['/login']);
+      });
       });
 
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname).set("admin", "false")
-      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
+      this.http.post(this.hostname + "user/create", null, {headers: header})
         .subscribe(body => {
           console.log(body);
+          this.getUserData();
         })
     });
 

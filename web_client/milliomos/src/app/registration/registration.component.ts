@@ -1,20 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import {AuthService} from "../services/auth.service";
+
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss']
+  styleUrls: ['./registration.component.scss']  
 })
 export class RegistrationComponent implements OnInit {
 
   public error: boolean = false
   public errorMsg: string = ""
+    
+  public animationStarted: boolean = false;
 
-  constructor(public auth: AuthService) { }
+  regForm = new FormGroup({
+    username: new FormControl(''),
+    email: new FormControl(''),
+    lastName: new FormControl(''),
+    firstName: new FormControl(''),
+    password: new FormControl(''),
+    passwordAgain: new FormControl('')
+  });
+  
+  constructor(public auth: AuthService, @Inject(Router) private router: Router) { }
+  
 
   ngOnInit(): void {
+    
   }
+
+  
 
   async onRegisterClicked(email: string, nickname: string, firstname: string, lastname: string, password: string, passwordagain: string) {
     // check email format
@@ -95,4 +113,18 @@ export class RegistrationComponent implements OnInit {
       this.error = true
     }
   }
+
+
+  //Loading screen 
+  show: boolean = false;
+  startLoading() {
+    this.animationStarted = true;
+    this.show = true;    
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 8500); // <------- DELAY -- Ide kell majd a response ideje 
+  }
+
+  
+
 }

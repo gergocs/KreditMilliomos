@@ -16,64 +16,72 @@ AnswerC:Mandatory. Answer for choice D
 Correct Answer:Mandatory: Letter in A,B,C,D
 Save button
 -->
+<div *ngIf="loading == true" class="loading">Loading&#8230;</div>
 
 <nav id="navbar">
     <li>Admin oldal</li>
-    <li>Valami</li>
-    <li>Valami</li>
-    <li>Kijelentkezés</li>
+    <li (click)="showForm = true">Új kérdés</li>
+    <li (click)="this.router.navigate(['/main']);">Főoldal</li>
+    <li (click)="this.authservice.logout()">Kijelentkezés</li>
     
     <div id="dot"></div>
 </nav>
 <div id="admin_page">
     <div id="users_dashboard">
         <!-- User data management -- Máté -->
-        <p>Felhasználók</p>
+        <h5>Felhasználók</h5>
         <div id="users_dashboard_datas">
-            ide dolgozz fiam
+            <p>Users Dashboard part</p>
         </div>
         
     </div>
     <div id="questions">
-        <form>
+        <form [formGroup]="questionForm" (ngSubmit)="onCreateQuestion()" *ngIf="showForm">
+            
             <h2>Új kérdés</h2>
+       
             <div>
                 <label for="category">Kategória: *</label>
-                <input type="text" id="category" placeholder="Elektronika" name="category" required>
+                <input type="text" id="category" placeholder="Elektronika" formControlName="category" required>
             </div>
             <div>
                 <label for="question">Kérdés: *</label>
-                <input type="textarea" id="question" name="question" minlength="6" required>
+                <input type="textarea" id="question" formControlName="question" minlength="6" required>
+            </div>
+            <div>
+                <label for="level">Nehézség: *</label>
+                <input type="number" id="level" formControlName="level" required>
             </div>
             <div>
                 <label for="answerA">'A' válasz: *</label>
-                <input type="text" id="answerA" name="answerA" required>
+                <input type="text" id="answerA" formControlName="answerA" required>
             </div>
             <div>
                 <label for="answerB">'B' válasz: *</label>
-                <input type="text" id="answerB" name="answerB" required>
+                <input type="text" id="answerB" formControlName="answerB" required>
             </div>
             <div>
                 <label for="answerC">'C' válasz: *</label>
-                <input type="text" id="answerC" name="answerC" required>
+                <input type="text" id="answerC" formControlName="answerC" required>
             </div>
             <div>
                 <label for="answerD">'D' válasz: *</label>
-                <input type="text" id="answerD" name="answerD" required>
+                <input type="text" id="answerD" formControlName="answerD" required>
             </div>
             <div>
                 <label for="correctAnswer">Helyes válasz: *</label>
-                <select id="correctAnswer" name="correctAnswer" required>
+                <select id="correctAnswer" formControlName="correctAnswer" required>
                     <option value="answerA">A</option>
                     <option value="answerB">B</option>
                     <option value="answerC">C</option>
                     <option value="answerD">D</option>
                 </select>
             </div>
-            <div className="question_buttons">
-            <button type="submit" className="submit_question_button">Mentés</button>
-            <button type="cancel" className="cancel_question_button">Mégse</button>
-        </div>
+            <!-- BUTTONS -->
+            <div id="buttons">
+                <button type="submit" id="submit_question_button">Mentés</button>
+                <button type="reset" id="cancel_question_button" >Mégse</button>
+            </div>
         </form>
     </div>
 </div>
@@ -113,10 +121,10 @@ Save button
                 <th scope="row">{{item.category}}</th>
                 <td>{{item.question}}</td>
                 <td>{{item.level}}</td>
-                <td>{{item.a1}}</td>
-                <td>{{item.a2}}</td>
-                <td>{{item.a3}}</td>
-                <td>{{item.a4}}</td>
+                <td>{{item.aA}}</td>
+                <td>{{item.aB}}</td>
+                <td>{{item.aC}}</td>
+                <td>{{item.aD}}</td>
                 <td>{{item.correct}}</td>
             </tr>
         </tbody>
@@ -125,7 +133,39 @@ Save button
     <button type="button" class="btn btn-danger m-2 border border-dark" (click)="this.delete()">Betöltött kérdések törlése</button>
 </div>
 
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark">
+    <h4>Összes jelenlegi kérdés:</h4>
+    <br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Kategória</th>
+            <th scope="col">Kérdés</th>
+            <th scope="col">Nehézség</th>
+            <th scope="col">Válasz A</th>
+            <th scope="col">Válasz B</th>
+            <th scope="col">Válasz C</th>
+            <th scope="col">Válasz D</th>
+            <th scope="col">Megfejtés</th>
+            <th scope="col">Törlés</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let question of allquestion">
+            <tr>
+                <th scope="row">{{question.category}}</th>
+                <td>{{question.question}}</td>
+                <td>{{question.level}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='A') ? '#00ff00' : '#ffaaaa'}">{{question.answerA}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='B') ? '#00ff00' : '#ffaaaa'}">{{question.answerB}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='C') ? '#00ff00' : '#ffaaaa'}">{{question.answerC}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='D') ? '#00ff00' : '#ffaaaa'}">{{question.answerD}}</td>
+                <td>{{question.answerCorrect}}</td>
+                <td><button type="button" class="btn btn-danger m-2 border border-dark material-icons" (click)="this.deleteexistingquestion(question.question)">delete</button></td>
+            </tr>
+        </tbody>
+      </table>
+</div>
+
 <footer>
     <p>&copy; 2023 Admin Site. All rights reserved.</p>
 </footer>
-
