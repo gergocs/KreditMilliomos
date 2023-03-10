@@ -112,3 +112,8 @@ button{
 #cancel_question_button:hover{
   background-color: rgb(255,0,0);
 }
+
+tr:not(:first-child):not(:last-child),td{
+  border: 1px solid black;
+  border-collapse:collapse;
+}

@@ -28,10 +28,24 @@ Save button
 </nav>
 <div id="admin_page">
     <div id="users_dashboard">
-        <!-- User data management -- Máté -->
         <h5>Felhasználók</h5>
         <div id="users_dashboard_datas">
-            <p>Users Dashboard part</p>
+            <table>
+                <thead>
+                    <th>Felhasználónév</th>
+                    <th>E-mail</th>
+                    <th>Vezetéknév</th>
+                    <th>Keresztnév</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of authservice.userList">
+                        <td>{{user.name}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.lastName}}</td>
+                        <td>{{user.firstName}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         
     </div>

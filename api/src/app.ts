@@ -2,7 +2,6 @@ import express from 'express'
 import * as bodyParser from 'body-parser'
 import * as admin from 'firebase-admin'
 import {type Auth, getAuth} from 'firebase-admin/auth'
-
 const serviceAccount = require('../kreditmilliomos-firebase-adminsdk-77e37-136a215381.json')
 import cors from 'cors'
 import {readFileSync} from 'fs'
