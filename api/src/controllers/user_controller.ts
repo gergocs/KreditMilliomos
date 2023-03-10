@@ -22,16 +22,21 @@ class UserController {
                     .then(user => {
                         if (!user) {
                             response.status(StatusCodes.IAmATeaPod).send({error: 'User not found'})
-                            next()
+                            response.end()
                         } else {
                             response.send(user)
-                            next()
+                            response.end()
                         }
-                        return;
                     })
-                    .catch(error => response.sendStatus(StatusCodes.InternalError))
+                    .catch(error => {
+                        response.sendStatus(StatusCodes.InternalError)
+                        response.end()
+                    })
             })
-            .catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+            .catch(error => {
+                response.sendStatus(StatusCodes.ServiceUnavailable)
+                response.end()
+            })
     }
 
     createUser(request: Request, response: Response, next: NextFunction) {
@@ -45,22 +50,22 @@ class UserController {
 
                 if (!tokenKey || tokenKey.length != 28) {
                     response.sendStatus(StatusCodes.IAmATeaPod)
-                    return;
+                    response.end()
                 }
 
                 if (!name || name.length == 0 || name == "undefined") {
                     response.sendStatus(StatusCodes.IAmATeaPod)
-                    return;
+                    response.end()
                 }
 
                 if (!firstName || firstName.length == 0 || firstName == "undefined") {
                     response.sendStatus(StatusCodes.IAmATeaPod)
-                    return;
+                    response.end()
                 }
 
                 if (!lastName || lastName.length == 0 || lastName == "undefined") {
                     response.sendStatus(StatusCodes.IAmATeaPod)
-                    return;
+                    response.end()
                 }
 
                 User.create({
@@ -73,11 +78,17 @@ class UserController {
                 })
                     .then(user => {
                         response.sendStatus(StatusCodes.Ok)
-                        return;
+                        response.end()
                     })
-                    .catch(error => response.sendStatus(StatusCodes.InternalError))
+                    .catch(error => {
+                        response.sendStatus(StatusCodes.InternalError)
+                        response.end()
+                    })
             })
-            .catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+            .catch(error => {
+                response.sendStatus(StatusCodes.ServiceUnavailable)
+                response.end()
+            })
     }
 
     isUserAdmin = (request: Request, response: Response, next: NextFunction) => {
@@ -89,13 +100,21 @@ class UserController {
                     .then(user => {
                         if (user && user.isAdmin) {
                             response.sendStatus(StatusCodes.Ok)
+                            response.end()
                         } else {
                             response.sendStatus(StatusCodes.IAmATeaPod)
+                            response.end()
                         }
                     })
-                    .catch(error => response.sendStatus(StatusCodes.InternalError))
+                    .catch(error => {
+                        response.sendStatus(StatusCodes.InternalError)
+                        response.end()
+                    })
             })
-            .catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+            .catch(error => {
+                response.sendStatus(StatusCodes.ServiceUnavailable)
+                response.end()
+            })
     }
 }
 

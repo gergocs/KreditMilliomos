@@ -39,13 +39,14 @@ class App {
         this.app.use((req, res, next): void => {
             if (req.headers.tokenkey === undefined) {
                 res.status(StatusCodes.Unauthorized).send('No token')
-                return
+                res.end()
             }
 
             this.fireAuth.getUser(req.headers.tokenkey as string).then(r => {
                 next()
             }).catch(er => {
                 res.status(StatusCodes.Unauthorized).send('Invalid token')
+                res.end()
             })
         })
         this.app.use((req, res, next): void => {
@@ -62,14 +63,18 @@ class App {
                             if (user && user.isAdmin) {
                                 next()
                             } else {
-                                next()
+                                res.sendStatus(StatusCodes.Unauthorized)
+                                res.end()
                             }
                         })
-                        .catch(error => res.sendStatus(StatusCodes.InternalError))
+                        .catch(error => {
+                            res.sendStatus(StatusCodes.InternalError)
+                            res.end()
+                        })
                 })
                 .catch(error => {
                     res.sendStatus(StatusCodes.ServiceUnavailable)
-                    console.log(error)
+                    res.end()
                 })
         })
     }
