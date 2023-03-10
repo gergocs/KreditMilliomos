@@ -37,11 +37,8 @@ export class AuthService {
         console.log(credential);
         this.user = credential;
         this.authState = this.authStates.loggedIn;
-<<<<<<< HEAD
         this.getUserData();
         this.getAllUsers();
-=======
->>>>>>> development
         if (router.url == "/login" || router.url == "/register")
         this.zone.run(() => {
           //this.router.navigate(['/main']);
