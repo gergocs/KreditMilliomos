@@ -81,6 +81,7 @@ class UserController {
                         response.end()
                     })
                     .catch(error => {
+                        console.log(error)
                         response.sendStatus(StatusCodes.InternalError)
                         response.end()
                     })

@@ -27,9 +27,9 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.loading = false;
   }
-  onGoogleLogin(){
+  async onGoogleLogin(){
     this.loading = true
-    this.auth.GoogleAuth().catch((error)=>{
+    await this.auth.GoogleAuth().catch(error=>{
       this.loading=false;
     })
   }
@@ -55,7 +55,9 @@ export class LoginComponent implements OnInit {
     }
     this.loading = true;
     try {
-      await this.auth.login(email, password);
+      await this.auth.login(email, password).catch(error=>{
+        this.loading=false
+      })
       //this.router.navigate(["/main"]);
     } catch {
       this.errorMsg = "Hibás e-mail cím vagy jelszó!"

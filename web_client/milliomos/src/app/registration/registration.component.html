@@ -1,3 +1,4 @@
+<div [hidden]="!loading" class="loading"><img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading_animation"></div>
 <div [formGroup]="regForm" class="container-lg my-5 p-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-primary" style="max-width: 500px;">
     <h3>Regisztráció</h3>
     <br>
@@ -35,21 +36,9 @@
     </div>
     <br>
     
-<button class="btn btn-success m-2" (click)="this.startLoading() ;this.onRegisterClicked(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value); ">Regisztráció</button>
+<button class="btn btn-success m-2" (click)="this.onRegisterClicked(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value); ">Regisztráció</button>
 <button class="btn btn-primary m-2" (click)="auth.GoogleAuth()">Bejelentkezés Google fiókkal</button>
-<button (click)="this.startLoading()" ></button>
 
-
-<!-- Loading animation START ------------------------- -->
-<div class="loading-animation" [ngClass]="{'show': show}">
-  <img src="assets/images/kreditmilliomos-red.png" alt="Loading_animation">
-  <div class="loader" >
-    <div class="progress" *ngIf="animationStarted"></div>
-    
-  </div>
-  
-</div>
-<!-- // Loading animation END ------------------------- -->
 </div>
 
 
