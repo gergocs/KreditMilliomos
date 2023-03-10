@@ -51,31 +51,32 @@ class App {
         })
         this.app.use((req, res, next): void => {
             if (!req.path.includes('admin')) {
-                next();
+                next()
+            }else{
+                const tokenKey = req.headers.tokenkey
+
+                sequelize.sync()
+                    .then(() => {
+                        User.findOne({where: {tokenKey}})
+                            .then(user => {
+                                if (user && user.isAdmin) {
+                                    next()
+                                } else {
+                                    res.sendStatus(StatusCodes.Unauthorized)
+                                    res.end()
+                                }
+                            })
+                            .catch(error => {
+                                res.sendStatus(StatusCodes.InternalError)
+                                res.end()
+                            })
+                    })
+                    .catch(error => {
+                        res.sendStatus(StatusCodes.ServiceUnavailable)
+                        res.end()
+                    })
             }
 
-            const tokenKey = req.headers.tokenkey
-
-            sequelize.sync()
-                .then(() => {
-                    User.findOne({where: {tokenKey}})
-                        .then(user => {
-                            if (user && user.isAdmin) {
-                                next()
-                            } else {
-                                res.sendStatus(StatusCodes.Unauthorized)
-                                res.end()
-                            }
-                        })
-                        .catch(error => {
-                            res.sendStatus(StatusCodes.InternalError)
-                            res.end()
-                        })
-                })
-                .catch(error => {
-                    res.sendStatus(StatusCodes.ServiceUnavailable)
-                    res.end()
-                })
         })
     }
 
