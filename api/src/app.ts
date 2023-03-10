@@ -38,38 +38,44 @@ class App {
         this.app.use((req, res, next): void => {
             if (req.headers.tokenkey === undefined) {
                 res.status(StatusCodes.Unauthorized).send('No token')
-                return
+                res.end()
             }
 
             this.fireAuth.getUser(req.headers.tokenkey as string).then(r => {
                 next()
             }).catch(er => {
                 res.status(StatusCodes.Unauthorized).send('Invalid token')
+                res.end()
             })
         })
         this.app.use((req, res, next): void => {
             if (!req.path.includes('admin')) {
-                next();
+                next()
+            }else{
+                const tokenKey = req.headers.tokenkey
+
+                sequelize.sync()
+                    .then(() => {
+                        User.findOne({where: {tokenKey}})
+                            .then(user => {
+                                if (user && user.isAdmin) {
+                                    next()
+                                } else {
+                                    res.sendStatus(StatusCodes.Unauthorized)
+                                    res.end()
+                                }
+                            })
+                            .catch(error => {
+                                res.sendStatus(StatusCodes.InternalError)
+                                res.end()
+                            })
+                    })
+                    .catch(error => {
+                        res.sendStatus(StatusCodes.ServiceUnavailable)
+                        res.end()
+                    })
             }
 
-            const tokenKey = req.headers.tokenkey
-
-            sequelize.sync()
-                .then(() => {
-                    User.findOne({where: {tokenKey}})
-                        .then(user => {
-                            if (user && user.isAdmin) {
-                                next()
-                            } else {
-                                next()
-                            }
-                        })
-                        .catch(error => res.sendStatus(StatusCodes.InternalError))
-                })
-                .catch(error => {
-                    res.sendStatus(StatusCodes.ServiceUnavailable)
-                    console.log(error)
-                })
         })
     }
 

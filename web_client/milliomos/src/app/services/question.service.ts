@@ -42,7 +42,7 @@ export class QuestionService {
       answerCorrect: q.answerCorrect
     }
 
-    return this.http.post(this.hostname + "question/admin/create", body, {headers: header});
+    return this.http.post(this.hostname + "question/admin/create", body, {headers: header, responseType: 'text'});
 
     }
 }

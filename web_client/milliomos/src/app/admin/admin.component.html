@@ -16,7 +16,7 @@ AnswerC:Mandatory. Answer for choice D
 Correct Answer:Mandatory: Letter in A,B,C,D
 Save button
 -->
-<div *ngIf="loading == true" class="loading">Loading&#8230;</div>
+<div [hidden]="!loading" class="loading"><img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading_animation"></div>
 
 <nav id="navbar">
     <li>Admin oldal</li>
@@ -169,10 +169,10 @@ Save button
                 <th scope="row">{{question.category}}</th>
                 <td>{{question.question}}</td>
                 <td>{{question.level}}</td>
-                <td [ngStyle]="{'background-color': (question.answerCorrect=='A') ? '#00ff00' : '#ffaaaa'}">{{question.answerA}}</td>
-                <td [ngStyle]="{'background-color': (question.answerCorrect=='B') ? '#00ff00' : '#ffaaaa'}">{{question.answerB}}</td>
-                <td [ngStyle]="{'background-color': (question.answerCorrect=='C') ? '#00ff00' : '#ffaaaa'}">{{question.answerC}}</td>
-                <td [ngStyle]="{'background-color': (question.answerCorrect=='D') ? '#00ff00' : '#ffaaaa'}">{{question.answerD}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='answerA') ? '#00ff00' : '#ffaaaa'}">{{question.answerA}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='answerB') ? '#00ff00' : '#ffaaaa'}">{{question.answerB}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='answerC') ? '#00ff00' : '#ffaaaa'}">{{question.answerC}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='answerD') ? '#00ff00' : '#ffaaaa'}">{{question.answerD}}</td>
                 <td>{{question.answerCorrect}}</td>
                 <td><button type="button" class="btn btn-danger m-2 border border-dark material-icons" (click)="this.deleteexistingquestion(question.question)">delete</button></td>
             </tr>

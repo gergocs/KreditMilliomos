@@ -15,6 +15,7 @@ export class RegistrationComponent implements OnInit {
   public errorMsg: string = ""
     
   public animationStarted: boolean = false;
+  public loading: boolean = false;
 
   regForm = new FormGroup({
     username: new FormControl(''),
@@ -36,6 +37,7 @@ export class RegistrationComponent implements OnInit {
 
   async onRegisterClicked(email: string, nickname: string, firstname: string, lastname: string, password: string, passwordagain: string) {
     // check email format
+    
     const emailRegex: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     if (!emailRegex.test(email)) {
       this.errorMsg = "Az e-mail cím formátuma nem megfelelő!"
@@ -93,8 +95,8 @@ export class RegistrationComponent implements OnInit {
       return;
     }
 
-    if (password.length < 4 || password.length > 24){
-      this.errorMsg = "A jelszó 4-24 karakter hosszúságú lehet!"
+    if (password.length < 6 || password.length > 24){
+      this.errorMsg = "A jelszó 6-24 karakter hosszúságú lehet!"
       this.error = true
       return;
     }
@@ -106,25 +108,16 @@ export class RegistrationComponent implements OnInit {
       return;
     }
 
+    this.loading=true
     try {
-      await this.auth.signup(email, nickname, firstname, lastname, password, passwordagain)
+      await this.auth.signup(email, nickname, firstname, lastname, password, passwordagain).catch(()=>{
+        this.loading=false
+      })
     } catch {
       this.errorMsg = "A regisztráció sikertelen!"
       this.error = true
+      this.loading = false
     }
   }
-
-
-  //Loading screen 
-  show: boolean = false;
-  startLoading() {
-    this.animationStarted = true;
-    this.show = true;    
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 8500); // <------- DELAY -- Ide kell majd a response ideje 
-  }
-
-  
 
 }

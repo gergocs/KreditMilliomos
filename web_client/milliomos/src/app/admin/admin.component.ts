@@ -50,25 +50,19 @@ export class AdminPageComponent implements OnInit {
    this.loading=true
     this.auth.onAuthStateChanged((credential) =>{this.userid = credential?.uid;
       this.questionService.getAllQuestion(this.userid).subscribe(body => {
-        console.log(body)
-
         this.allquestion = body
-        console.log(this.allquestion)
         this.loading=false
       },(error: any) => {
         let question: Question = {
-          category: "Matek",
-          question: "Nehez a matek?",
-          level: "3",
-          answerA: "igen  blabla hosszu szöveg teszt asdasdasdasd  blabla hosszu szöveg teszt asdasdasdasd",
-          answerB: "nagyon  blabla hosszu szöveg teszt asdasdasdasd  blabla hosszu szöveg teszt asdasdasdasd",
-          answerC: "nem  blabla hosszu szöveg teszt asdasdasdasd  blabla hosszu szöveg teszt asdasdasdasd",
-          answerD: "SzabóT megment blabla hosszu szöveg teszt asdasdasdasd  blabla hosszu szöveg teszt asdasdasdasd",
-          answerCorrect: "D"
+          category: "Hiba",
+          question: "Sikerült az adatbázis elérése?",
+          level: "-1",
+          answerA: "Hát nem",
+          answerB: "úgy néz ki.",
+          answerC: "De lehet, hogy még nincs",
+          answerD: "is kérdés az adatbázisban.",
+          answerCorrect: "answerA"
         }
-        console.log(error)
-        this.allquestion.push(question)
-        this.allquestion.push(question)
         this.allquestion.push(question)
         this.loading=false
       })
@@ -93,11 +87,18 @@ export class AdminPageComponent implements OnInit {
     }
     this.questionService.createQuestion(newQ, this.userid)
     .subscribe(body => {
+      if( body == null){
+        throw new Error()
+      }
       console.log("Created question in DB")
       console.log(body);
+      this.allquestion.push(newQ);
       this.loading=false
     },(error) => {
       console.log(error)
+      if(error.status == 200){
+        this.allquestion.push(newQ);
+      }
       this.loading=false
     }
     );

@@ -1,5 +1,5 @@
 /* Absolute Center Spinner */
-.loading {
+.loading{
     position: fixed;
     z-index: 999;
     overflow: show;
@@ -8,8 +8,13 @@
     left: 0;
     bottom: 0;
     right: 0;
-    width: 50px;
-    height: 50px;
+    width: 50%;
+    height: 50%;
+  }
+  .loadingpic {
+    width: 100%;
+    height: width;
+    animation: spinner 3s linear 0s infinite;
   }
   
   /* Transparent Overlay */
@@ -32,23 +37,6 @@
     text-shadow: none;
     background-color: transparent;
     border: 0;
-  }
-  
-  .loading:not(:required):after {
-    content: '';
-    display: block;
-    font-size: 10px;
-    width: 50px;
-    height: 50px;
-    margin-top: -0.5em;
-  
-    border: 15px solid rgba(33, 150, 243, 1.0);
-    border-radius: 100%;
-    border-bottom-color: transparent;
-    -webkit-animation: spinner 1s linear 0s infinite;
-    animation: spinner 1s linear 0s infinite;
-  
-  
   }
   
   /* Animation */
