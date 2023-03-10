@@ -20,6 +20,6 @@ const dbUrl: any = {
 }
 
 //URL végére kell az sslmode=require változó, hogy beengedjen
-const sequelize = new Sequelize(dbUrl.test + '?sslmode=require')
+const sequelize = new Sequelize(dbUrl.testForFrontend + '?sslmode=require')
 
 export { sequelize }

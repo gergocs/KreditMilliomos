@@ -42,7 +42,7 @@ export class AdminPageComponent implements OnInit {
     correctAnswer: new FormControl('')
   });
 
-  constructor(public router: Router,protected http: HttpClient, public questionService: QuestionService, protected auth: AngularFireAuth, public authservice : AuthService) {
+  constructor(public router: Router,protected http: HttpClient, public questionService: QuestionService, public auth: AngularFireAuth, public authservice : AuthService) {
 
    }
 

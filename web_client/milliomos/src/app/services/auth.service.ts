@@ -19,6 +19,7 @@ export class AuthService {
   }
   user: firebase.User | undefined;
   userdata: UserModell | undefined;
+  userList: UserModell[] | undefined;
   authState = this.authStates.unknown;
 
   hostname: string;
@@ -36,6 +37,7 @@ export class AuthService {
         this.user = credential;
         this.authState = this.authStates.loggedIn;
         this.getUserData();
+        this.getAllUsers();
         if (router.url == "/login" || router.url == "/register")
         this.zone.run(() => {
           //this.router.navigate(['/main']);
@@ -168,5 +170,26 @@ export class AuthService {
     });
 
 
+  }
+
+  async getAllUsers(){
+    try{
+      if (!this.user)
+        return
+      console.log('getallUsers')
+      let token = this.user.uid;
+      let header = new HttpHeaders()
+        .set("tokenkey", token)
+      this.http.get<UserModell[]>(this.hostname + "user/getAllUsers", {headers: header})
+        .subscribe(body => {
+          console.log("body: ", body)
+          this.userList = body        
+        })
+    }catch(error){
+      console.log(error);
+      return new Promise((resolve, reject) => {
+        reject();
+        })
+    }
   }
 }

@@ -99,15 +99,16 @@ class UserController {
             .catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
     }
 
-    listAllUsers = (request: Request, response: Response) => {
+    listAllUsers = (request: Request, response: Response,next: NextFunction) => {
         sequelize.sync()
         .then(() => {
             User.findAll().then(
                 users => {
                     response.send(users)
+                    next()
                 }
             ).catch(error => response.sendStatus(500))
-      }).catch(error => response.sendStatus(503));
+      }).catch(error => response.sendStatus(503))
     }
 }
 
