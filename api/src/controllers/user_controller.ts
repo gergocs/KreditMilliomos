@@ -125,10 +125,10 @@ class UserController {
             User.findAll().then(
                 users => {
                     response.send(users)
-                    next()
+                    response.end()
                 }
-            ).catch(error => response.sendStatus(500))
-      }).catch(error => response.sendStatus(503))
+            ).catch(error => response.sendStatus(StatusCodes.InternalError))
+      }).catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
     }
 }
 
