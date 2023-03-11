@@ -1,4 +1,5 @@
 import {Request, Response, NextFunction, Router} from 'express'
+import {getAuth} from 'firebase-admin/auth'
 import User from '../models/user'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
@@ -9,9 +10,10 @@ class UserController {
 
     constructor() {
         this.router.get(this.path + '/get', this.getUser)
-        this.router.get(this.path + '/getAllUsers', this.listAllUsers)
+        this.router.get(this.path + '/admin/getAllUsers', this.listAllUsers)
         this.router.post(this.path + '/create', this.createUser)
         this.router.post(this.path + '/isAdmin', this.isUserAdmin)
+        this.router.post(this.path + '/admin/ban', this.banUser)
     }
 
     getUser = (request: Request, response: Response, next: NextFunction) => {
@@ -129,6 +131,30 @@ class UserController {
                 }
             ).catch(error => response.sendStatus(StatusCodes.InternalError))
       }).catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+    }
+
+    banUser = (request: Request, response: Response,next: NextFunction) => {
+        try {
+            const isBan = request.body.isBan
+            const token = request.body.tokenkey
+
+            if (typeof token === "string") {
+                getAuth().updateUser(token, {
+                    disabled: isBan
+                }).then((userRecord) => {
+                    response.sendStatus(StatusCodes.Ok)
+                    response.end()
+                }).catch((error) => {
+                    response.sendStatus(StatusCodes.ServiceUnavailable)
+                    response.end()
+                })
+            } else {
+                throw new Error()
+            }
+        } catch (e) {
+            response.sendStatus(StatusCodes.UnprocessableContent)
+            response.end()
+        }
     }
 }
 
