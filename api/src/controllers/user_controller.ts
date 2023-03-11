@@ -11,6 +11,7 @@ class UserController {
     constructor() {
         this.router.get(this.path + '/get', this.getUser)
         this.router.get(this.path + '/admin/getAllUsers', this.listAllUsers)
+        this.router.get(this.path + '/admin/getBannedUsers', this.getBannedUsers)
         this.router.post(this.path + '/create', this.createUser)
         this.router.post(this.path + '/isAdmin', this.isUserAdmin)
         this.router.post(this.path + '/admin/ban', this.banUser)
@@ -121,19 +122,47 @@ class UserController {
             })
     }
 
-    listAllUsers = (request: Request, response: Response,next: NextFunction) => {
+    listAllUsers = (request: Request, response: Response, next: NextFunction) => {
         sequelize.sync()
-        .then(() => {
-            User.findAll().then(
-                users => {
-                    response.send(users)
-                    response.end()
-                }
-            ).catch(error => response.sendStatus(StatusCodes.InternalError))
-      }).catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+            .then(() => {
+                User.findAll().then(
+                    users => {
+                        response.send(users)
+                        response.end()
+                    }
+                ).catch(error => response.sendStatus(StatusCodes.InternalError))
+            }).catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
     }
 
-    banUser = (request: Request, response: Response,next: NextFunction) => {
+    getBannedUsers = (request: Request, response: Response, next: NextFunction) => {
+        let bannedUsers = new Array<string>()
+        const listAllUsers = (nextPageToken) => {
+            getAuth()
+                .listUsers(1000, nextPageToken)
+                .then((listUsersResult) => {
+                    listUsersResult.users.forEach((userRecord) => {
+                        if (userRecord.disabled) {
+                            bannedUsers.push(userRecord.uid)
+                        }
+                    });
+
+                    if (listUsersResult.pageToken) {
+                        listAllUsers(listUsersResult.pageToken)
+                    } else {
+                        response.send(bannedUsers)
+                        response.end()
+                    }
+                })
+                .catch((error) => {
+                    response.sendStatus(StatusCodes.ServiceUnavailable)
+                    response.end()
+                });
+        };
+
+        listAllUsers(undefined)
+    }
+
+    banUser = (request: Request, response: Response, next: NextFunction) => {
         try {
             const isBan = request.body.isBan
             const token = request.body.tokenkey
