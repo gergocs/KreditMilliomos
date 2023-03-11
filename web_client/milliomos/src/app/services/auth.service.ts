@@ -54,7 +54,7 @@ export class AuthService {
 
   async getUserData() {
     if (!this.user)
-      return 
+      return
 
     let token = this.user.uid;
     let header = new HttpHeaders()
@@ -105,7 +105,7 @@ export class AuthService {
       const result = await this.auth.signInWithPopup(provider);
 
       console.log(result)
-      
+
       let firstlogin = result.additionalUserInfo?.isNewUser;
 
       //@ts-ignore
@@ -145,7 +145,7 @@ export class AuthService {
             return await this.getUserData() //mukodik
         }
 
-      
+
     } catch (error) {
       return new Promise((resolve, reject) => {reject();}) //mukodik
     }
@@ -194,10 +194,10 @@ export class AuthService {
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token)
-      this.http.get<UserModell[]>(this.hostname + "user/getAllUsers", {headers: header})
+      this.http.get<UserModell[]>(this.hostname + "user/admin/getAllUsers", {headers: header})
         .subscribe(body => {
           console.log("body: ", body)
-          this.userList = body        
+          this.userList = body
         })
     }catch(error){
       console.log(error);
@@ -206,7 +206,7 @@ export class AuthService {
         })
     }
   }
-  
+
   async delfromfire(){
     this.user?.delete();
   }

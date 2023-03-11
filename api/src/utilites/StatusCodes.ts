@@ -7,6 +7,7 @@ export enum StatusCodes {
     NotFound = 404,
 
     IAmATeaPod = 418,
+    UnprocessableContent = 422,
 
     // 500 - ServerError
     InternalError = 500,
