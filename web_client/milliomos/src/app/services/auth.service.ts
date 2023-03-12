@@ -209,9 +209,7 @@ export class AuthService {
         })
     }catch(error){
       console.log(error);
-      return new Promise((resolve, reject) => {
-        reject();
-        })
+      return new Promise((resolve, reject) => {reject();})
     }
   }
 

@@ -46,18 +46,19 @@ export class QuestionService {
 
     }
 
-    deleteQuestion(q: string, uid: any){
+    async deleteQuestion(q: string, uid: any){
       let header = new HttpHeaders()
         .set("tokenkey", uid)
-      console.log(q)
-      this.http.delete(this.hostname + "question/admin/deleteQuestion", {headers: header, body: {question: q}}).toPromise().then(r => {
+      await this.http.delete(this.hostname + "question/admin/deleteQuestion", {headers: header, body: {question: q}}).toPromise().then(r => {
         if (r){
           console.log(r)
-          window.location.reload()
+          return new Promise((resolve, reject) => {resolve(r);})
         }
-        window.location.reload() //TODO something nicer and faster
+        console.log()
+        return new Promise((resolve, reject) => {resolve(r);})
+        //window.location.reload() //TODO something nicer and faster
       }).catch(e => {
-        console.log(e)
+        return new Promise((resolve, reject) => {reject(e);})
       })
     }
 }
