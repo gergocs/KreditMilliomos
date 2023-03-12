@@ -18,6 +18,8 @@ export class AuthService {
     loggedOut: 1,
     loggedIn: 2,
   }
+  bannedUserIDs: string[] | undefined;
+  helperListArray: boolean[] = new Array(1);
   user: firebase.User | undefined;
   userdata: UserModell | undefined;
   userList: UserModell[] | undefined;
@@ -34,7 +36,7 @@ export class AuthService {
 
     this.auth.onAuthStateChanged((credential) => {
       if (credential) {
-        console.log(credential);
+
         this.user = credential;
         this.authState = this.authStates.loggedIn;
         this.getUserData();
@@ -60,7 +62,6 @@ export class AuthService {
     let header = new HttpHeaders()
       .set("tokenkey", token)
     await this.http.get<UserModell>(this.hostname + "user/get", {headers: header}).toPromise().then(body =>{
-      console.log(body)
 
       this.userdata = body
         if(body?.isAdmin){
@@ -190,14 +191,21 @@ export class AuthService {
     try{
       if (!this.user)
         return
-      console.log('getallUsers')
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token)
-      this.http.get<UserModell[]>(this.hostname + "user/admin/getAllUsers", {headers: header})
-        .subscribe(body => {
-          console.log("body: ", body)
-          this.userList = body
+      await this.http.get<UserModell[]>(this.hostname + "user/admin/getAllUsers", {headers: header})
+        .subscribe(async (body) => {
+          this.userList = body;
+         this.helperListArray = new Array(body.length);
+          await this.bannedUserList();
+          body.forEach((user, index) => {
+            if(this.bannedUserIDs && this.helperListArray)
+            {
+              this.helperListArray[index] = this.bannedUserIDs?.includes(user.tokenKey);
+            }
+
+          });
         })
     }catch(error){
       console.log(error);
@@ -207,7 +215,31 @@ export class AuthService {
     }
   }
 
+
+
+  async bannedUserList() {
+    if (!this.user)
+      return
+
+    let token = this.user.uid;
+    let header = new HttpHeaders().set("tokenkey",token)//json egyből alakítható
+    await this.http.get<string[]>(this.hostname + "user/admin/getBannedUsers", {headers: header}).toPromise().then(async body => {
+      if (body == null) {
+        throw new Error()
+      }
+
+      this.bannedUserIDs = body;
+
+    }).catch(error =>{
+
+      console.log(error)
+    })
+
+  }
+
   async delfromfire(){
     this.user?.delete();
   }
+
+
 }
