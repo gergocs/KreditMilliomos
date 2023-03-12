@@ -67,7 +67,7 @@ export class AdminPageComponent implements OnInit {
           answerB: "úgy néz ki.",
           answerC: "De lehet, hogy még nincs",
           answerD: "is kérdés az adatbázisban.",
-          answerCorrect: "answerA"
+          answerCorrect: "A"
         }
         this.allquestion.push(question)
         this.loading=false
@@ -145,7 +145,7 @@ export class AdminPageComponent implements OnInit {
           answerB: words[4],
           answerC: words[5],
           answerD: words[6],
-          answerCorrect: words[7]
+          answerCorrect: words[7].trim()
         }
         this.Importeditems.push(obj)
       });

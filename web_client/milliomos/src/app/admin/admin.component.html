@@ -68,10 +68,10 @@ Save button
             <div>
                 <label for="correctAnswer">Helyes válasz: *</label>
                 <select id="correctAnswer" formControlName="correctAnswer" required>
-                    <option value="answerA">A</option>
-                    <option value="answerB">B</option>
-                    <option value="answerC">C</option>
-                    <option value="answerD">D</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
                 </select>
             </div>
             <!-- BUTTONS -->
@@ -187,10 +187,10 @@ Save button
                 <th scope="row">{{question.category}}</th>
                 <td>{{question.question}}</td>
                 <td>{{question.level}}</td>
-                <td [ngStyle]="{'background-color': (question.answerCorrect=='answerA') ? '#00ff00' : '#ffaaaa'}">{{question.answerA}}</td>
-                <td [ngStyle]="{'background-color': (question.answerCorrect=='answerB') ? '#00ff00' : '#ffaaaa'}">{{question.answerB}}</td>
-                <td [ngStyle]="{'background-color': (question.answerCorrect=='answerC') ? '#00ff00' : '#ffaaaa'}">{{question.answerC}}</td>
-                <td [ngStyle]="{'background-color': (question.answerCorrect=='answerD') ? '#00ff00' : '#ffaaaa'}">{{question.answerD}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='A') ? '#00ff00' : '#ffaaaa'}">{{question.answerA}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='B') ? '#00ff00' : '#ffaaaa'}">{{question.answerB}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='C') ? '#00ff00' : '#ffaaaa'}">{{question.answerC}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='D') ? '#00ff00' : '#ffaaaa'}">{{question.answerD}}</td>
                 <td>{{question.answerCorrect}}</td>
                 <td><button type="button" class="btn btn-danger m-2 border border-dark material-icons" (click)="this.deleteexistingquestion(question.question,i)">delete</button></td>
             </tr>
