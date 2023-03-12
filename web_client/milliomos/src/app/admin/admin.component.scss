@@ -1,6 +1,6 @@
 @import "admininput.component.scss";
 
-$width_of_user_management_dashboard: 30%; //Ezt változtasd
+$width_of_user_management_dashboard: 35%; //Ezt változtasd
 $width_of_new_question_dashboard: 100% - $width_of_user_management_dashboard; // ezt ne változtasd
 
 $font_size_of_li_elements: (1.6625em, 1.324em, 1.324em, 1.324em);
@@ -22,13 +22,13 @@ body {
     width: 100%;
     height: 3.12em;
     background-color: rgb(47, 47, 47);
-    
-    
+
+
 }
 li{
     display: inline;
     padding-top: 35px;
-    margin-right: 10px; 
+    margin-right: 10px;
     color: #f6f4e6;
     text-decoration: none;
     font-size: 1.3em;
@@ -37,8 +37,8 @@ li{
     -webkit-transition: all 0.2s ease-in-out;
     transition: all 0.5s ease-in-out;
     cursor: pointer;
-    
-    
+
+
 
     @for $i from 1 through length($font_size_of_li_elements){
         &:nth-child(#{$i}){
@@ -49,7 +49,7 @@ li{
 
 li:hover{
     color: #ffd900;
-    
+
 }
 th,td{
     text-align: center;
@@ -69,7 +69,7 @@ th,td{
   transition: all 0.2s ease-in-out;
 }
 
-// Dot positions 
+// Dot positions
 @for $i from 1 through length($dot_positions) {
     li:nth-child(#{$i}):hover ~ #dot {
       -webkit-transform: translateX(nth($dot_positions, $i));
@@ -92,7 +92,7 @@ th,td{
 
 #users_dashboard{
     width: $width_of_user_management_dashboard;
-    
+
     height: $height_of_dashboards;
     float: left;
 
@@ -113,11 +113,11 @@ th,td{
 
 //Kérdés form eleje ------------
 #questions{
-    
-    width: $width_of_new_question_dashboard;
+
+    width: $width_of_new_question_dashboard, 100%;
     height: $height_of_dashboards;
     overflow: hidden;
-    text-align: center;   
+    text-align: center;
     background-color: #6b6b6b;
 }
 

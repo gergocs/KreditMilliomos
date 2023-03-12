@@ -8,6 +8,9 @@ import { AppModule } from '../app.module'
 import { Question } from '../models/question'
 import { AuthService } from '../services/auth.service'
 import { QuestionService } from '../services/question.service'
+import {MatIconModule} from '@angular/material/icon';
+import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-admin',
@@ -42,7 +45,7 @@ export class AdminPageComponent implements OnInit {
     correctAnswer: new FormControl('')
   });
 
-  constructor(public router: Router,protected http: HttpClient, public questionService: QuestionService, public auth: AngularFireAuth, public authservice : AuthService) {
+  constructor(public router: Router,protected http: HttpClient, public questionService: QuestionService, public auth: AngularFireAuth, public authservice : AuthService, private modalService: NgbModal) {
 
    }
 
@@ -52,6 +55,7 @@ export class AdminPageComponent implements OnInit {
       this.questionService.getAllQuestion(this.userid).subscribe(body => {
         this.allquestion = body
         this.loading=false
+
       },(error: any) => {
         let question: Question = {
           category: "Hiba",
@@ -178,6 +182,53 @@ export class AdminPageComponent implements OnInit {
     console.log(q)
   }
 
+
+  async banUser(tokenKey: string, disable: boolean,i: number) {
+    let text = "Biztosan " +( disable ? "bannolni akarod" : "fel akarod oldani" )+ "?";
+    await this.confirm(text,tokenKey).then(async confirmed => {
+      if (confirmed) {
+        this.loading = true;
+        if (this.userid) {
+          let body = {
+            isBan: disable,
+            tokenkey: tokenKey
+          }
+          let header = new HttpHeaders().set("tokenkey", this.userid)
+          await this.http.post((this.hostname == "localhost" ? "http://localhost:8080/" : "https://kreditmilliomos.mooo.com:80/") + "user/admin/ban", body, {
+            headers: header,
+            responseType: 'text'
+          }).toPromise().then(async body => {
+
+
+            if (body == null) {
+              throw new Error()
+            }
+            this.loading = false;
+            this.authservice.helperListArray[i] = !this.authservice.helperListArray[i];
+          }).catch(error => {
+            this.loading = false;
+            console.log(error)
+          })
+        }
+      }
+
+    }).catch(error=>{return})
+
+  }
+  public confirm(
+    title: string,
+    message: string,
+    btnOkText: string = 'OK',
+    btnCancelText: string = 'Cancel',
+    dialogSize: 'sm'|'lg' = 'sm'): Promise<boolean> {
+    const modalRef = this.modalService.open(ConfirmationDialogComponent, { size: dialogSize });
+    modalRef.componentInstance.title = title;
+    modalRef.componentInstance.message = message;
+    modalRef.componentInstance.btnOkText = btnOkText;
+    modalRef.componentInstance.btnCancelText = btnCancelText;
+
+    return modalRef.result;
+  }
 }
 
 

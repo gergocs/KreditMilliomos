@@ -14,6 +14,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminPageComponent } from './admin/admin.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import {MatButtonModule} from "@angular/material/button";
+
+
 
 @NgModule({
   declarations: [
@@ -21,7 +26,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     RegistrationComponent,
     LoginComponent,
     MainComponent,
-    AdminPageComponent
+    AdminPageComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +37,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     AngularFireModule.initializeApp(environment.firebase),
     provideAuth(() => getAuth()),
     NgbModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
