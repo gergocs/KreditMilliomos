@@ -19,6 +19,7 @@ Save button
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <div [hidden]="!loading" class="loading"><img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading_animation"></div>
 
+<!-- NAVBAR - START -->
 <nav id="navbar">
     <li>Admin oldal</li>
     <li (click)="showForm = true">Új kérdés</li>
@@ -27,34 +28,12 @@ Save button
 
     <div id="dot"></div>
 </nav>
-<div id="admin_page">
-    <div id="users_dashboard">
-        <h5>Felhasználók</h5>
-        <div id="users_dashboard_datas">
-            <table>
-                <thead>
-                    <th>Felhasználónév</th>
-                    <th>E-mail</th>
-                    <th>Vezetéknév</th>
-                    <th>Keresztnév</th>
-                    <th>Tiltás/Feloldás</th>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let user of authservice.userList; let i = index" [attr.data-index]="i">
-                        <td>{{user.name}}</td>
-                        <td>{{user.email}}</td>
-                        <td>{{user.firstName}}</td>
-                        <td>{{user.lastName}}</td>
-                        <td *ngIf="authservice.helperListArray[i]" (click)="this.banUser(user.tokenKey, false,i)"><button mat-raised-button color="primary" [class.mat-elevation-z4]="true">Unban<mat-icon>check_circle</mat-icon></button></td>
-                        <td *ngIf="!authservice.helperListArray[i]" (click)="this.banUser(user.tokenKey,true,i)"><button mat-raised-button color="warn" [class.mat-elevation-z4]="true">Ban<mat-icon>cancel</mat-icon></button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<!-- NAVBAR - END -->
 
-    </div>
+<!-- NEW QUESTION - START -->
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark" style="max-width: 740px;" *ngIf="showForm">
     <div id="questions">
-        <form [formGroup]="questionForm" (ngSubmit)="onCreateQuestion()" *ngIf="showForm">
+        <form [formGroup]="questionForm" (ngSubmit)="onCreateQuestion()">
 
             <h2>Új kérdés</h2>
 
@@ -103,11 +82,44 @@ Save button
         </form>
     </div>
 </div>
+<!-- NEW QUESTION - END -->
 
-<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark" style="max-width: 640px;">
+<!-- USERS - START -->
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark" style="max-width: 740px;">
+    <div id="admin_page">
+        <div id="users_dashboard">
+            <h5>Felhasználók</h5>
+            <div id="users_dashboard_datas">
+                <table>
+                    <thead>
+                        <th>Felhasználónév</th>
+                        <th>E-mail</th>
+                        <th>Vezetéknév</th>
+                        <th>Keresztnév</th>
+                        <th>Tiltás/Feloldás</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of authservice.userList; let i = index" [attr.data-index]="i">
+                            <td>{{user.name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.firstName}}</td>
+                            <td>{{user.lastName}}</td>
+                            <td *ngIf="authservice.helperListArray[i]" (click)="this.banUser(user.tokenKey, false,i)"><button mat-raised-button color="primary" [class.mat-elevation-z4]="true">Unban<mat-icon>check_circle</mat-icon></button></td>
+                            <td *ngIf="!authservice.helperListArray[i]" (click)="this.banUser(user.tokenKey,true,i)"><button mat-raised-button color="warn" [class.mat-elevation-z4]="true">Ban<mat-icon>cancel</mat-icon></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- USERS - END -->
+
+<!-- FILE IMPORT - START -->
+<div id="file-import" class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark" style="max-width: 640px;">
     <h4 class="import-label">Importálás fájlból</h4>
-    <div *ngIf="error" class="alert alert-danger" role="alert">
-        {{errorMsg}}
+    <div *ngIf="importError" class="alert alert-danger" role="alert">
+        {{importErrorMsg}}
     </div>
     <div class="mb-3">
         <label for="formFileSm" class="form-label">Kérdéseket tartalmazó .csv fájl megnyitása</label>
@@ -118,7 +130,7 @@ Save button
     </div>
 </div>
 
-<div *ngIf="visible" class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark">
+<div id="file-display" *ngIf="importsVisible" class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark">
     <h4>Betöltött kérdések:</h4>
     <br>
     <table class="table">
@@ -134,23 +146,25 @@ Save button
             <th scope="col">Megfejtés</th>
           </tr>
         </thead>
-        <tbody *ngFor="let item of items">
+        <tbody *ngFor="let item of Importeditems">
             <tr>
                 <th scope="row">{{item.category}}</th>
                 <td>{{item.question}}</td>
                 <td>{{item.level}}</td>
-                <td>{{item.aA}}</td>
-                <td>{{item.aB}}</td>
-                <td>{{item.aC}}</td>
-                <td>{{item.aD}}</td>
-                <td>{{item.correct}}</td>
+                <td>{{item.answerA}}</td>
+                <td>{{item.answerB}}</td>
+                <td>{{item.answerC}}</td>
+                <td>{{item.answerD}}</td>
+                <td>{{item.answerCorrect}}</td>
             </tr>
         </tbody>
       </table>
     <button type="button" class="btn btn-success m-2 border border-dark" (click)="this.save()">Betöltött kérdések mentése</button>
     <button type="button" class="btn btn-danger m-2 border border-dark" (click)="this.delete()">Betöltött kérdések törlése</button>
 </div>
+<!-- FILE IMPORT - END -->
 
+<!-- ALL QUESTIONS - START -->
 <div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark">
     <h4>Összes jelenlegi kérdés:</h4>
     <br>
@@ -183,6 +197,7 @@ Save button
         </tbody>
       </table>
 </div>
+<!-- ALL QUESTIONS - END -->
 
 <footer>
     <p>&copy; 2023 Admin Site. All rights reserved.</p>

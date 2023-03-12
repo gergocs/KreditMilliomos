@@ -107,18 +107,18 @@ th,td{
     }
 }
 
-
-
 //Users_dashboard vége ------------
 
 //Kérdés form eleje ------------
 #questions{
-
     width: $width_of_new_question_dashboard, 100%;
     height: $height_of_dashboards;
     overflow: hidden;
     text-align: center;
     background-color: #6b6b6b;
+    display: block;
+    position: static;
+    z-index: 9;
 }
 
 form{
@@ -133,7 +133,19 @@ h2{
 
 
 // file import styles --- start ---
+#file-import div label{
+    color: black;
+}
 
+#file-import div button{
+    font-size: 1.2em;
+    width: auto;
+}
+
+#file-display button{
+    font-size: 1.2em;
+    width: auto;
+}
 // file import styles --- end ---
 
 @import '../app.component.scss';

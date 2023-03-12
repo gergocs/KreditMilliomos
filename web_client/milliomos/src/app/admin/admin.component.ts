@@ -11,6 +11,7 @@ import { QuestionService } from '../services/question.service'
 import {MatIconModule} from '@angular/material/icon';
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import { waitForAsync } from '@angular/core/testing'
 
 @Component({
   selector: 'app-admin',
@@ -24,13 +25,14 @@ export class AdminPageComponent implements OnInit {
 
   public showForm: boolean = false;
 
-  public visible: boolean = false
-  public error: boolean = false
-  public errorMsg: string = ""
-  public hostname: string = "localhost"
-
+  // VARS FOR FILE IMPORT
+  public importsVisible: boolean = false
+  public importError: boolean = false
+  public importErrorMsg: string = ""
   public file: any
-  public items: any[] = []
+  public Importeditems: Question[] = []
+
+  public hostname: string = "localhost"
 
   public allquestion: Question[] = []
 
@@ -107,19 +109,19 @@ export class AdminPageComponent implements OnInit {
     }
     );
   }
-
+// FILE IMPORT START
   fileChanged(e: any) {
     this.file = e.target.files[0]
   }
 
   load() {
     if(this.file == undefined){
-      this.error = true
-      this.errorMsg = "Nincs fájl kiválasztva!"
+      this.importError = true
+      this.importErrorMsg = "Nincs fájl kiválasztva!"
       return
     }
     else{
-      this.error = false
+      this.importError = false
       this.readFile(this.file)
     }
 
@@ -135,48 +137,75 @@ export class AdminPageComponent implements OnInit {
 
       lines.forEach((line: string) => {
         const words = line.split(';');
-        const obj = {
+        const obj: Question = {
           category: words[0],
           question: words[1],
           level: words[2],
-          a1: words[3],
-          a2: words[4],
-          a3: words[5],
-          a4: words[6],
-          correct: words[7]
+          answerA: words[3],
+          answerB: words[4],
+          answerC: words[5],
+          answerD: words[6],
+          answerCorrect: words[7]
         }
-        this.items.push(obj)
+        this.Importeditems.push(obj)
       });
     };
   }
 
   display(): void{
     // Error handling
-    if(this.items.length == 0){
-      this.error = true
-      this.visible = false
-      this.errorMsg = "Még nincsennek kérdések betöltve!"
+    if(this.Importeditems.length == 0){
+      this.importError = true
+      this.importsVisible = false
+      this.importErrorMsg = "Még nincsennek kérdések betöltve!"
       return
     }
     else{
-      this.error = false
-      this.visible = true
+      this.importError = false
+      this.importsVisible = true
     }
   }
 
-  save(): void{
-    if(this.items.length == 0) return
+  async save(){
+    if(this.Importeditems.length == 0) return
+    this.loading=true
 
-    this.items.forEach((item: any) => {
-      console.log(item)
+    this.Importeditems.forEach(async (item: Question) => {
+      /* // TODO:
+      this.questionService.createQuestion(item, this.userid).subscribe(body => {
+        if( body == null){
+          throw new Error()
+        }
+        this.allquestion.push(item)
+      },(error) => {
+        console.log(error)
+        if(error.status == 200){
+          this.allquestion.push(item)
+        }
+      }) */
+      console.log("asd")
+      await this.questionService.createQuestion(item, this.userid).toPromise().then(body => {
+        if( body == null){
+          throw new Error()
+        }
+        console.log("123")
+        this.allquestion.push(item)
+      }).catch(error => {
+        console.log(error)
+        if(error.status == 200){
+          this.allquestion.push(item)
+        }
+      })
     })
+    this.loading=false
   }
 
   delete(): void{
-    if(this.items.length != 0){
-     this.items.splice(0)
+    if(this.Importeditems.length != 0){
+     this.Importeditems.splice(0)
     }
   }
+// FILE IMPORT END
 
   async deleteexistingquestion(q: string, i: number) {
     this.loading=true
