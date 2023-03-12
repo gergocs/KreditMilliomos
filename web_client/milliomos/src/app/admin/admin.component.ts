@@ -178,8 +178,15 @@ export class AdminPageComponent implements OnInit {
     }
   }
 
-  deleteexistingquestion(q: string) {
-    this.questionService.deleteQuestion(q, this.authservice.user?.uid)
+  async deleteexistingquestion(q: string, i: number) {
+    this.loading=true
+    await this.questionService.deleteQuestion(q, this.authservice.user?.uid).then(thing =>{
+      this.allquestion.splice(i, 1)
+      this.loading=false
+    }).catch(err => {
+      console.log(err)
+      this.loading=false
+    })
   }
 
 

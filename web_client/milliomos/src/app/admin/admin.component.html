@@ -168,7 +168,7 @@ Save button
             <th scope="col">Törlés</th>
           </tr>
         </thead>
-        <tbody *ngFor="let question of allquestion">
+        <tbody *ngFor="let question of allquestion; let i = index" [attr.data-index]="i">
             <tr>
                 <th scope="row">{{question.category}}</th>
                 <td>{{question.question}}</td>
@@ -178,7 +178,7 @@ Save button
                 <td [ngStyle]="{'background-color': (question.answerCorrect=='answerC') ? '#00ff00' : '#ffaaaa'}">{{question.answerC}}</td>
                 <td [ngStyle]="{'background-color': (question.answerCorrect=='answerD') ? '#00ff00' : '#ffaaaa'}">{{question.answerD}}</td>
                 <td>{{question.answerCorrect}}</td>
-                <td><button type="button" class="btn btn-danger m-2 border border-dark material-icons" (click)="this.deleteexistingquestion(question.question)">delete</button></td>
+                <td><button type="button" class="btn btn-danger m-2 border border-dark material-icons" (click)="this.deleteexistingquestion(question.question,i)">delete</button></td>
             </tr>
         </tbody>
       </table>
