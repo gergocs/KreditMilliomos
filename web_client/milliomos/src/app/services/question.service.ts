@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable } from 'rxjs';
@@ -44,5 +44,20 @@ export class QuestionService {
 
     return this.http.post(this.hostname + "question/admin/create", body, {headers: header, responseType: 'text'});
 
+    }
+
+    deleteQuestion(q: string, uid: any){
+      let header = new HttpHeaders()
+        .set("tokenkey", uid)
+      console.log(q)
+      this.http.delete(this.hostname + "question/admin/deleteQuestion", {headers: header, body: {question: q}}).toPromise().then(r => {
+        if (r){
+          console.log(r)
+          window.location.reload()
+        }
+        window.location.reload() //TODO something nicer and faster
+      }).catch(e => {
+        console.log(e)
+      })
     }
 }

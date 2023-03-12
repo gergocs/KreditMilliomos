@@ -12,9 +12,11 @@ class QuestionController {
         this.router.post(this.path + '/admin/create', this.createQuestion)
         this.router.post(this.path + '/admin/import', this.importQuestion)
         this.router.get(this.path + '/admin/getAllQuestion', this.getAllQuestion)
+        this.router.delete(this.path + '/admin/deleteQuestion', this.deleteQuestion)
     }
 
     createQuestion(request: Request, response: Response, next: NextFunction) {
+        //TODO validate input
         sequelize.sync()
             .then(() => {
                 Question.create({
@@ -54,6 +56,28 @@ class QuestionController {
                 next()
             }).catch(error => response.sendStatus(StatusCodes.InternalError))
         }).catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+    }
+
+    deleteQuestion(request: Request, response: Response, next: NextFunction) {
+        let question = request.body.question
+
+        if (!question) {
+            response.sendStatus(StatusCodes.IAmATeaPod)
+            response.end()
+        }
+        console.log(question)
+        sequelize.sync().then(() => {
+            Question.destroy({where: {question: question}}).then(r => {
+                response.sendStatus(StatusCodes.NoContent)
+                response.end()
+            }).catch(error => {
+                response.sendStatus(StatusCodes.InternalError)
+                response.end()
+            })
+        }).catch(error => {
+            response.sendStatus(StatusCodes.ServiceUnavailable)
+            response.end()
+        })
     }
 }
 

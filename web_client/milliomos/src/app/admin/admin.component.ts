@@ -178,8 +178,8 @@ export class AdminPageComponent implements OnInit {
     }
   }
 
-  deleteexistingquestion(q: any) {
-    console.log(q)
+  deleteexistingquestion(q: string) {
+    this.questionService.deleteQuestion(q, this.authservice.user?.uid)
   }
 
 
