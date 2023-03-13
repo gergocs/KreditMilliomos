@@ -1,9 +1,11 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {Router} from '@angular/router';
-import {HttpClient, HttpHeaders} from '@angular/common/http'
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http'
 import firebase from 'firebase/compat/app';
 import {FacebookAuthProvider, getAdditionalUserInfo, GoogleAuthProvider} from '@angular/fire/auth';
+import { UserModell } from '../models/usermodell';
+import { catchError, map, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,21 +18,38 @@ export class AuthService {
     loggedOut: 1,
     loggedIn: 2,
   }
+  bannedUserIDs: string[] | undefined;
+  helperListArray: boolean[] = new Array(1);
   user: firebase.User | undefined;
+  userdata: UserModell | undefined;
+  userList: UserModell[] | undefined;
   authState = this.authStates.unknown;
 
-  constructor(protected auth: AngularFireAuth, protected router: Router, protected http: HttpClient) {
+  hostname: string;
+
+  constructor(private zone:NgZone, protected auth: AngularFireAuth, protected router: Router, protected http: HttpClient) {
+    if(location.hostname == "localhost"){
+      this.hostname = "http://localhost:8080/";
+    }else{
+      this.hostname = "https://kreditmilliomos.mooo.com:80/"
+    }
+
     this.auth.onAuthStateChanged((credential) => {
       if (credential) {
-        console.log(credential);
+
         this.user = credential;
         this.authState = this.authStates.loggedIn;
         this.getUserData();
-        if (router.url == "/login")
-          router.navigate(["/main"])
+        this.getAllUsers();
+        if (router.url == "/login" || router.url == "/register")
+        this.zone.run(() => {
+          //this.router.navigate(['/main']);
+      });
       } else {
         this.authState = this.authStates.loggedOut;
-        router.navigate(["/login"]);
+        this.zone.run(() => {
+          this.router.navigate(['/login']);
+      });
       }
     })
   }
@@ -42,10 +61,22 @@ export class AuthService {
     let token = this.user.uid;
     let header = new HttpHeaders()
       .set("tokenkey", token)
-    this.http.get("http://146.190.205.69:8080/user/get", {headers: header})
-      .subscribe(body => {
-        console.log(body);
-      })
+    await this.http.get<UserModell>(this.hostname + "user/get", {headers: header}).toPromise().then(body =>{
+
+      this.userdata = body
+        if(body?.isAdmin){
+          this.zone.run(() => {
+            this.router.navigate(['/admin']);
+        });
+        }else {
+          this.zone.run(() => {
+            this.router.navigate(['/main']);
+        })
+        }
+    }).catch(error =>{
+      return new Promise((resolve, reject) => {reject();})
+    })
+
   }
 
   async isLoggedIn() {
@@ -56,7 +87,8 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    await this.auth.signInWithEmailAndPassword(email, password);
+    await this.auth.signInWithEmailAndPassword(email, password)
+    return await this.getUserData()
   }
 
   async logout() {
@@ -64,14 +96,18 @@ export class AuthService {
   }
 
   async GoogleAuth() {
-    return this.AuthLogin(new GoogleAuthProvider());
+    await this.AuthLogin(new GoogleAuthProvider()).catch((error)=>{
+      return new Promise((resolve, reject) => {reject();})
+    });
   }
 
   async AuthLogin(provider: any) {
     try {
       const result = await this.auth.signInWithPopup(provider);
 
-      console.log(result.additionalUserInfo?.profile)
+      console.log(result)
+
+      let firstlogin = result.additionalUserInfo?.isNewUser;
 
       //@ts-ignore
       let email=result.additionalUserInfo?.profile?.email
@@ -86,53 +122,122 @@ export class AuthService {
       let nickname=result.additionalUserInfo?.profile?.email.split("@")[0]
       if(!nickname) {nickname = "missingnickname"}
 
-      console.log(email + " " + firstname + " " +  lastname + " " +  nickname)
-
-
-
       if (!this.user)
         return
-
-      if(!this.user.emailVerified)
-      await this.user.sendEmailVerification()
 
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("isoauth", 'true').set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname)
-      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
-        .subscribe(body => {
-          console.log(body);
-        })
+      if(firstlogin){
+          await this.http.post(this.hostname + "user/create", header, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
+            if (body == null){
+              throw new Error() //remeljuk mukodik
+            }
+            console.log(body)
+            console.log("You have been successfully logged in with a new google account!");
+            return await this.getUserData() //mukodik
+          }).catch(error =>{
+            console.log(error)
+            console.log("nem sikerult a DB-be letrehozni a usert")
+            this.delfromfire()
+            return new Promise((resolve, reject) => {reject();}) //mukodik
+          })
+        }else{
+            return await this.getUserData() //mukodik
+        }
 
-      console.log("You have been successfully logged in!");
+
     } catch (error) {
-      console.log(error);
+      return new Promise((resolve, reject) => {reject();}) //mukodik
     }
   }
 
-  signup(email: string, nickname: string, firstname: string, lastname: string, password: string, passwordagain: string) {
+  async signup(email: string, nickname: string, firstname: string, lastname: string, password: string, passwordagain: string) {
 
     if (password != passwordagain) {
       return
     }
-    this.auth.createUserWithEmailAndPassword(email, password).then(cred => {
+    await this.auth.createUserWithEmailAndPassword(email, password).then(async cred => {
       if (!this.user)
         return
-
-      this.user.sendEmailVerification().then(() => {
-        window.alert("Erősítsd meg az e-mail címedet!");
-        this.router.navigate(["/login"]);
-      });
 
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token).set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname).set("admin", "false")
-      this.http.post("http://146.190.205.69:8080/user/create", null, {headers: header})
-        .subscribe(body => {
-          console.log(body);
-        })
+      await this.http.post(this.hostname + "user/create", null, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
+        console.log(body)
+        if (body == null){
+          throw new Error() //remeljuk mukodik
+        }
+        if (this.user)
+        this.user.sendEmailVerification().then(() => {
+          window.alert("Erősítsd meg az e-mail címedet!");
+          this.zone.run(() => {
+            this.router.navigate(['/login']);
+        });
+        });
+      }).catch(error =>{
+        console.log(error)
+        console.log("nem sikerult a DB-be letrehozni a usert regnel")
+        this.delfromfire()
+        return new Promise((resolve, reject) => {reject();}) //tesztre var TODO
+      })
     });
 
 
   }
+
+  async getAllUsers(){
+    try{
+      if (!this.user)
+        return
+      let token = this.user.uid;
+      let header = new HttpHeaders()
+        .set("tokenkey", token)
+      await this.http.get<UserModell[]>(this.hostname + "user/admin/getAllUsers", {headers: header})
+        .subscribe(async (body) => {
+          this.userList = body;
+         this.helperListArray = new Array(body.length);
+          await this.bannedUserList();
+          body.forEach((user, index) => {
+            if(this.bannedUserIDs && this.helperListArray)
+            {
+              this.helperListArray[index] = this.bannedUserIDs?.includes(user.tokenKey);
+            }
+
+          });
+        })
+    }catch(error){
+      console.log(error);
+      return new Promise((resolve, reject) => {reject();})
+    }
+  }
+
+
+
+  async bannedUserList() {
+    if (!this.user)
+      return
+
+    let token = this.user.uid;
+    let header = new HttpHeaders().set("tokenkey",token)//json egyből alakítható
+    await this.http.get<string[]>(this.hostname + "user/admin/getBannedUsers", {headers: header}).toPromise().then(async body => {
+      if (body == null) {
+        throw new Error()
+      }
+
+      this.bannedUserIDs = body;
+
+    }).catch(error =>{
+
+      console.log(error)
+    })
+
+  }
+
+  async delfromfire(){
+    this.user?.delete();
+  }
+
+
 }

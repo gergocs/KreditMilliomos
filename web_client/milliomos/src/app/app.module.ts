@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegistrationComponent } from './registration/registration.component';
@@ -13,6 +13,12 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminPageComponent } from './admin/admin.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import {MatButtonModule} from "@angular/material/button";
+
+
 
 @NgModule({
   declarations: [
@@ -20,15 +26,20 @@ import { AdminPageComponent } from './admin/admin.component';
     RegistrationComponent,
     LoginComponent,
     MainComponent,
-    AdminPageComponent
+    AdminPageComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
     provideAuth(() => getAuth()),
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
