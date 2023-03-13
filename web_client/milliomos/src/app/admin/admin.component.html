@@ -1,4 +1,4 @@
-<!--TODO! 
+<!--TODO!
 Form for adding a new question
 GIVEN as an administrator
 WHEN I log in and land on the administrator main page
@@ -16,68 +16,189 @@ AnswerC:Mandatory. Answer for choice D
 Correct Answer:Mandatory: Letter in A,B,C,D
 Save button
 -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<div [hidden]="!loading" class="loading"><img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading_animation"></div>
 
+<!-- NAVBAR - START -->
 <nav id="navbar">
     <li>Admin oldal</li>
-    <li>Valami</li>
-    <li>Valami</li>
-    <li>Kijelentkezés</li>
-    
+    <li (click)="showForm = true">Új kérdés</li>
+    <li (click)="this.router.navigate(['/main']);">Főoldal</li>
+    <li (click)="this.authservice.logout()">Kijelentkezés</li>
+
     <div id="dot"></div>
 </nav>
-<div id="admin_page">
-    <div id="users_dashboard">
-        <!-- User data management -- Máté -->
-        <p>Felhasználók</p>
-        <div id="users_dashboard_datas">
-            ide dolgozz fiam
-        </div>
-        
-    </div>
+<!-- NAVBAR - END -->
+
+<!-- NEW QUESTION - START -->
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark" style="max-width: 740px;" *ngIf="showForm">
     <div id="questions">
-        <form>
+        <form [formGroup]="questionForm" (ngSubmit)="onCreateQuestion()">
+
             <h2>Új kérdés</h2>
+
             <div>
                 <label for="category">Kategória: *</label>
-                <input type="text" id="category" placeholder="Elektronika" name="category" required>
+                <input type="text" id="category" placeholder="Elektronika" formControlName="category" required>
             </div>
             <div>
                 <label for="question">Kérdés: *</label>
-                <input type="textarea" id="question" name="question" minlength="6" required>
+                <input type="textarea" id="question" formControlName="question" minlength="6" required>
+            </div>
+            <div>
+                <label for="level">Nehézség: *</label>
+                <input type="number" id="level" formControlName="level" required>
             </div>
             <div>
                 <label for="answerA">'A' válasz: *</label>
-                <input type="text" id="answerA" name="answerA" required>
+                <input type="text" id="answerA" formControlName="answerA" required>
             </div>
             <div>
                 <label for="answerB">'B' válasz: *</label>
-                <input type="text" id="answerB" name="answerB" required>
+                <input type="text" id="answerB" formControlName="answerB" required>
             </div>
             <div>
                 <label for="answerC">'C' válasz: *</label>
-                <input type="text" id="answerC" name="answerC" required>
+                <input type="text" id="answerC" formControlName="answerC" required>
             </div>
             <div>
                 <label for="answerD">'D' válasz: *</label>
-                <input type="text" id="answerD" name="answerD" required>
+                <input type="text" id="answerD" formControlName="answerD" required>
             </div>
             <div>
                 <label for="correctAnswer">Helyes válasz: *</label>
-                <select id="correctAnswer" name="correctAnswer" required>
-                    <option value="answerA">A</option>
-                    <option value="answerB">B</option>
-                    <option value="answerC">C</option>
-                    <option value="answerD">D</option>
+                <select id="correctAnswer" formControlName="correctAnswer" required>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
                 </select>
             </div>
-            <div className="question_buttons">
-            <button type="submit" className="submit_question_button">Mentés</button>
-            <button type="cancel" className="cancel_question_button">Mégse</button>
-        </div>
+            <!-- BUTTONS -->
+            <div id="buttons">
+                <button type="submit" id="submit_question_button">Mentés</button>
+                <button type="reset" id="cancel_question_button" >Mégse</button>
+            </div>
         </form>
     </div>
 </div>
+<!-- NEW QUESTION - END -->
+
+<!-- USERS - START -->
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark" style="max-width: 740px;">
+    <div id="admin_page">
+        <div id="users_dashboard">
+            <h5>Felhasználók</h5>
+            <div id="users_dashboard_datas">
+                <table>
+                    <thead>
+                        <th>Felhasználónév</th>
+                        <th>E-mail</th>
+                        <th>Vezetéknév</th>
+                        <th>Keresztnév</th>
+                        <th>Tiltás/Feloldás</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of authservice.userList; let i = index" [attr.data-index]="i">
+                            <td>{{user.name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.firstName}}</td>
+                            <td>{{user.lastName}}</td>
+                            <td *ngIf="authservice.helperListArray[i]" (click)="this.banUser(user.tokenKey, false,i)"><button mat-raised-button color="primary" [class.mat-elevation-z4]="true">Unban<mat-icon>check_circle</mat-icon></button></td>
+                            <td *ngIf="!authservice.helperListArray[i]" (click)="this.banUser(user.tokenKey,true,i)"><button mat-raised-button color="warn" [class.mat-elevation-z4]="true">Ban<mat-icon>cancel</mat-icon></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- USERS - END -->
+
+<!-- FILE IMPORT - START -->
+<div id="file-import" class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark" style="max-width: 640px;">
+    <h4 class="import-label">Importálás fájlból</h4>
+    <div *ngIf="importError" class="alert alert-danger" role="alert">
+        {{importErrorMsg}}
+    </div>
+    <div class="mb-3">
+        <label for="formFileSm" class="form-label">Kérdéseket tartalmazó .csv fájl megnyitása</label>
+        <input class="form-control form-control-sm border border-dark" id="formFileSm" type="file" style="width: 360px; color: black;" (change)="this.fileChanged($event)">
+        <br>
+        <button type="button" class="btn btn-secondary m-2 border border-dark" (click)="this.load()">Betöltés</button>
+        <button type="button" class="btn btn-info m-2 border border-dark" (click)="this.display()">Betöltött kérdések megjelenítése</button>
+    </div>
+</div>
+
+<div id="file-display" *ngIf="importsVisible" class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark">
+    <h4>Betöltött kérdések:</h4>
+    <br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Kategória</th>
+            <th scope="col">Kérdés</th>
+            <th scope="col">Nehézség</th>
+            <th scope="col">Válasz A</th>
+            <th scope="col">Válasz B</th>
+            <th scope="col">Válasz C</th>
+            <th scope="col">Válasz D</th>
+            <th scope="col">Megfejtés</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let item of Importeditems">
+            <tr>
+                <th scope="row">{{item.category}}</th>
+                <td>{{item.question}}</td>
+                <td>{{item.level}}</td>
+                <td>{{item.answerA}}</td>
+                <td>{{item.answerB}}</td>
+                <td>{{item.answerC}}</td>
+                <td>{{item.answerD}}</td>
+                <td>{{item.answerCorrect}}</td>
+            </tr>
+        </tbody>
+      </table>
+    <button type="button" class="btn btn-success m-2 border border-dark" (click)="this.save()">Betöltött kérdések mentése</button>
+    <button type="button" class="btn btn-danger m-2 border border-dark" (click)="this.delete()">Betöltött kérdések törlése</button>
+</div>
+<!-- FILE IMPORT - END -->
+
+<!-- ALL QUESTIONS - START -->
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark">
+    <h4>Összes jelenlegi kérdés:</h4>
+    <br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Kategória</th>
+            <th scope="col">Kérdés</th>
+            <th scope="col">Nehézség</th>
+            <th scope="col">Válasz A</th>
+            <th scope="col">Válasz B</th>
+            <th scope="col">Válasz C</th>
+            <th scope="col">Válasz D</th>
+            <th scope="col">Megfejtés</th>
+            <th scope="col">Törlés</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let question of allquestion; let i = index" [attr.data-index]="i">
+            <tr>
+                <th scope="row">{{question.category}}</th>
+                <td>{{question.question}}</td>
+                <td>{{question.level}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='A') ? '#00ff00' : '#ffaaaa'}">{{question.answerA}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='B') ? '#00ff00' : '#ffaaaa'}">{{question.answerB}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='C') ? '#00ff00' : '#ffaaaa'}">{{question.answerC}}</td>
+                <td [ngStyle]="{'background-color': (question.answerCorrect=='D') ? '#00ff00' : '#ffaaaa'}">{{question.answerD}}</td>
+                <td>{{question.answerCorrect}}</td>
+                <td><button type="button" class="btn btn-danger m-2 border border-dark material-icons" (click)="this.deleteexistingquestion(question.question,i)">delete</button></td>
+            </tr>
+        </tbody>
+      </table>
+</div>
+<!-- ALL QUESTIONS - END -->
+
 <footer>
     <p>&copy; 2023 Admin Site. All rights reserved.</p>
 </footer>
-
