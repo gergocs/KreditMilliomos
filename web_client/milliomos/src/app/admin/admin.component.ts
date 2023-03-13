@@ -53,6 +53,7 @@ export class AdminPageComponent implements OnInit {
 
   ngOnInit(){
    this.loading=true
+    this.authservice.getAllUsers()
     this.auth.onAuthStateChanged((credential) =>{this.userid = credential?.uid;
       this.questionService.getAllQuestion(this.userid).subscribe(body => {
         this.allquestion = body

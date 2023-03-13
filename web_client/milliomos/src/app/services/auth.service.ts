@@ -39,8 +39,6 @@ export class AuthService {
 
         this.user = credential;
         this.authState = this.authStates.loggedIn;
-        this.getUserData();
-        this.getAllUsers();
         if (router.url == "/login" || router.url == "/register")
         this.zone.run(() => {
           //this.router.navigate(['/main']);
