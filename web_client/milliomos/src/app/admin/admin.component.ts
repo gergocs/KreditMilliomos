@@ -170,33 +170,18 @@ export class AdminPageComponent implements OnInit {
     if(this.Importeditems.length == 0) return
     this.loading=true
 
-    this.Importeditems.forEach(async (item: Question) => {
-      /* // TODO:
-      this.questionService.createQuestion(item, this.userid).subscribe(body => {
+    
+      await this.questionService.importQuestions(this.Importeditems, this.userid).toPromise().then(body => {
         if( body == null){
           throw new Error()
         }
-        this.allquestion.push(item)
-      },(error) => {
-        console.log(error)
-        if(error.status == 200){
-          this.allquestion.push(item)
-        }
-      }) */
-      console.log("asd")
-      await this.questionService.createQuestion(item, this.userid).toPromise().then(body => {
-        if( body == null){
-          throw new Error()
-        }
-        console.log("123")
-        this.allquestion.push(item)
+        this.allquestion= this.allquestion.concat(this.Importeditems)
       }).catch(error => {
         console.log(error)
         if(error.status == 200){
-          this.allquestion.push(item)
+          this.allquestion= this.allquestion.concat(this.Importeditems)
         }
       })
-    })
     this.loading=false
   }
 

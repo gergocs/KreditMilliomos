@@ -46,6 +46,14 @@ export class QuestionService {
 
     }
 
+    importQuestions(q: Question[], uid: any){
+      let header = new HttpHeaders()
+      .set("tokenkey", uid)
+    
+      return this.http.post(this.hostname + "question/admin/import", q, {headers: header, responseType: 'text'});
+  
+      }
+
     async deleteQuestion(q: string, uid: any){
       let header = new HttpHeaders()
         .set("tokenkey", uid)
