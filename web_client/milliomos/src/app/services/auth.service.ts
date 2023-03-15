@@ -125,7 +125,12 @@ export class AuthService {
 
       let token = this.user.uid;
       let header = new HttpHeaders()
-        .set("tokenkey", token).set("isoauth", 'true').set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname)
+        .set("tokenkey", token)
+        .set("isoauth", 'true')
+        .set("email", encodeURIComponent(email))
+        .set("nickname", encodeURIComponent(nickname))
+        .set("firstname", encodeURIComponent(firstname))
+        .set("lastname", encodeURIComponent(lastname))
       if(firstlogin){
           await this.http.post(this.hostname + "user/create", header, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
             if (body == null){
@@ -161,7 +166,12 @@ export class AuthService {
 
       let token = this.user.uid;
       let header = new HttpHeaders()
-        .set("tokenkey", token).set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname).set("admin", "false")
+        .set("tokenkey", token)
+        .set("email", encodeURIComponent(email))
+        .set("nickname", encodeURIComponent(nickname))
+        .set("firstname", encodeURIComponent(firstname))
+        .set("lastname", encodeURIComponent(lastname))
+        .set("admin", "false")
       await this.http.post(this.hostname + "user/create", null, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
         console.log(body)
         if (body == null){
@@ -195,7 +205,15 @@ export class AuthService {
       await this.http.get<UserModell[]>(this.hostname + "user/admin/getAllUsers", {headers: header})
         .subscribe(async (body) => {
           this.userList = body;
-         this.helperListArray = new Array(body.length);
+
+          this.userList.forEach(u=>{
+            u.name = decodeURIComponent(u.name)
+            u.firstName = decodeURIComponent(u.firstName)
+            u.lastName = decodeURIComponent(u.lastName)
+            u.email = decodeURIComponent(u.email)
+          })
+
+          this.helperListArray = new Array(body.length);
           await this.bannedUserList();
           body.forEach((user, index) => {
             if(this.bannedUserIDs && this.helperListArray)

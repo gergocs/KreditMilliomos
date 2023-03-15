@@ -32,14 +32,14 @@ export class QuestionService {
     let header = new HttpHeaders()
     .set("tokenkey", uid)
     let body = {
-      category: q.category,
-      question: q.question,
-      level: q.level,
-      answerA: q.answerA,
-      answerB: q.answerB,
-      answerC: q.answerC,
-      answerD: q.answerD,
-      answerCorrect: q.answerCorrect
+      category: encodeURIComponent(q.category),
+      question: encodeURIComponent(q.question),
+      level: encodeURIComponent(q.level),
+      answerA: encodeURIComponent(q.answerA),
+      answerB: encodeURIComponent(q.answerB),
+      answerC: encodeURIComponent(q.answerC),
+      answerD: encodeURIComponent(q.answerD),
+      answerCorrect: encodeURIComponent(q.answerCorrect)
     }
 
     return this.http.post(this.hostname + "question/admin/create", body, {headers: header, responseType: 'text'});

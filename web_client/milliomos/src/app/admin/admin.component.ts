@@ -57,6 +57,16 @@ export class AdminPageComponent implements OnInit {
     this.auth.onAuthStateChanged((credential) =>{this.userid = credential?.uid;
       this.questionService.getAllQuestion(this.userid).subscribe(body => {
         this.allquestion = body
+
+        this.allquestion.forEach(q => {
+          q.category = decodeURIComponent(q.category)
+          q.question = decodeURIComponent(q.question)
+          q.answerA = decodeURIComponent(q.answerA)
+          q.answerB = decodeURIComponent(q.answerB)
+          q.answerC = decodeURIComponent(q.answerC)
+          q.answerD = decodeURIComponent(q.answerD)
+        })
+
         this.loading=false
 
       },(error: any) => {
@@ -216,7 +226,7 @@ export class AdminPageComponent implements OnInit {
             tokenkey: tokenKey
           }
           let header = new HttpHeaders().set("tokenkey", this.userid)
-          await this.http.post((this.hostname == "localhost" ? "http://localhost:8080/" : "https://kreditmilliomos.mooo.com:80/") + "user/admin/ban", body, {
+          await this.http.post((location.hostname == "localhost" ? "http://localhost:8080/" : "https://kreditmilliomos.mooo.com:80/") + "user/admin/ban", body, {
             headers: header,
             responseType: 'text'
           }).toPromise().then(async body => {
