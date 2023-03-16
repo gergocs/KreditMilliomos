@@ -17,6 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import {MatButtonModule} from "@angular/material/button";
+import { ProfileComponent } from './profile/profile.component';
+import { LobbyComponent } from './lobby/lobby.component';
 
 
 
@@ -27,7 +29,9 @@ import {MatButtonModule} from "@angular/material/button";
     LoginComponent,
     MainComponent,
     AdminPageComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    ProfileComponent,
+    LobbyComponent
   ],
   imports: [
     BrowserModule,

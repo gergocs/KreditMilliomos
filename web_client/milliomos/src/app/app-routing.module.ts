@@ -4,7 +4,17 @@ import { LoginComponent } from './login/login.component';
 import { MainComponent } from './main/main.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { AdminPageComponent } from './admin/admin.component';
+import { ProfileComponent } from './profile/profile.component';
+import { LobbyComponent } from './lobby/lobby.component';
 const routes: Routes = [
+  {
+    path: 'lobby',
+    component: LobbyComponent
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent
+  },
   {
     path: 'login',
     component: LoginComponent
