@@ -4,6 +4,7 @@ export enum StatusCodes {
     Ok = 200,
     NoContent = 204,
     //400 - ClientError
+    BadRequest = 400,
     Unauthorized = 401,
     NotFound = 404,
 

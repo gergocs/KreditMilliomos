@@ -181,7 +181,7 @@ export class AdminPageComponent implements OnInit {
     if(this.Importeditems.length == 0) return
     this.loading=true
 
-    
+
       await this.questionService.importQuestions(this.Importeditems, this.userid).toPromise().then(body => {
         if( body == null){
           throw new Error()
@@ -226,7 +226,7 @@ export class AdminPageComponent implements OnInit {
             tokenkey: tokenKey
           }
           let header = new HttpHeaders().set("tokenkey", this.userid)
-          await this.http.post((location.hostname == "localhost" ? "http://localhost:8080/" : "https://kreditmilliomos.mooo.com:80/") + "user/admin/ban", body, {
+          await this.http.put((location.hostname == "localhost" ? "http://localhost:8080/" : "https://kreditmilliomos.mooo.com:80/") + "user/admin/ban", body, {
             headers: header,
             responseType: 'text'
           }).toPromise().then(async body => {

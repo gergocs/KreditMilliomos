@@ -59,7 +59,7 @@ export class AuthService {
     let token = this.user.uid;
     let header = new HttpHeaders()
       .set("tokenkey", token)
-    await this.http.get<UserModell>(this.hostname + "user/get", {headers: header}).toPromise().then(body =>{
+    await this.http.get<UserModell>(this.hostname + "user", {headers: header}).toPromise().then(body =>{
 
       this.userdata = body
         if(body?.isAdmin){
@@ -132,7 +132,7 @@ export class AuthService {
         .set("firstname", encodeURIComponent(firstname))
         .set("lastname", encodeURIComponent(lastname))
       if(firstlogin){
-          await this.http.post(this.hostname + "user/create", header, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
+          await this.http.post(this.hostname + "user", header, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
             if (body == null){
               throw new Error() //remeljuk mukodik
             }
@@ -172,7 +172,7 @@ export class AuthService {
         .set("firstname", encodeURIComponent(firstname))
         .set("lastname", encodeURIComponent(lastname))
         .set("admin", "false")
-      await this.http.post(this.hostname + "user/create", null, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
+      await this.http.post(this.hostname + "user", null, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
         console.log(body)
         if (body == null){
           throw new Error() //remeljuk mukodik
@@ -202,7 +202,7 @@ export class AuthService {
       let token = this.user.uid;
       let header = new HttpHeaders()
         .set("tokenkey", token)
-      await this.http.get<UserModell[]>(this.hostname + "user/admin/getAllUsers", {headers: header})
+      await this.http.get<UserModell[]>(this.hostname + "user/admin/allUsers", {headers: header})
         .subscribe(async (body) => {
           this.userList = body;
 
@@ -237,7 +237,7 @@ export class AuthService {
 
     let token = this.user.uid;
     let header = new HttpHeaders().set("tokenkey",token)//json egyből alakítható
-    await this.http.get<string[]>(this.hostname + "user/admin/getBannedUsers", {headers: header}).toPromise().then(async body => {
+    await this.http.get<string[]>(this.hostname + "user/admin/bannedUsers", {headers: header}).toPromise().then(async body => {
       if (body == null) {
         throw new Error()
       }
