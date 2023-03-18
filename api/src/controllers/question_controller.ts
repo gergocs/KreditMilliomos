@@ -9,10 +9,10 @@ class QuestionController {
     public router = Router()
 
     constructor() {
-        this.router.post(this.path + '/admin/create', this.createQuestion)
+        this.router.get(this.path + '/admin/allQuestion', this.getAllQuestion)
         this.router.post(this.path + '/admin/import', this.importQuestion)
-        this.router.get(this.path + '/admin/getAllQuestion', this.getAllQuestion)
-        this.router.delete(this.path + '/admin/deleteQuestion', this.deleteQuestion)
+        this.router.post(this.path + '/admin', this.createQuestion)
+        this.router.delete(this.path + '/admin', this.deleteQuestion)
     }
 
     createQuestion(request: Request, response: Response, next: NextFunction) {
@@ -31,10 +31,17 @@ class QuestionController {
                 })
                     .then(data => {
                         response.sendStatus(StatusCodes.Ok)
+                        response.end()
                     })
-                    .catch(error => response.sendStatus(StatusCodes.InternalError))
+                    .catch(error => {
+                        response.sendStatus(StatusCodes.InternalError)
+                        response.end()
+                    })
             })
-            .catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+            .catch(error => {
+                response.sendStatus(StatusCodes.ServiceUnavailable)
+                response.end()
+            })
     }
 
     importQuestion(request: Request, response: Response, next: NextFunction) {
@@ -43,19 +50,32 @@ class QuestionController {
                 Question.bulkCreate(request.body)
                     .then(data => {
                         response.sendStatus(StatusCodes.Ok)
+                        response.end()
                     })
-                    .catch(error => response.sendStatus(StatusCodes.InternalError))
+                    .catch(error => {
+                        response.sendStatus(StatusCodes.InternalError)
+                        response.end()
+                    })
             })
-            .catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+            .catch(error => {
+                response.sendStatus(StatusCodes.ServiceUnavailable)
+                response.end()
+            })
     }
 
     getAllQuestion(request: Request, response: Response, next: NextFunction) {
         sequelize.sync().then(() => {
             Question.findAll().then(data => {
                 response.send(data)
-                next()
-            }).catch(error => response.sendStatus(StatusCodes.InternalError))
-        }).catch(error => response.sendStatus(StatusCodes.ServiceUnavailable))
+                response.end()
+            }).catch(error => {
+                response.sendStatus(StatusCodes.InternalError)
+                response.end()
+            })
+        }).catch(error => {
+            response.sendStatus(StatusCodes.ServiceUnavailable)
+            response.end()
+        })
     }
 
     deleteQuestion(request: Request, response: Response, next: NextFunction) {
@@ -65,7 +85,7 @@ class QuestionController {
             response.sendStatus(StatusCodes.IAmATeaPod)
             response.end()
         }
-        console.log(question)
+
         sequelize.sync().then(() => {
             Question.destroy({where: {question: question}}).then(r => {
                 response.sendStatus(StatusCodes.NoContent)
