@@ -1,5 +1,6 @@
 import {StatusCodes} from "./StatusCodes";
 import Game from "./game";
+import {GameModes} from "./gameModes";
 
 class RunningGameStorage {
     private static runningGameStorage: RunningGameStorage
@@ -18,13 +19,13 @@ class RunningGameStorage {
         return this.runningGameStorage
     }
 
-    startGame(token: string, category: string) {
+    startGame(token: string, category: string, difficulty: GameModes) {
         if (this.isGameRunning(token)) {
             return StatusCodes.Unauthorized
         }
 
         const timeRemaining = Date.now() + (this.mInMS * 15) //TODO: maybe change time
-        this.runningGames.set(<string>token, new Game(timeRemaining, category, false)) //TODO: Implement hardCore
+        this.runningGames.set(<string>token, new Game(timeRemaining, category, difficulty)) //TODO: Implement hardCore
         return StatusCodes.Ok
     }
 
