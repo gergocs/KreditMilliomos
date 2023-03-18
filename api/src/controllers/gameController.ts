@@ -16,13 +16,18 @@ class GameController {
 
     startGame(request: Request, response: Response, next: NextFunction): void {
         let category = request.headers.category
+        let difficulty = request.headers.difficulty
 
         //TODO: more validation e.g. isValidCategory? isValidString? etc.
         if (!category || typeof category !== "string" || Array.isArray(category)){
             response.sendStatus(StatusCodes.NotFound)
         }
 
-        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>category))
+        if (!difficulty || isNaN(Number(difficulty)) || Array.isArray(difficulty) || Number(difficulty) < 0 || Number(difficulty) > 2){
+            response.sendStatus(StatusCodes.NotFound)
+        }
+
+        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>category,  <number><unknown>difficulty))
     }
 
     getTime(request: Request, response: Response, next: NextFunction) {

@@ -1,5 +1,6 @@
 import Question from "../models/question";
 import {sequelize} from "../db/sequelizeConnector";
+import {GameModes} from "./gameModes";
 
 class Game {
     private readonly _time: Number /* end of (game) time represented in unix epoch */
@@ -8,16 +9,18 @@ class Game {
     private half: boolean /* half the questions */
     private mobile: boolean /* mobile help TODO: find solution to implement this to the game */
     private audience: boolean /* random help */
-    private hardCore: boolean /* almost unwinnable level for Electronics and similar subjects */
+    private difficulty: GameModes /* difficulty of the game*/
+    private level: number /* current level */
 
-    constructor(time: number, subject: string, hardCore: boolean) {
+    constructor(time: number, subject: string, difficulty: GameModes) {
         this._time = time
         this.question = undefined
         this.category = subject
         this.half = true
         this.mobile = true
         this.audience = true
-        this.hardCore = hardCore
+        this.difficulty = difficulty
+        this.level = 0
     }
 
     get time(): Number {
@@ -25,14 +28,14 @@ class Game {
     }
 
     generateQuestion() {
-        if (this.question?.level == 15) {
+        if (this.level == 15) {
             // TODO win
         }
         sequelize.sync()
             .then(() => {
                 Question.findAndCountAll({
                     where: {
-                        level: (!this.question ? 1 : this.question.level + 1),
+                        level: (!this.question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this.question.level + 1), 15))), // TODO: Check if this is good
                         category: this.category
                     }
                 })
@@ -172,10 +175,7 @@ class Game {
             throw new GameException("The game dont generated question")
         }
 
-        if (!this.mobile) {
-            throw new GameException("The user already used half")
-        }
-
+        this.level++
         return answer === this.question.answerCorrect
     }
 
