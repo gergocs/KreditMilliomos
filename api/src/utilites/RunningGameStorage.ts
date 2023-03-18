@@ -19,13 +19,19 @@ class RunningGameStorage {
         return this.runningGameStorage
     }
 
-    startGame(token: string, category: string, difficulty: GameModes) {
+    startGame(token: string, category: string) {
+
         if (this.isGameRunning(token)) {
+            
             return StatusCodes.Unauthorized
         }
 
-        const timeRemaining = Date.now() + (this.mInMS * 15) //TODO: maybe change time
-        this.runningGames.set(<string>token, new Game(timeRemaining, category, difficulty)) //TODO: Implement hardCore
+        //TODO: maybe change time
+        const timeRemaining = Date.now() + (this.mInMS * 15)
+        this.runningGames.set(<string>token, new Game(timeRemaining, category, false))
+        
+        //TODO: Implement hardCore
+
         return StatusCodes.Ok
     }
 
@@ -45,7 +51,8 @@ class RunningGameStorage {
 
 
     private isGameRunning(token: string): boolean {
-        return !this.runningGames.has(<string>token) || (this.runningGames.get(token) == undefined)
+        
+        return this.runningGames.has(<string>token) || !this.runningGames.get(token) == undefined
     }
 }
 

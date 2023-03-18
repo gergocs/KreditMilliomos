@@ -3,6 +3,7 @@ import {sequelize} from "../db/sequelizeConnector";
 import {GameModes} from "./gameModes";
 
 class Game {
+
     private readonly _time: Number /* end of (game) time represented in unix epoch */
     private question: Question | undefined /* current question */
     private category: string /* current question */
@@ -12,25 +13,29 @@ class Game {
     private difficulty: GameModes /* difficulty of the game*/
     private level: number /* current level */
 
-    constructor(time: number, subject: string, difficulty: GameModes) {
+    constructor(time: number, subject: string, hardCore: boolean) {
+        
         this._time = time
         this.question = undefined
         this.category = subject
         this.half = true
         this.mobile = true
         this.audience = true
-        this.difficulty = difficulty
-        this.level = 0
+        //this.hardCore = hardCore
     }
 
     get time(): Number {
-        return this._time;
+        return this._time
     }
 
-    generateQuestion() {
-        if (this.level == 15) {
-            // TODO win
+
+    generateQuestion(): Question {
+
+        if (this.question?.level == 15) {
+            
+            //TODO: winning
         }
+
         sequelize.sync()
             .then(() => {
                 Question.findAndCountAll({
@@ -43,6 +48,10 @@ class Game {
                         this.question = rows[this.getRandomInt(0, count)]
                     })
             })
+        
+            
+        //mivel a question adatatag private ezért egy másolatot adok vissza belőle
+        return structuredClone(<Question>this.question)
     }
 
     useHalf(): Question {
@@ -124,8 +133,8 @@ class Game {
         return this.question
     }
 
-    // TODO: Find solution to implement it
-    useMobile(): Question {
+    useMobile(): string {
+        
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
@@ -134,12 +143,16 @@ class Game {
             throw new GameException("The user already used half")
         }
 
+        const myAnswers = [this.question.answerA, this.question.answerB, this.question.answerC, this.question.answerD]
+        const probabilityMassOfMyAnswers = [0.4, 0.9, 0.4, 0.4]
+        const answerIGot = this.getWeightedRandom(myAnswers, probabilityMassOfMyAnswers)
+
         this.mobile = false
-        return this.question
+        return answerIGot
     }
 
-    /* TODO: add more weight for the correct answer */
     useAudience(): string {
+
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
@@ -148,26 +161,12 @@ class Game {
             throw new GameException("The user already used half")
         }
 
-        let randomNumber = this.getRandomInt(0, 3) // Random number between 0-3
-        this.audience = false
+        const myAnswers = [this.question.answerA, this.question.answerB, this.question.answerC, this.question.answerD]
+        const probabilityMassOfMyAnswers = [0.5, 0.8, 0.1, 0.3]
+        const answerIGot = this.getWeightedRandom(myAnswers, probabilityMassOfMyAnswers)
 
-        switch (randomNumber) {
-            case 0: {
-                return this.question.answerA
-            }
-            case 1: {
-                return this.question.answerB
-            }
-            case 2: {
-                return this.question.answerC
-            }
-            case 3: {
-                return this.question.answerD
-            }
-            default: {
-                throw new GameException("Unreachable case reached")
-            }
-        }
+        this.audience = false
+        return answerIGot
     }
 
     checkAnswer(answer: string): boolean {
@@ -182,6 +181,15 @@ class Game {
     private getRandomInt(min, max): number {
         min = Math.ceil(min)
         return Math.floor(Math.random() * (Math.floor(max) - min + 1)) + min
+    }
+
+    private getWeightedRandom(answerOptions: Array<string>, probabilityMassOfMyAnswers: Array<number>) {
+        
+        const cumulativeDistribution = probabilityMassOfMyAnswers.map((sum => value => sum += value)(0))
+        const myRandom = Math.random()
+        const indexOfWeightedRandom = cumulativeDistribution.filter(e => myRandom >= e).length
+
+        return answerOptions[indexOfWeightedRandom]
     }
 }
 
