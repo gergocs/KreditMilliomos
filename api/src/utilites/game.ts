@@ -4,7 +4,7 @@ import {GameModes} from "./gameModes";
 
 class Game {
 
-    private readonly _time: Number /* end of (game) time represented in unix epoch */
+    private readonly _time: number /* end of (game) time represented in unix epoch */
     private question: Question | undefined /* current question */
     private category: string /* current question */
     private half: boolean /* half the questions */
@@ -13,26 +13,22 @@ class Game {
     private difficulty: GameModes /* difficulty of the game*/
     private level: number /* current level */
 
-    constructor(time: number, subject: string, hardCore: boolean) {
-        
+    constructor(time: number, subject: string, difficulty: GameModes) {
         this._time = time
         this.question = undefined
         this.category = subject
         this.half = true
         this.mobile = true
         this.audience = true
-        //this.hardCore = hardCore
+        this.difficulty = difficulty
     }
 
-    get time(): Number {
+    get time(): number {
         return this._time
     }
 
-
     generateQuestion(): Question {
-
-        if (this.question?.level == 15) {
-            
+        if (this.level == 15) {
             //TODO: winning
         }
 
@@ -48,9 +44,7 @@ class Game {
                         this.question = rows[this.getRandomInt(0, count)]
                     })
             })
-        
-            
-        //mivel a question adatatag private ezért egy másolatot adok vissza belőle
+
         return structuredClone(<Question>this.question)
     }
 
@@ -134,7 +128,6 @@ class Game {
     }
 
     useMobile(): string {
-        
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
@@ -146,7 +139,6 @@ class Game {
         const myAnswers = [this.question.answerA, this.question.answerB, this.question.answerC, this.question.answerD]
         const probabilityMassOfMyAnswers = [0.4, 0.9, 0.4, 0.4]
         const answerIGot = this.getWeightedRandom(myAnswers, probabilityMassOfMyAnswers)
-
         this.mobile = false
         return answerIGot
     }
@@ -184,7 +176,6 @@ class Game {
     }
 
     private getWeightedRandom(answerOptions: Array<string>, probabilityMassOfMyAnswers: Array<number>) {
-        
         const cumulativeDistribution = probabilityMassOfMyAnswers.map((sum => value => sum += value)(0))
         const myRandom = Math.random()
         const indexOfWeightedRandom = cumulativeDistribution.filter(e => myRandom >= e).length
