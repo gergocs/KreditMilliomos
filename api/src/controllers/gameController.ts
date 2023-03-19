@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction, Router } from 'express'
+import {Request, Response, NextFunction, Router} from 'express'
 import Question from '../models/question'
-import { sequelize } from '../db/sequelizeConnector'
-import { StatusCodes } from '../utilites/StatusCodes'
+import {sequelize} from '../db/sequelizeConnector'
+import {StatusCodes} from '../utilites/StatusCodes'
 import RunningGameStorage from "../utilites/RunningGameStorage"
 
 class GameController {
@@ -20,38 +20,36 @@ class GameController {
 
     startGame(request: Request, response: Response, next: NextFunction): void {
         let myCategory = request.headers.category
+        let difficulty = request.headers.difficulty
 
-        //TODO: more validation e.g. isValidCategory? isValidString? etc.
-        if (!myCategory || typeof myCategory !== "string" || Array.isArray(myCategory)) {
+        if (!myCategory || typeof myCategory !== "string" || Array.isArray(myCategory) || myCategory.length > 255) {
             response.sendStatus(StatusCodes.NotFound)
+            response.end()
         }
 
-        if (myCategory === undefined) {
+        if (!difficulty || isNaN(Number(difficulty)) || Array.isArray(difficulty) || Number(difficulty) < 0 || Number(difficulty) > 2){
             response.sendStatus(StatusCodes.NotFound)
-        }
-
-        if (myCategory != undefined && myCategory.length > 255) {
-            response.sendStatus(StatusCodes.NotFound)
+            response.end()
         }
 
         sequelize.sync().then(() => {
-            Question.findOne({ where: { category: myCategory } })
-                .then(data => { 
-                    
+            Question.findOne({where: {category: myCategory}})
+                .then(data => {
                     //if there's data in category it's valid
                     if (data != null || data != undefined) {
-
-                        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>myCategory))
-
+                        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>myCategory, <number><unknown>difficulty))
+                        response.end()
                     } else {
-                        
-                        throw response.sendStatus(StatusCodes.NotFound)
+                        response.sendStatus(StatusCodes.NotFound)
+                        response.end()
                     }
-                }).catch(error => { 
-                     response.sendStatus(StatusCodes.InternalError)
-                })
+                }).catch(error => {
+                response.sendStatus(StatusCodes.InternalError)
+                response.end()
+            })
         }).catch(error => {
             response.sendStatus(StatusCodes.ServiceUnavailable)
+            response.end()
         })
     }
 
@@ -62,25 +60,25 @@ class GameController {
     }
 
     getActualQuestion(request: Request, response: Response, next: NextFunction): void {
-        
+
         //Game osztály hozzáférés
         RunningGameStorage.instance().runningGames[<string>request.headers.tokenkey]
 
-        //TODO
+        //TODO: From the returned question we should remove the correct answer field
     }
 
     useMobile(request: Request, response: Response, next: NextFunction): void {
-        
+
         //TODO
     }
 
     useAudience(request: Request, response: Response, next: NextFunction): void {
-        
+
         //TODO
     }
 
     useHalf(request: Request, response: Response, next: NextFunction): void {
-        
+
         //TODO
     }
 }
