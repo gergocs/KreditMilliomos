@@ -33,7 +33,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: MainComponent
+    component: LoginComponent
     //redirectTo: 'main',
     //pathMatch: 'full'
   },

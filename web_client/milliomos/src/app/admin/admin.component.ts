@@ -12,6 +12,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import { waitForAsync } from '@angular/core/testing'
+import { UserModell } from '../models/usermodell'
 
 @Component({
   selector: 'app-admin',
@@ -47,13 +48,65 @@ export class AdminPageComponent implements OnInit {
     correctAnswer: new FormControl('')
   });
 
+  userList: UserModell[] | undefined
+  helperListArray: boolean[] = new Array(1);
+  bannedUserIDs: string[] | undefined
+
   constructor(public router: Router,protected http: HttpClient, public questionService: QuestionService, public auth: AngularFireAuth, public authservice : AuthService, private modalService: NgbModal) {
 
    }
 
-  ngOnInit(){
+  async ngOnInit(){
    this.loading=true
-    this.authservice.getAllUsers()
+    let userdatas = window.localStorage.getItem("userdatas")
+    if(!userdatas){
+      this.authservice.logout()
+      return
+    }
+
+    await this.authservice.getAllUsers(JSON.parse(userdatas).tokenKey).then(async (body) => {
+      if(!body)
+      return
+
+      this.userList = body;
+
+      this.userList.forEach(u=>{
+        u.name = decodeURIComponent(u.name)
+        u.firstName = decodeURIComponent(u.firstName)
+        u.lastName = decodeURIComponent(u.lastName)
+        u.email = decodeURIComponent(u.email)
+      })
+
+      this.helperListArray = new Array(body.length);
+      await this.authservice.bannedUserList().then(async body => {
+        if (body == null) {
+          throw new Error()
+        }
+  
+        this.bannedUserIDs = body;
+  
+      }).catch(error =>{
+  
+        console.log(error)
+      })
+
+
+      body.forEach((user, index) => {
+        if(this.bannedUserIDs && this.helperListArray)
+        {
+          this.helperListArray[index] = this.bannedUserIDs?.includes(user.tokenKey);
+        }
+
+      });
+      this.loading=false
+    }).catch(err =>{
+      console.log(err)
+      this.loading=false
+    })
+
+
+
+
     this.auth.onAuthStateChanged((credential) =>{this.userid = credential?.uid;
       this.questionService.getAllQuestion(this.userid).subscribe(body => {
         this.allquestion = body
@@ -88,6 +141,8 @@ export class AdminPageComponent implements OnInit {
 
 
   }
+
+  
 
   onCreateQuestion() {
     //validity check
@@ -236,7 +291,7 @@ export class AdminPageComponent implements OnInit {
               throw new Error()
             }
             this.loading = false;
-            this.authservice.helperListArray[i] = !this.authservice.helperListArray[i];
+            this.helperListArray[i] = !this.helperListArray[i];
           }).catch(error => {
             this.loading = false;
             console.log(error)
