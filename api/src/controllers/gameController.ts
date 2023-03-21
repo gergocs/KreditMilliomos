@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
@@ -11,11 +11,13 @@ class GameController {
 
     constructor() {
         this.router.post(this.path + '/start', this.startGame)
-        this.router.get(this.path + '/getTIme', this.getTime)
-        this.router.get(this.path + '/getActualQuestion', this.getActualQuestion)
-
+        this.router.get(this.path + '/getTime', this.getTime)
+        this.router.get(this.path + '/evaluateGame', this.evaluateGame)
         this.router.get(this.path + '/useHalf', this.useHalf)
-        this.router.get(this.path + '/useMobile', this.useMobile)
+        this.router.get(this.path + '/useSwitch', this.useSwitch)
+        this.router.get(this.path + '/useAudience', this.useAudience)
+        this.router.post(this.path + '/giveUp', this.giveUp)
+        this.router.post(this.path + '/endGame', this.endGame)
     }
 
     startGame(request: Request, response: Response, next: NextFunction): void {
@@ -27,7 +29,7 @@ class GameController {
             response.end()
         }
 
-        if (!difficulty || isNaN(Number(difficulty)) || Array.isArray(difficulty) || Number(difficulty) < 0 || Number(difficulty) > 2){
+        if (!difficulty || isNaN(Number(difficulty)) || Array.isArray(difficulty) || Number(difficulty) < 0 || Number(difficulty) > 2) {
             response.sendStatus(StatusCodes.NotFound)
             response.end()
         }
@@ -55,31 +57,98 @@ class GameController {
 
     getTime(request: Request, response: Response, next: NextFunction) {
         response.send({
-            time: <number>RunningGameStorage.instance().getTime(<string>request.headers.tokenkey)
+            time: <number>RunningGameStorage.instance().getTime(<string>request.headers.tokenkey),
+            remainingTime: <number>RunningGameStorage.instance().getRemainingTime(<string>request.headers.tokenkey)
         })
     }
 
-    getActualQuestion(request: Request, response: Response, next: NextFunction): void {
+    evaluateGame(request: Request, response: Response, next: NextFunction): void {
+        let token = <string>request.headers.tokenkey
+        let question
 
-        //Game osztály hozzáférés
-        RunningGameStorage.instance().runningGames[<string>request.headers.tokenkey]
+        if (RunningGameStorage.instance().hasQuestion(token)) {
+            question = RunningGameStorage.instance().evaluateGame(token, <string>request.headers.answer)
+        } else {
+            question = RunningGameStorage.instance().evaluateGame(token, "")
+        }
 
-        //TODO: From the returned question we should remove the correct answer field
+        if (typeof question == "boolean") {
+            if (question) {
+                response.send({
+                    win: true
+                })
+            }
+        } else if (!question) {
+            response.send({
+                win: false
+            })
+        } else {
+            //TODO: From the returned question we should remove the correct answer field
+            response.send(question)
+        }
+
+        response.end()
     }
 
-    useMobile(request: Request, response: Response, next: NextFunction): void {
+    useSwitch(request: Request, response: Response, next: NextFunction): void {
+        let token = <string>request.headers.tokenkey
+        let question = RunningGameStorage.instance().useSwitch(token)
 
-        //TODO
+        if (!question) {
+            response.sendStatus(StatusCodes.BadRequest)
+        } else {
+            //TODO: From the returned question we should remove the correct answer field
+            response.send(question)
+        }
+
+        response.end()
     }
 
     useAudience(request: Request, response: Response, next: NextFunction): void {
+        let token = <string>request.headers.tokenkey
+        let guess = RunningGameStorage.instance().useAudience(token)
 
-        //TODO
+        if (!guess) {
+            response.sendStatus(StatusCodes.BadRequest)
+        } else {
+            response.send({
+                guess: guess
+            })
+        }
+
+        response.end()
     }
 
     useHalf(request: Request, response: Response, next: NextFunction): void {
+        let token = <string>request.headers.tokenkey
+        let question = RunningGameStorage.instance().useHalf(token)
 
-        //TODO
+        if (!question) {
+            response.sendStatus(StatusCodes.BadRequest)
+        } else {
+            //TODO: From the returned question we should remove the correct answer field
+            response.send(question)
+        }
+
+        response.end()
+    }
+
+    giveUp(request: Request, response: Response, next: NextFunction): void {
+        let token = <string>request.headers.tokenkey
+        let save = (<string>request.headers.tokenkey).toLowerCase() == 'true'
+
+        response.sendStatus(RunningGameStorage.instance().giveUpGame(token, save) ? StatusCodes.Ok : StatusCodes.BadRequest)
+        response.end()
+    }
+
+    endGame(request: Request, response: Response, next: NextFunction): void {
+        let token = <string>request.headers.tokenkey
+        let save = (<string>request.headers.tokenkey).toLowerCase() == 'true'
+
+        RunningGameStorage.instance().endGame(token, save)
+
+        response.sendStatus(StatusCodes.Ok)
+        response.end()
     }
 }
 
