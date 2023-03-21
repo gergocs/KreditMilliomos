@@ -1,6 +1,6 @@
 import App from './app'
-import UserController from './controllers/user_controller'
-import QuestionController from './controllers/question_controller'
+import UserController from './controllers/userController'
+import QuestionController from './controllers/questionController'
 import gameController from "./controllers/gameController";
 import * as dotenv from 'dotenv'
 import * as process from "process";
