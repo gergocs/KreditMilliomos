@@ -1,8 +1,9 @@
 class GameException extends Error {
-    constructor(msg: string) {
+    win: boolean
+    constructor(msg: string, win = false) {
         super(msg);
+        this.win = win
 
-        // Set the prototype explicitly.
         Object.setPrototypeOf(this, GameException.prototype);
     }
 }

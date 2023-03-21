@@ -8,7 +8,7 @@ class Game {
     private question: Question | undefined /* current question */
     private category: string /* current question */
     private half: boolean /* half the questions */
-    private mobile: boolean /* mobile help TODO: find solution to implement this to the game */
+    private switch: boolean /* switch help */
     private audience: boolean /* random help */
     private difficulty: GameModes /* difficulty of the game*/
     private level: number /* current level */
@@ -18,7 +18,7 @@ class Game {
         this.question = undefined
         this.category = subject
         this.half = true
-        this.mobile = true
+        this.switch = true
         this.audience = true
         this.difficulty = difficulty
     }
@@ -27,25 +27,26 @@ class Game {
         return this._time
     }
 
-    generateQuestion(): Question {
-        if (this.level == 15) {
-            //TODO: winning
+    hasQuestion(): boolean {
+        return !!this.question
+    }
+
+    evaluateGame(answer: string): Question | undefined {
+        if (!this.question){
+            return this.generateQuestion()
         }
 
-        sequelize.sync()
-            .then(() => {
-                Question.findAndCountAll({
-                    where: {
-                        level: (!this.question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this.question.level + 1), 15))), // TODO: Check if this is good
-                        category: this.category
-                    }
-                })
-                    .then(({count, rows}) => {
-                        this.question = rows[this.getRandomInt(0, count)]
-                    })
-            })
+        let status = this.checkAnswer(answer)
 
-        return structuredClone(<Question>this.question)
+        if (!status) {
+            return undefined
+        }
+
+        return this.generateQuestion()
+    }
+
+    canGiveUp(): boolean {
+        return !(this.half || this.switch || this.audience)
     }
 
     useHalf(): Question {
@@ -127,30 +128,28 @@ class Game {
         return this.question
     }
 
-    useMobile(): string {
+    useSwitch(): Question {
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
 
-        if (!this.mobile) {
-            throw new GameException("The user already used half")
+        if (!this.switch) {
+            throw new GameException("The user already used switch")
         }
 
-        const myAnswers = [this.question.answerA, this.question.answerB, this.question.answerC, this.question.answerD]
-        const probabilityMassOfMyAnswers = [0.4, 0.9, 0.4, 0.4]
-        const answerIGot = this.getWeightedRandom(myAnswers, probabilityMassOfMyAnswers)
-        this.mobile = false
-        return answerIGot
+        let question = this.generateQuestion(0)
+        this.switch = false
+
+        return question
     }
 
     useAudience(): string {
-
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
 
         if (!this.audience) {
-            throw new GameException("The user already used half")
+            throw new GameException("The user already used audience")
         }
 
         const myAnswers = [this.question.answerA, this.question.answerB, this.question.answerC, this.question.answerD]
@@ -161,12 +160,33 @@ class Game {
         return answerIGot
     }
 
-    checkAnswer(answer: string): boolean {
+    private generateQuestion(offset = 1): Question {
+        if (this.level == 15) {
+            throw new GameException("", true)
+        }
+        // TODO: catch sequelize errors
+        sequelize.sync()
+            .then(() => {
+                Question.findAndCountAll({
+                    where: {
+                        level: (!this.question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this.question.level + offset), 15))), // TODO: Check if this is good
+                        category: this.category
+                    }
+                })
+                    .then(({count, rows}) => {
+                        this.question = rows[this.getRandomInt(0, count)]
+                        this.level += offset
+                    })
+            })
+
+        return structuredClone(<Question>this.question)
+    }
+
+    private checkAnswer(answer: string): boolean {
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
 
-        this.level++
         return answer === this.question.answerCorrect
     }
 
