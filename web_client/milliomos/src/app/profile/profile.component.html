@@ -1,5 +1,7 @@
+<div [hidden]="!loading" class="loading"><img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading_animation"></div>
 <nav>
     <div class="logo">Legyen ön is Kreditmilliomos!</div>
+    <button (click)="this.router.navigate(['/main'])">Főoldal</button>
     <div class="game_start">
       <button class="start-button" (click)="redirectToLobby()">játék kezdése</button>
     </div>
@@ -7,21 +9,20 @@
 <div class="container">
   <div class="user-info">
     <h2>Felhasználói adatok</h2>
-    <form >
+    <form [formGroup]="updateForm">
+        <div>Email: <span>{{this.userdata?.email}}</span></div>
+        <br>
         <label>Felhasználónév:</label>
-        <input type="text" name="username" >
+        <input value="{{this.userdata?.name}}" type="text" formControlName="username" >
         <br><br>
-        <label>E-mail cím:</label>
-        <input type="email" name="email" >
+        <label>Vezetéknév:</label>
+        <input value="{{this.userdata?.firstName}}" type="text" formControlName="firstName">
         <br><br>
-        <label>Teljes név:</label>
-        <input type="text" name="fullname" >
-        <br><br>
-        <label>Születési dátum:</label>
-        <input type="date" name="birthdate" >
+        <label>Keresztnév:</label>
+        <input value="{{this.userdata?.lastName}}" type="text" formControlName="lastName" >
         <br><br>
        
-        <button type="submit" class="update-button">Frissítés</button>
+        <button type="submit" (click)="updateuser()" class="update-button">Frissítés</button>
       </form>
      
       

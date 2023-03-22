@@ -14,9 +14,12 @@ export class MainComponent implements OnInit {
       window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet!");
       auth.logout();
     }
+    if (!window.localStorage.getItem("userdatas")){
+      auth.logout();
+    }
   }
 
-  ngOnInit(): void {
+  ngOnInit(){
   }
 
   async onLogoutPress() {
