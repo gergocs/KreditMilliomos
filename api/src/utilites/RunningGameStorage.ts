@@ -1,7 +1,9 @@
 import {StatusCodes} from "./StatusCodes";
 import Game from "./game";
+import ScoreBoard from "models/scoreBoard";
 import {GameModes} from "./gameModes";
 import Question from "../models/question";
+import {sequelize} from "../db/sequelizeConnector";
 
 class RunningGameStorage {
     private static runningGameStorage: RunningGameStorage
@@ -81,7 +83,21 @@ class RunningGameStorage {
         }
 
         if (save) {
-            //TODO: Save the game
+            const category = game?.category
+            const level = game?.level
+            const time = game?.time
+            sequelize.sync()
+            .then(() => {
+                ScoreBoard.create({
+                    tokenKey: token,
+                    category: <string>category,
+                    level: <number>level,
+                    time: <number>time
+                })
+                .catch((error) => {
+                     console.error('Failed to save game: ', error)
+                })
+        })
         }
 
         this.runningGames.delete(token)
@@ -93,8 +109,24 @@ class RunningGameStorage {
             return
         }
 
+        let game = this.runningGames.get(<string>token)
+
         if (save) {
-            //TODO: Save the game
+            const category = game?.category
+            const level = game?.level
+            const time = game?.time
+            sequelize.sync()
+            .then(() => {
+            ScoreBoard.create({
+                tokenKey: token,
+                category: <string>category,
+                level: <number>level,
+                time: <number>time
+            })
+            .catch((error) => {
+                console.error('Failed to save game: ', error)
+            })
+        })
         }
 
         this.runningGames.delete(token)
