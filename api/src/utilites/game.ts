@@ -6,17 +6,17 @@ class Game {
 
     private readonly _time: number /* end of (game) time represented in unix epoch */
     private question: Question | undefined /* current question */
-    private category: string /* current question */
+    private _category: string /* current question */
     private half: boolean /* half the questions */
     private switch: boolean /* switch help */
     private audience: boolean /* random help */
     private difficulty: GameModes /* difficulty of the game*/
-    private level: number /* current level */
+    private _level: number /* current level */
 
     constructor(time: number, subject: string, difficulty: GameModes) {
         this._time = time
         this.question = undefined
-        this.category = subject
+        this._category = subject
         this.half = true
         this.switch = true
         this.audience = true
@@ -25,6 +25,14 @@ class Game {
 
     get time(): number {
         return this._time
+    }
+
+    get category(): string{
+        return this._category
+    }
+
+    get level(): number{
+        return this._level
     }
 
     hasQuestion(): boolean {
@@ -161,7 +169,7 @@ class Game {
     }
 
     private generateQuestion(offset = 1): Question {
-        if (this.level == 15) {
+        if (this._level == 15) {
             throw new GameException("", true)
         }
         // TODO: catch sequelize errors
@@ -175,7 +183,7 @@ class Game {
                 })
                     .then(({count, rows}) => {
                         this.question = rows[this.getRandomInt(0, count)]
-                        this.level += offset
+                        this._level += offset
                     })
             })
 
