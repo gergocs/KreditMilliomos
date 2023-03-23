@@ -1,6 +1,6 @@
 import {StatusCodes} from "./StatusCodes";
 import Game from "./game";
-import ScoreBoard from "models/scoreBoard";
+import ScoreBoard from "../models/scoreBoard";
 import {GameModes} from "./gameModes";
 import Question from "../models/question";
 import {sequelize} from "../db/sequelizeConnector";
