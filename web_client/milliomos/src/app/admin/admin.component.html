@@ -40,7 +40,9 @@ Save button
 
             <div>
                 <label for="category">Kategória: *</label>
-                <input type="text" id="category" placeholder="Elektronika" formControlName="category" required>
+                <select formControlName="category" required>
+                    <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">{{category.category}}</option>
+                </select>
             </div>
             <div>
                 <label for="question">Kérdés: *</label>
@@ -199,6 +201,42 @@ Save button
       </table>
 </div>
 <!-- ALL QUESTIONS - END -->
+
+<!-- QUESTION CATEGORIES - START -->
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark">
+    <h4>Összes jelenlegi kategória:</h4>
+    <br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Kategória</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">
+            <tr>
+                <td>{{category.category}}</td>
+            </tr>
+        </tbody>
+      </table>
+</div>
+<!-- NEW CATEGORY - START -->
+<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-dark" style="max-width: 740px;" *ngIf="showForm">
+    <div id="questions">
+        <form [formGroup]="categoryForm" (ngSubmit)="createQuestionCategory()">
+            <h2>Új kérdés kategória</h2>
+            <div>
+                <label for="category">Kategória: *</label>
+                <input type="text" id="category" placeholder="Elektronika" formControlName="category" required>
+            </div>
+            <!-- BUTTONS -->
+            <div id="buttons">
+                <button type="submit" id="submit_question_button">Mentés</button>
+                <button type="reset" id="cancel_question_button" >Mégse</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- NEW CATEGORY - END -->
 
 <footer>
     <p>&copy; 2023 Admin Site. All rights reserved.</p>

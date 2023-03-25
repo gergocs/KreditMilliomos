@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable } from 'rxjs';
 import { Question } from '../models/question';
+import { QuestionCategory } from '../models/questionCategory';
 
 @Injectable({
   providedIn: 'root'
@@ -68,5 +69,20 @@ export class QuestionService {
       }).catch(e => {
         return new Promise((resolve, reject) => {reject(e);})
       })
+    }
+
+    getQuestionCategories(uid: any){
+      let header = new HttpHeaders().set("tokenkey", uid);
+      return this.http.get<QuestionCategory[]>(this.hostname + "question/admin/allQuestionCategories", { headers: header });
+    }
+    
+    createQuestionCategory(qc:QuestionCategory,uid:any){
+      let header = new HttpHeaders()
+      .set("tokenkey", uid)
+      let body = {
+        category: encodeURIComponent(qc.category),
+      }
+  
+      return this.http.post(this.hostname + "question/admin/createQuestionCategory", body, {headers: header, responseType: 'text'});
     }
 }
