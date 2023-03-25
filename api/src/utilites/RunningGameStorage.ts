@@ -162,45 +162,66 @@ class RunningGameStorage {
 
     //TODO: Wrap the game.use... methods in to try catch
     useHalf(token: string): Question | undefined {
-        if (this.isGameRunning(token)) {
-            return undefined
+        try {
+
+            if (this.isGameRunning(token)) {
+                return undefined
+            }
+    
+            let game = this.runningGames.get(<string>token)
+    
+            if (!game) {
+                return undefined
+            }
+    
+            return game.useHalf()
+
+        } catch (error) {
+
+            throw new GameException('Error in RunninGameStorage:useHalf method\n' + error)
         }
-
-        let game = this.runningGames.get(<string>token)
-
-        if (!game) {
-            return undefined
-        }
-
-        return game.useHalf()
     }
 
     useSwitch(token: string): Question | undefined {
-        if (this.isGameRunning(token)) {
-            return undefined
+        try {
+
+            if (this.isGameRunning(token)) {
+                return undefined
+            }
+    
+            let game = this.runningGames.get(<string>token)
+    
+            if (!game) {
+                return undefined
+            }
+    
+            return game.useSwitch()
+
+        } catch (error) {
+
+            throw new GameException('Error in RunninGameStorage:useSwitch method\n' + error)
         }
-
-        let game = this.runningGames.get(<string>token)
-
-        if (!game) {
-            return undefined
-        }
-
-        return game.useSwitch()
     }
 
     useAudience(token: string): string | undefined {
-        if (this.isGameRunning(token)) {
-            return undefined
+        try {
+
+            if (this.isGameRunning(token)) {
+                return undefined
+            }
+    
+            let game = this.runningGames.get(<string>token)
+    
+            if (!game) {
+                return undefined
+            }
+    
+            return game.useAudience()
+
+        } catch (error) {
+
+            throw new GameException('Error in RunninGameStorage:useAudience method\n' + error)
         }
-
-        let game = this.runningGames.get(<string>token)
-
-        if (!game) {
-            return undefined
-        }
-
-        return game.useAudience()
     }
 
     private isGameRunning(token: string): boolean {
