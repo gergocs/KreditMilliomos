@@ -161,7 +161,12 @@ class Game {
         }
 
         const myAnswers = [this.question.answerA, this.question.answerB, this.question.answerC, this.question.answerD]
-        const probabilityMassOfMyAnswers = [0.5, 0.8, 0.1, 0.3]
+        const probabilityMassOfMyAnswers : Array<number> = [
+            (this.question.answerA == this.question.answerCorrect ? 0.8 : 0.5) as number, 
+            (this.question.answerB == this.question.answerCorrect ? 0.8 : 0.1) as number, 
+            (this.question.answerC == this.question.answerCorrect ? 0.8 : 0.3) as number,
+            (this.question.answerD == this.question.answerCorrect ? 0.8 : 0.5) as number
+        ]
         const answerIGot = this.getWeightedRandom(myAnswers, probabilityMassOfMyAnswers)
 
         this.audience = false
@@ -181,10 +186,16 @@ class Game {
                         category: this.category
                     }
                 })
-                    .then(({count, rows}) => {
+                .then(({count, rows}) => {
                         this.question = rows[this.getRandomInt(0, count)]
                         this._level += offset
-                    })
+                })
+                .catch(error => {
+                    throw new GameException("Error in Question.findAndCountAll!\n" + error)
+                })
+            })
+            .catch(error => {
+                throw new GameException("Error in sequelize.sync!\n" + error)
             })
 
         return structuredClone(<Question>this.question)

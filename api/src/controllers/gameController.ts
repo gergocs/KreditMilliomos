@@ -83,7 +83,12 @@ class GameController {
                 win: false
             })
         } else {
+
             //TODO: From the returned question we should remove the correct answer field
+            if (question instanceof Question) {
+                question.answerCorrect = '';
+            }
+
             response.send(question)
         }
 
@@ -97,7 +102,12 @@ class GameController {
         if (!question) {
             response.sendStatus(StatusCodes.BadRequest)
         } else {
+            
             //TODO: From the returned question we should remove the correct answer field
+            if (question instanceof Question) {
+                question.answerCorrect = '';
+            }
+
             response.send(question)
         }
 
@@ -126,7 +136,12 @@ class GameController {
         if (!question) {
             response.sendStatus(StatusCodes.BadRequest)
         } else {
+
             //TODO: From the returned question we should remove the correct answer field
+            if (question instanceof Question) {
+                question.answerCorrect = '';
+            }
+
             response.send(question)
         }
 
