@@ -19,6 +19,7 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
 import {MatButtonModule} from "@angular/material/button";
 import { ProfileComponent } from './profile/profile.component';
 import { LobbyComponent } from './lobby/lobby.component';
+import { GameComponent } from './game/game.component';
 
 
 
@@ -31,7 +32,8 @@ import { LobbyComponent } from './lobby/lobby.component';
     AdminPageComponent,
     ConfirmationDialogComponent,
     ProfileComponent,
-    LobbyComponent
+    LobbyComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,

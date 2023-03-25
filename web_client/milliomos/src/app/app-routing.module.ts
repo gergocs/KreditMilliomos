@@ -6,10 +6,15 @@ import { RegistrationComponent } from './registration/registration.component';
 import { AdminPageComponent } from './admin/admin.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LobbyComponent } from './lobby/lobby.component';
+import { GameComponent } from './game/game.component';
 const routes: Routes = [
   {
     path: 'lobby',
     component: LobbyComponent
+  },
+  {
+    path: 'game',
+    component: GameComponent
   },
   {
     path: 'profile',

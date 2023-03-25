@@ -1,0 +1,96 @@
+<head>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap");
+  </style>
+</head>
+
+<button class="btn btn-secondary" routerLink="/profile">Kilépés</button>
+<div id="game-window-container">
+  <!-- Game title -->
+  <div id="title" class="ontainer-lg p-3 mb-5">
+    <br />
+    <p>Legyen Ön is kreditmilliomos!</p>
+  </div>
+
+  <!-- Game area -->
+  <div class="row">
+    <!-- Main panel -->
+    <div class="col-9 p-3">
+      <div class="container bg-light rounded" id="main-panel">
+        <br />
+
+        <!-- Question -->
+        <h4 class="p-1">
+          {{ this.currentQuestion.question }}
+        </h4>
+        <hr />
+        <br />
+        <!-- Answer holder -->
+        <div class="container" id="answers">
+          <!-- Answer buttons -->
+          <div class="row">
+            <div
+              class="card col border-warning border border-3 rounded-4 answer-box"
+              [class.answer-box-selected]="selectedA"
+              (click)="mouseClick('A')"
+            >
+              <div class="card-body">
+                {{ this.currentQuestion.answerA }}
+              </div>
+            </div>
+            <div class="col-1"></div>
+            <div
+              class="card col border-warning border border-3 rounded-4 answer-box"
+              [class.answer-box-selected]="selectedB"
+              (click)="mouseClick('B')"
+            >
+              <div class="card-body">
+                {{ this.currentQuestion.answerB }}
+              </div>
+            </div>
+            <div class="w-100"><br /></div>
+            <div
+              class="card col border-warning border border-3 rounded-4 answer-box"
+              [class.answer-box-selected]="selectedC"
+              (click)="mouseClick('C')"
+            >
+              <div class="card-body">
+                {{ this.currentQuestion.answerC }}
+              </div>
+            </div>
+            <div class="col-1"></div>
+            <div
+              class="card col border-warning border border-3 rounded-4 answer-box"
+              [class.answer-box-selected]="selectedD"
+              (click)="mouseClick('D')"
+            >
+              <div class="card-body">
+                {{ this.currentQuestion.answerD }}
+              </div>
+            </div>
+          </div>
+          <br />
+        </div>
+        <hr />
+        <div class="container text-center">
+          <button
+            id="next-button"
+            type="button"
+            class="btn btn-warning btn-lg"
+            (click)="submit()"
+          >
+            Megerősít
+          </button>
+        </div>
+        <br />
+      </div>
+    </div>
+
+    <!-- Side panel -->
+    <div class="col-3 p-3">
+      <div class="container bg-light rounded" id="side-panel">
+        <p>side panel</p>
+      </div>
+    </div>
+  </div>
+</div>
