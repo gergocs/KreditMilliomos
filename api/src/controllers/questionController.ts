@@ -2,6 +2,7 @@ import {Request, Response, NextFunction, Router} from 'express'
 import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
+import QuestionCategory from '../models/questionCategory'
 
 class QuestionController {
 
@@ -10,8 +11,10 @@ class QuestionController {
 
     constructor() {
         this.router.get(this.path + '/admin/allQuestion', this.getAllQuestion)
+        this.router.get(this.path + '/admin/allQuestionCategories', this.getAllCategories)
         this.router.post(this.path + '/admin/import', this.importQuestion)
         this.router.post(this.path + '/admin', this.createQuestion)
+        this.router.post(this.path + '/admin/createQuestionCategory', this.createCategory)
         this.router.delete(this.path + '/admin', this.deleteQuestion)
     }
 
@@ -98,6 +101,43 @@ class QuestionController {
             response.sendStatus(StatusCodes.ServiceUnavailable)
             response.end()
         })
+    }
+
+    getAllCategories(request: Request, response: Response, next: NextFunction) {
+        sequelize.sync().then(() => {
+            QuestionCategory.findAll().then(data => {
+                response.send(data)
+                response.end()
+            }).catch(error => {
+                console.log(error)
+                response.sendStatus(StatusCodes.InternalError)
+                response.end()
+            })
+        }).catch(error => {
+            response.sendStatus(StatusCodes.ServiceUnavailable)
+            response.end()
+        })
+    }
+
+    createCategory(request: Request, response: Response, next: NextFunction) {
+        sequelize.sync()
+            .then(() => {
+                QuestionCategory.create({
+                    category: request.body.category as string
+                })
+                    .then(data => {
+                        response.sendStatus(StatusCodes.Ok)
+                        response.end()
+                    })
+                    .catch(error => {
+                        response.sendStatus(StatusCodes.InternalError)
+                        response.end()
+                    })
+            })
+            .catch(error => {
+                response.sendStatus(StatusCodes.ServiceUnavailable)
+                response.end()
+            })
     }
 }
 

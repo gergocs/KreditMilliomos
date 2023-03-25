@@ -13,6 +13,7 @@ import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-d
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import { waitForAsync } from '@angular/core/testing'
 import { UserModell } from '../models/usermodell'
+import { QuestionCategory } from '../models/questionCategory'
 
 @Component({
   selector: 'app-admin',
@@ -36,6 +37,11 @@ export class AdminPageComponent implements OnInit {
   public hostname: string = "localhost"
 
   public allquestion: Question[] = []
+  public allQuestionCategories: QuestionCategory[] = []
+
+  categoryForm = new FormGroup({
+    category: new FormControl(''),
+  }) 
 
   questionForm = new FormGroup({
     category: new FormControl(''),
@@ -108,6 +114,17 @@ export class AdminPageComponent implements OnInit {
 
 
     this.auth.onAuthStateChanged((credential) =>{this.userid = credential?.uid;
+      this.questionService.getQuestionCategories(this.userid).subscribe(body =>{
+          this.allQuestionCategories = body;
+          this.allQuestionCategories.forEach(qc => {
+            qc.category = decodeURIComponent(qc.category)
+          })
+      },(error:any)=>{
+        let qcat: QuestionCategory = {
+          category: "Hiba",
+        }
+        this.allQuestionCategories.push(qcat)
+      })
       this.questionService.getAllQuestion(this.userid).subscribe(body => {
         this.allquestion = body
 
@@ -162,8 +179,6 @@ export class AdminPageComponent implements OnInit {
       if( body == null){
         throw new Error()
       }
-      console.log("Created question in DB")
-      console.log(body);
       this.allquestion.push(newQ);
       this.loading=false
     },(error) => {
@@ -257,6 +272,30 @@ export class AdminPageComponent implements OnInit {
     }
   }
 // FILE IMPORT END
+
+  async createQuestionCategory(){
+    this.loading=true
+    let newQC: QuestionCategory = {
+      category: this.categoryForm.get('category')?.value,
+    }
+    this.questionService.createQuestionCategory(newQC, this.userid)
+    .subscribe(body => {
+      if( body == null){
+        throw new Error()
+      }
+      console.log("Created question category in DB")
+      console.log(body);
+      this.allQuestionCategories.push(newQC);
+      this.loading=false
+    },(error) => {
+      console.log(error)
+      if(error.status == 200){
+        this.allQuestionCategories.push(newQC);
+      }
+      this.loading=false
+    }
+    );
+  }
 
   async deleteexistingquestion(q: string, i: number) {
     this.loading=true

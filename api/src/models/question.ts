@@ -1,5 +1,6 @@
 import { DataTypes, Model, InferAttributes, InferCreationAttributes  } from 'sequelize'
 import { sequelize } from '../db/sequelizeConnector'
+import QuestionCategory from './questionCategory'
 
 class Question extends Model<InferAttributes<Question>,InferCreationAttributes<Question>> {
     
@@ -15,7 +16,8 @@ class Question extends Model<InferAttributes<Question>,InferCreationAttributes<Q
 
 Question.init({
         category: {
-            type: new DataTypes.STRING(255)
+            type: new DataTypes.STRING(255),
+            references:{model:{tableName:'questioncategory'},key:'category'}
         },
         question: {
             type: new DataTypes.STRING(500),
