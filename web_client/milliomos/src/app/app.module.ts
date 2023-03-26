@@ -31,9 +31,10 @@ import { AdminQuestionsComponent } from './admin-questions/admin-questions.compo
     LoginComponent,
     MainComponent,
     AdminUsersComponent,
+    AdminQuestionsComponent,
     ConfirmationDialogComponent,
     ProfileComponent,
-    LobbyComponent
+    LobbyComponent,
     GameComponent
   ],
   imports: [
