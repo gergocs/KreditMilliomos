@@ -12,7 +12,7 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AdminPageComponent } from './admin/admin.component';
+import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
@@ -20,6 +20,7 @@ import {MatButtonModule} from "@angular/material/button";
 import { ProfileComponent } from './profile/profile.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { GameComponent } from './game/game.component';
+import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
 
 
 
@@ -29,10 +30,10 @@ import { GameComponent } from './game/game.component';
     RegistrationComponent,
     LoginComponent,
     MainComponent,
-    AdminPageComponent,
+    AdminUsersComponent,
     ConfirmationDialogComponent,
     ProfileComponent,
-    LobbyComponent,
+    LobbyComponent
     GameComponent
   ],
   imports: [

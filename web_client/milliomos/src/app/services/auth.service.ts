@@ -62,7 +62,7 @@ export class AuthService {
       window.localStorage.setItem("userdatas", JSON.stringify(body))
         if(body?.isAdmin){
           this.zone.run(() => {
-            this.router.navigate(['/admin']);
+            this.router.navigate(['/admin-users']);
         });
         }else {
           this.zone.run(() => {
@@ -208,7 +208,7 @@ export class AuthService {
       let header = new HttpHeaders()
         .set("tokenkey", tokenkey)
       return await this.http.get<UserModell[]>(this.hostname + "user/admin/allUsers", {headers: header}).toPromise()
-        
+
   }
 
 

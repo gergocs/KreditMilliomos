@@ -1,1 +1,133 @@
 @import '../app.component.scss';
+
+.content {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content .register {
+  padding: 0 24px;
+  width: 630px;
+  border-radius: 20px;
+  background-color: #ffffff;
+}
+
+.content .register h2 {
+  margin: 24px 0;
+  color: #333333;
+  font-size: 24px;
+}
+
+.content .register .row {
+  display: flex;
+}
+
+.content .register .row .input-box {
+  width: 50%;
+}
+
+.content .register .input-box {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content .register .input-box label {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.content .register .input-box input {
+  padding: 16px 24px;
+  margin: 8px 0;
+  display: inline-block;
+  color: #333333;
+  border: 2px solid #e1def9;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.content .register .input-box input::placeholder {
+  color: #333333;
+  opacity: 0.3;
+}
+
+.content .register .register-button {
+  padding: 16px 32px;
+  margin: 14px 0 24px 0;
+  background-color: #efa044;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: 0.5s;
+}
+
+.content .register .register-button:hover {
+  background-color: #ee8c1d;
+}
+
+.content .register .separator {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.content .register .separator .text {
+  margin: 0 24px;
+  color: #757171;
+  font-size: 12px;
+  text-align: center;
+}
+
+.content .register .separator .line {
+  width: 100%;
+  height: 0px;
+  border-bottom: 0.2px solid #757171;
+  opacity: 0.5;
+}
+
+.content .register .google {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+}
+
+.content .register .google button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+}
+
+.content .register .google button img {
+  margin-right: 8px;
+  width: 22px;
+  height: 22px;
+}
+
+.content .register .login {
+  margin: 24px 0;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.content .register .login a {
+  color: #efa044;
+  text-decoration: none;
+}
+
+.content .register .login a:hover {
+  text-decoration: underline;
+}
