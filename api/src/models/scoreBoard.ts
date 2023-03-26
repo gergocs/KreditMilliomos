@@ -5,7 +5,7 @@ class ScoreBoard extends Model<InferAttributes<ScoreBoard>, InferCreationAttribu
     declare tokenKey: string
     declare category: string
     declare level: number
-    declare time: number
+    declare time: bigint
 }
 
 ScoreBoard.init({
@@ -20,7 +20,7 @@ ScoreBoard.init({
             type: new DataTypes.INTEGER,
         },
         time: {
-            type: new DataTypes.INTEGER,
+            type: new DataTypes.BIGINT,
         }
     },
     {

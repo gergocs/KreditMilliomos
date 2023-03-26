@@ -1,10 +1,12 @@
 import Question from "../models/question";
 import {sequelize} from "../db/sequelizeConnector";
 import {GameModes} from "./gameModes";
+import question from "../models/question";
+import { GameException } from "../exceptions/GameException";
 
 class Game {
 
-    private readonly _time: number /* end of (game) time represented in unix epoch */
+    private readonly _time: bigint /* end of (game) time represented in unix epoch */
     private question: Question | undefined /* current question */
     private _category: string /* current question */
     private half: boolean /* half the questions */
@@ -13,7 +15,7 @@ class Game {
     private difficulty: GameModes /* difficulty of the game*/
     private _level: number /* current level */
 
-    constructor(time: number, subject: string, difficulty: GameModes) {
+    constructor(time: bigint, subject: string, difficulty: GameModes) {
         this._time = time
         this.question = undefined
         this._category = subject
@@ -21,17 +23,18 @@ class Game {
         this.switch = true
         this.audience = true
         this.difficulty = difficulty
+        this._level = 1
     }
 
-    get time(): number {
+    get time(): bigint {
         return this._time
     }
 
-    get category(): string{
+    get category(): string {
         return this._category
     }
 
-    get level(): number{
+    get level(): number {
         return this._level
     }
 
@@ -39,18 +42,18 @@ class Game {
         return !!this.question
     }
 
-    evaluateGame(answer: string): Question | undefined {
-        if (!this.question){
-            return this.generateQuestion()
+    async evaluateGame(answer: string): Promise<Question | boolean> {
+        if (!this.hasQuestion()) {
+            return await this.generateQuestion();
         }
 
         let status = this.checkAnswer(answer)
 
         if (!status) {
-            return undefined
+            return false
         }
 
-        return this.generateQuestion()
+        return await this.generateQuestion();
     }
 
     canGiveUp(): boolean {
@@ -136,7 +139,7 @@ class Game {
         return this.question
     }
 
-    useSwitch(): Question {
+    async useSwitch(): Promise<Question> {
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
@@ -148,7 +151,7 @@ class Game {
         let question = this.generateQuestion(0)
         this.switch = false
 
-        return question
+        return await question
     }
 
     useAudience(): string {
@@ -161,9 +164,9 @@ class Game {
         }
 
         const myAnswers = [this.question.answerA, this.question.answerB, this.question.answerC, this.question.answerD]
-        const probabilityMassOfMyAnswers : Array<number> = [
-            (this.question.answerA == this.question.answerCorrect ? 0.8 : 0.5) as number, 
-            (this.question.answerB == this.question.answerCorrect ? 0.8 : 0.1) as number, 
+        const probabilityMassOfMyAnswers: Array<number> = [
+            (this.question.answerA == this.question.answerCorrect ? 0.8 : 0.5) as number,
+            (this.question.answerB == this.question.answerCorrect ? 0.8 : 0.1) as number,
             (this.question.answerC == this.question.answerCorrect ? 0.8 : 0.3) as number,
             (this.question.answerD == this.question.answerCorrect ? 0.8 : 0.5) as number
         ]
@@ -173,32 +176,35 @@ class Game {
         return answerIGot
     }
 
-    private generateQuestion(offset = 1): Question {
-        if (this._level == 15) {
+    private generateQuestion(offset = 1): Promise<Question> {
+        // TODO: _level = 16
+        if (this._level == 3) {
             throw new GameException("", true)
         }
-        // TODO: catch sequelize errors
-        sequelize.sync()
-            .then(() => {
-                Question.findAndCountAll({
-                    where: {
-                        level: (!this.question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this.question.level + offset), 15))), // TODO: Check if this is good
-                        category: this.category
-                    }
-                })
-                .then(({count, rows}) => {
-                        this.question = rows[this.getRandomInt(0, count)]
-                        this._level += offset
+
+        return new Promise<Question>((resolve, reject) => {
+            // TODO: catch sequelize errors
+            sequelize.sync()
+                .then(() => {
+                    Question.findAndCountAll({
+                        where: {
+                            level: (!this.question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this.question.level + offset), 15))), // TODO: Check if this is good
+                            category: this.category
+                        }
+                    })
+                        .then(({count, rows}) => {
+                            this.question = rows[this.getRandomInt(0, count - 1)]
+                            this._level += offset
+                            resolve(this.question)
+                        })
+                        .catch(error => {
+                            throw new GameException("Error in Question.findAndCountAll!\n" + error)
+                        })
                 })
                 .catch(error => {
-                    throw new GameException("Error in Question.findAndCountAll!\n" + error)
+                    throw new GameException("Error in sequelize.sync!\n" + error)
                 })
-            })
-            .catch(error => {
-                throw new GameException("Error in sequelize.sync!\n" + error)
-            })
-
-        return structuredClone(<Question>this.question)
+        })
     }
 
     private checkAnswer(answer: string): boolean {
@@ -206,7 +212,7 @@ class Game {
             throw new GameException("The game dont generated question")
         }
 
-        return answer === this.question.answerCorrect
+        return answer.toLowerCase() === this.question.answerCorrect.toLowerCase()
     }
 
     private getRandomInt(min, max): number {

@@ -8,23 +8,23 @@
 <div id="game-window-container">
   <!-- Game title -->
   <div id="title" class="ontainer-lg p-3 mb-5">
-    <br />
+    <br/>
     <p>Legyen Ön is kreditmilliomos!</p>
   </div>
 
   <!-- Game area -->
   <div class="row">
     <!-- Main panel -->
-    <div class="col-9 p-3">
+    <div class="col-8 p-3">
       <div class="container bg-light rounded" id="main-panel">
-        <br />
+        <br/>
 
         <!-- Question -->
         <h4 class="p-1">
-          {{ this.currentQuestion.question }}
+          {{ this.currentQuestion?.question }}
         </h4>
-        <hr />
-        <br />
+        <hr/>
+        <br/>
         <!-- Answer holder -->
         <div class="container" id="answers">
           <!-- Answer buttons -->
@@ -35,7 +35,7 @@
               (click)="mouseClick('A')"
             >
               <div class="card-body">
-                {{ this.currentQuestion.answerA }}
+                {{ this.currentQuestion?.answerA }}
               </div>
             </div>
             <div class="col-1"></div>
@@ -45,17 +45,17 @@
               (click)="mouseClick('B')"
             >
               <div class="card-body">
-                {{ this.currentQuestion.answerB }}
+                {{ this.currentQuestion?.answerB }}
               </div>
             </div>
-            <div class="w-100"><br /></div>
+            <div class="w-100"><br/></div>
             <div
               class="card col border-warning border border-3 rounded-4 answer-box"
               [class.answer-box-selected]="selectedC"
               (click)="mouseClick('C')"
             >
               <div class="card-body">
-                {{ this.currentQuestion.answerC }}
+                {{ this.currentQuestion?.answerC }}
               </div>
             </div>
             <div class="col-1"></div>
@@ -65,24 +65,25 @@
               (click)="mouseClick('D')"
             >
               <div class="card-body">
-                {{ this.currentQuestion.answerD }}
+                {{ this.currentQuestion?.answerD }}
               </div>
             </div>
           </div>
-          <br />
+          <br/>
         </div>
-        <hr />
+        <hr/>
         <div class="container text-center">
           <button
-            id="next-button"
+            id="submit-button"
             type="button"
-            class="btn btn-warning btn-lg"
+            class="btn btn-secondary btn-lg"
+            [class.submit-button-active]="userCanSubmit"
             (click)="submit()"
           >
             Megerősít
           </button>
         </div>
-        <br />
+        <br/>
       </div>
     </div>
 

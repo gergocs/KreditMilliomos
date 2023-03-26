@@ -76,10 +76,7 @@ export class AuthService {
   }
 
   async isLoggedIn() {
-    if (this.user)
-      return true;
-
-    return false;
+    return !!this.user;
   }
 
   async login(email: string, password: string) {
