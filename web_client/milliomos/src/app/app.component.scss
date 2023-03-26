@@ -10,13 +10,16 @@
     right: 0;
     width: 50%;
     height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .loadingpic {
-    width: 100%;
+    width: 650px;
     height: width;
     animation: spinner 3s linear 0s infinite;
   }
-  
+
   /* Transparent Overlay */
   .loading:before {
     content: '';
@@ -28,7 +31,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
   }
-  
+
   /* :not(:required) hides these rules from IE9 and below */
   .loading:not(:required) {
     /* hide "loading..." text */
@@ -38,9 +41,9 @@
     background-color: transparent;
     border: 0;
   }
-  
+
   /* Animation */
-  
+
   @-webkit-keyframes spinner {
     0% {
       -webkit-transform: rotate(0deg);
