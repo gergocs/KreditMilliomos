@@ -3,6 +3,7 @@ import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
 import RunningGameStorage from "../utilites/RunningGameStorage"
+import { GameException } from "../exceptions/GameException";
 
 class GameController {
 
@@ -64,35 +65,32 @@ class GameController {
 
     evaluateGame(request: Request, response: Response, next: NextFunction): void {
         let token = <string>request.headers.tokenkey
+        let answer = <string>request.headers.answer
         let question
 
         if (RunningGameStorage.instance().hasQuestion(token)) {
-            question = RunningGameStorage.instance().evaluateGame(token, <string>request.headers.answer)
+            question = RunningGameStorage.instance().evaluateGame(token, answer)
         } else {
             question = RunningGameStorage.instance().evaluateGame(token, "")
         }
 
-        if (typeof question == "boolean") {
-            if (question) {
+        question.then(r => {
+            if (typeof r == "boolean") {
                 response.send({
-                    win: true
+                    question: undefined,
+                    win: r
+                })
+            } else if (r instanceof Question) {
+                let q = JSON.parse(JSON.stringify(r))
+                q.answerCorrect = '';
+                response.send({
+                    question: q,
+                    win: undefined
                 })
             }
-        } else if (!question) {
-            response.send({
-                win: false
-            })
-        } else {
+            response.end()
+        })
 
-            //TODO: From the returned question we should remove the correct answer field
-            if (question instanceof Question) {
-                question.answerCorrect = '';
-            }
-
-            response.send(question)
-        }
-
-        response.end()
     }
 
     useSwitch(request: Request, response: Response, next: NextFunction): void {
@@ -101,17 +99,19 @@ class GameController {
 
         if (!question) {
             response.sendStatus(StatusCodes.BadRequest)
+            response.end()
         } else {
-            
-            //TODO: From the returned question we should remove the correct answer field
-            if (question instanceof Question) {
-                question.answerCorrect = '';
-            }
-
-            response.send(question)
+            question.then(r => {
+                if (r) {
+                    let q = JSON.parse(JSON.stringify(r))
+                    q.answerCorrect = '';
+                    response.send({
+                        question: q,
+                        win: undefined
+                    })
+                }
+            })
         }
-
-        response.end()
     }
 
     useAudience(request: Request, response: Response, next: NextFunction): void {
@@ -131,17 +131,18 @@ class GameController {
 
     useHalf(request: Request, response: Response, next: NextFunction): void {
         let token = <string>request.headers.tokenkey
-        let question = RunningGameStorage.instance().useHalf(token)
+        let question
+
+        try {
+            question = RunningGameStorage.instance().useHalf(token)
+        } catch (e) {
+            response.send(StatusCodes.BadRequest)
+        }
 
         if (!question) {
             response.sendStatus(StatusCodes.BadRequest)
         } else {
-
-            //TODO: From the returned question we should remove the correct answer field
-            if (question instanceof Question) {
-                question.answerCorrect = '';
-            }
-
+            question.answerCorrect = '';
             response.send(question)
         }
 
@@ -150,7 +151,7 @@ class GameController {
 
     giveUp(request: Request, response: Response, next: NextFunction): void {
         let token = <string>request.headers.tokenkey
-        let save = (<string>request.headers.tokenkey).toLowerCase() == 'true'
+        let save = (<string>request.headers.save).toLowerCase() == 'true'
 
         response.sendStatus(RunningGameStorage.instance().giveUpGame(token, save) ? StatusCodes.Ok : StatusCodes.BadRequest)
         response.end()
@@ -158,7 +159,7 @@ class GameController {
 
     endGame(request: Request, response: Response, next: NextFunction): void {
         let token = <string>request.headers.tokenkey
-        let save = (<string>request.headers.tokenkey).toLowerCase() == 'true'
+        let save = (<string>request.headers.save).toLowerCase() == 'true'
 
         RunningGameStorage.instance().endGame(token, save)
 

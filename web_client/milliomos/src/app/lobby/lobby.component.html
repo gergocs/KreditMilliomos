@@ -1,2 +1,26 @@
-<p>lobby works!</p>
-<button routerLink="/game">Játék indítása</button>
+<div
+  class="container-lg my-5 p-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-primary"
+  style="max-width: 500px"
+>
+  <h3>Lobby</h3>
+  <br />
+  <select class="form-select" aria-label="Default select example" #category>
+    <option selected>Kategória választása</option>
+    <option value="grafika">grafika</option>
+  </select>
+  <br />
+  <select class="form-select" aria-label="Default select example" #difficulty>
+    <option selected>Nehézség választása</option>
+    <option value="0">könnyű</option>
+    <option value="1">közepes</option>
+    <option value="2">nehéz</option>
+  </select>
+  <br />
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="startNewGame(category.value, difficulty.value)"
+  >
+    Játék indítása
+  </button>
+</div>

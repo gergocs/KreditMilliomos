@@ -1,4 +1,4 @@
-class GameException extends Error {
+export class GameException extends Error {
     win: boolean
     constructor(msg: string, win = false) {
         super(msg);

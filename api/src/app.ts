@@ -39,6 +39,7 @@ class App {
             if (req.headers.tokenkey === undefined) {
                 res.status(StatusCodes.Unauthorized).send('No token')
                 res.end()
+                return
             }
 
             this.fireAuth.getUser(req.headers.tokenkey as string).then(r => {

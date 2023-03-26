@@ -6,5 +6,5 @@ export interface Question {
     answerB: string;
     answerC: string;
     answerD: string;
-    answerCorrect: string;
+    answerCorrect: string; // TODO: In the future this field will be removed from the frontend
  }

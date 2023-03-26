@@ -3,7 +3,7 @@ import { sequelize } from '../db/sequelizeConnector'
 import QuestionCategory from './questionCategory'
 
 class Question extends Model<InferAttributes<Question>,InferCreationAttributes<Question>> {
-    
+
     declare category: string
     declare question: string
     declare level: number

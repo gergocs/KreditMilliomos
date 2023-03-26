@@ -4,6 +4,7 @@ import ScoreBoard from "../models/scoreBoard";
 import {GameModes} from "./gameModes";
 import Question from "../models/question";
 import {sequelize} from "../db/sequelizeConnector";
+import {GameException} from "../exceptions/GameException"
 
 class RunningGameStorage {
     private static runningGameStorage: RunningGameStorage
@@ -15,7 +16,7 @@ class RunningGameStorage {
     }
 
     public static instance() {
-        if (this.runningGameStorage === null) {
+        if (!this.runningGameStorage) {
             this.runningGameStorage = new RunningGameStorage()
         }
 
@@ -28,13 +29,13 @@ class RunningGameStorage {
         }
 
         //TODO: maybe change time
-        const timeRemaining = (new Date()).getTime() + (this.mInMS * 15)
+        const timeRemaining = BigInt((new Date()).getTime() + (this.mInMS * 15))
         this.runningGames.set(<string>token, new Game(timeRemaining, category, difficulty))
         return StatusCodes.Ok
     }
 
     hasQuestion(token: string): boolean {
-        if (this.isGameRunning(token)) {
+        if (!this.isGameRunning(token)) {
             return false
         }
 
@@ -47,8 +48,8 @@ class RunningGameStorage {
         return game.hasQuestion()
     }
 
-    evaluateGame(token: string, answer: string): Question | undefined | boolean {
-        if (this.isGameRunning(token)) {
+    async evaluateGame(token: string, answer: string) {
+        if (!this.isGameRunning(token)) {
             return undefined
         }
 
@@ -59,16 +60,18 @@ class RunningGameStorage {
                 return undefined
             }
 
-            return game.evaluateGame(answer)
+            return await game.evaluateGame(answer)
         } catch (e) {
             if (e instanceof GameException) {
-                return e.win
+                return new Promise(resolve => {
+                    resolve(e.win)
+                })
             }
         }
     }
 
     giveUpGame(token: string, save: boolean): boolean {
-        if (this.isGameRunning(token)) {
+        if (!this.isGameRunning(token)) {
             return false
         }
 
@@ -87,17 +90,17 @@ class RunningGameStorage {
             const level = game?.level
             const time = game?.time
             sequelize.sync()
-            .then(() => {
-                ScoreBoard.create({
-                    tokenKey: token,
-                    category: <string>category,
-                    level: <number>level,
-                    time: <number>time
+                .then(() => {
+                    ScoreBoard.create({
+                        tokenKey: token,
+                        category: <string>category,
+                        level: <number>level,
+                        time: <bigint>time
+                    })
+                        .catch((error) => {
+                            console.error('Failed to save game: ', error)
+                        })
                 })
-                .catch((error) => {
-                     console.error('Failed to save game: ', error)
-                })
-        })
         }
 
         this.runningGames.delete(token)
@@ -105,7 +108,7 @@ class RunningGameStorage {
     }
 
     endGame(token: string, save: boolean) {
-        if (this.isGameRunning(token)) {
+        if (!this.isGameRunning(token)) {
             return
         }
 
@@ -116,24 +119,24 @@ class RunningGameStorage {
             const level = game?.level
             const time = game?.time
             sequelize.sync()
-            .then(() => {
-            ScoreBoard.create({
-                tokenKey: token,
-                category: <string>category,
-                level: <number>level,
-                time: <number>time
-            })
-            .catch((error) => {
-                console.error('Failed to save game: ', error)
-            })
-        })
+                .then(() => {
+                    ScoreBoard.create({
+                        tokenKey: token,
+                        category: <string>category,
+                        level: <number>level,
+                        time: <bigint>time
+                    })
+                        .catch((error) => {
+                            console.error('Failed to save game: ', error)
+                        })
+                })
         }
 
         this.runningGames.delete(token)
     }
 
     getTime(token: string) {
-        if (this.isGameRunning(token)) {
+        if (!this.isGameRunning(token)) {
             return -1
         }
 
@@ -147,7 +150,7 @@ class RunningGameStorage {
     }
 
     getRemainingTime(token: string) {
-        if (this.isGameRunning(token)) {
+        if (!this.isGameRunning(token)) {
             return -1
         }
 
@@ -157,44 +160,41 @@ class RunningGameStorage {
             return -1
         }
 
-        return game.time - (new Date()).getTime()
+        return game.time - BigInt((new Date()).getTime())
     }
 
     //TODO: Wrap the game.use... methods in to try catch
     useHalf(token: string): Question | undefined {
         try {
-
-            if (this.isGameRunning(token)) {
+            if (!this.isGameRunning(token)) {
                 return undefined
             }
-    
+
             let game = this.runningGames.get(<string>token)
-    
+
             if (!game) {
                 return undefined
             }
-    
+
             return game.useHalf()
-
         } catch (error) {
-
             throw new GameException('Error in RunninGameStorage:useHalf method\n' + error)
         }
     }
 
-    useSwitch(token: string): Question | undefined {
+    useSwitch(token: string): Promise<Question | undefined> | undefined {
         try {
 
-            if (this.isGameRunning(token)) {
+            if (!this.isGameRunning(token)) {
                 return undefined
             }
-    
+
             let game = this.runningGames.get(<string>token)
-    
+
             if (!game) {
                 return undefined
             }
-    
+
             return game.useSwitch()
 
         } catch (error) {
@@ -206,16 +206,16 @@ class RunningGameStorage {
     useAudience(token: string): string | undefined {
         try {
 
-            if (this.isGameRunning(token)) {
+            if (!this.isGameRunning(token)) {
                 return undefined
             }
-    
+
             let game = this.runningGames.get(<string>token)
-    
+
             if (!game) {
                 return undefined
             }
-    
+
             return game.useAudience()
 
         } catch (error) {

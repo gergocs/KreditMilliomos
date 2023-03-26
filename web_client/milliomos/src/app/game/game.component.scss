@@ -2,6 +2,7 @@
 :host {
   display: block;
   background-color: rgb(152, 54, 48);
+  overflow: hidden;
 }
 
 #game-window-container {
@@ -9,6 +10,7 @@
   height: 100vh;
   width: 100vw;
   overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 // Title
@@ -24,13 +26,10 @@
   margin-left: 2%;
 }
 
+// Answers
 #answers {
   font-family: "Roboto", sans-serif;
   font-weight: 500;
-}
-
-#next-button {
-  color: white;
 }
 
 .answer-box:hover {
@@ -43,4 +42,16 @@
   background-color: #ffc107;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   color: aliceblue;
+}
+
+// Button
+#submit-button {
+  color: white;
+}
+
+.submit-button-active {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: white;
+  cursor: pointer;
 }
