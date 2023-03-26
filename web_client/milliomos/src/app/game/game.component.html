@@ -1,97 +1,56 @@
-<head>
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap");
-  </style>
-</head>
-
-<button class="btn btn-secondary" routerLink="/profile">Kilépés</button>
-<div id="game-window-container">
-  <!-- Game title -->
-  <div id="title" class="ontainer-lg p-3 mb-5">
-    <br/>
-    <p>Legyen Ön is kreditmilliomos!</p>
+<div class="content">
+  <div class="title">
+    <h2>Legyen Ön is kreditmilliomos!</h2>
   </div>
-
-  <!-- Game area -->
-  <div class="row">
-    <!-- Main panel -->
-    <div class="col-8 p-3">
-      <div class="container bg-light rounded" id="main-panel">
-        <br/>
-
-        <!-- Question -->
-        <h4 class="p-1">
-          {{ this.currentQuestion?.question }}
-        </h4>
-        <hr/>
-        <br/>
-        <!-- Answer holder -->
-        <div class="container" id="answers">
-          <!-- Answer buttons -->
-          <div class="row">
-            <div
-              class="card col border-warning border border-3 rounded-4 answer-box"
-              [class.answer-box-selected]="selectedA"
-              (click)="mouseClick('A')"
-            >
-              <div class="card-body">
-                {{ this.currentQuestion?.answerA }}
-              </div>
-            </div>
-            <div class="col-1"></div>
-            <div
-              class="card col border-warning border border-3 rounded-4 answer-box"
-              [class.answer-box-selected]="selectedB"
-              (click)="mouseClick('B')"
-            >
-              <div class="card-body">
-                {{ this.currentQuestion?.answerB }}
-              </div>
-            </div>
-            <div class="w-100"><br/></div>
-            <div
-              class="card col border-warning border border-3 rounded-4 answer-box"
-              [class.answer-box-selected]="selectedC"
-              (click)="mouseClick('C')"
-            >
-              <div class="card-body">
-                {{ this.currentQuestion?.answerC }}
-              </div>
-            </div>
-            <div class="col-1"></div>
-            <div
-              class="card col border-warning border border-3 rounded-4 answer-box"
-              [class.answer-box-selected]="selectedD"
-              (click)="mouseClick('D')"
-            >
-              <div class="card-body">
-                {{ this.currentQuestion?.answerD }}
-              </div>
-            </div>
-          </div>
-          <br/>
+  <div class="game">
+    <div class="question">
+      <h3>{{ this.currentQuestion?.question }}</h3>
+      <div class="answers">
+        <div class="answer" [class.answer-selected]="selectedA" (click)="mouseClick('A')">
+          <span>{{ this.currentQuestion?.answerA }}</span>
         </div>
-        <hr/>
-        <div class="container text-center">
-          <button
-            id="submit-button"
-            type="button"
-            class="btn btn-secondary btn-lg"
-            [class.submit-button-active]="userCanSubmit"
-            (click)="submit()"
-          >
-            Megerősít
-          </button>
+        <div class="answer" [class.answer-selected]="selectedB" (click)="mouseClick('B')">
+          <span>{{ this.currentQuestion?.answerB }}</span>
         </div>
-        <br/>
+        <div class="answer" [class.answer-selected]="selectedC" (click)="mouseClick('C')">
+          <span>{{ this.currentQuestion?.answerC }}</span>
+        </div>
+        <div class="answer" [class.answer-selected]="selectedD" (click)="mouseClick('D')">
+          <span>{{ this.currentQuestion?.answerD }}</span>
+        </div>
       </div>
+      <button id="submit-button" [class.button-active]="userCanSubmit" (click)="submit()">Választás megerősítése</button>
     </div>
-
-    <!-- Side panel -->
-    <div class="col-3 p-3">
-      <div class="container bg-light rounded" id="side-panel">
-        <p>side panel</p>
+    <div class="sidebar">
+      <a (click)="exitGame()"><i class="material-icons">exit_to_app</i></a>
+      <div class="helps">
+        <div class="help">
+          <i class="material-icons disabled">comments_disabled</i>
+        </div>
+        <div class="help">
+          <i class="material-icons">group</i>
+        </div>
+        <div class="help">
+          <i class="material-icons">refresh</i>
+        </div>
       </div>
+      <ul>
+        <li>15 kredit</li>
+        <li>14 kredit</li>
+        <li>13 kredit</li>
+        <li>12 kredit</li>
+        <li>11 kredit</li>
+        <li>10 kredit</li>
+        <li>9 kredit</li>
+        <li>8 kredit</li>
+        <li>7 kredit</li>
+        <li>6 kredit</li>
+        <li>5 kredit</li>
+        <li>4 kredit</li>
+        <li class="active">3 kredit</li>
+        <li class="answered">2 kredit</li>
+        <li class="answered">1 kredit</li>
+      </ul>
     </div>
   </div>
 </div>

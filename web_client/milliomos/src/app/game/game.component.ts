@@ -151,7 +151,7 @@ export class GameComponent implements OnInit {
           console.log(r.win) //TODO: Win or lose
           if(!r.win){
             this.wrongAnswerSound.play()}
-          this.gameService.endGame(this.userid, true).then(()=>{
+            this.gameService.endGame(this.userid, true).then(()=>{
             this.router.navigateByUrl("/lobby")
           })
         } else if (r.question !== undefined) {
@@ -188,5 +188,14 @@ export class GameComponent implements OnInit {
     this.selectedB = false;
     this.selectedC = false;
     this.selectedD = false;
+  }
+
+  // Exit game code
+  exitGame() {
+    this.backgroundMusic.pause()
+    this.wrongAnswerSound.play()
+    this.gameService.endGame(this.userid, true).then(()=>{
+      this.router.navigateByUrl("/lobby")
+    })
   }
 }
