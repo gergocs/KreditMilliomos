@@ -38,6 +38,7 @@ import { AdminQuestionsComponent } from './admin-questions/admin-questions.compo
     GameComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
