@@ -1,0 +1,42 @@
+<div [hidden]="!loading" class="loading"><img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading_animation"></div>
+<nav>
+    <div class="logo">Legyen ön is Kreditmilliomos!</div>
+    <button (click)="this.router.navigate(['/main'])">Főoldal</button>
+    <div class="game_start">
+      <button class="start-button" (click)="redirectToLobby()">játék kezdése</button>
+    </div>
+  </nav>
+<div class="container">
+  <div class="user-info">
+    <h2>Felhasználói adatok</h2>
+    <form [formGroup]="updateForm">
+        <div>Email: <span>{{this.userdata?.email}}</span></div>
+        <br>
+        <label>Felhasználónév:</label>
+        <input value="{{this.userdata?.name}}" type="text" formControlName="username" >
+        <br><br>
+        <label>Vezetéknév:</label>
+        <input value="{{this.userdata?.firstName}}" type="text" formControlName="firstName">
+        <br><br>
+        <label>Keresztnév:</label>
+        <input value="{{this.userdata?.lastName}}" type="text" formControlName="lastName" >
+        <br><br>
+       
+        <button type="submit" (click)="updateuser()" class="update-button">Frissítés</button>
+      </form>
+     
+      
+      
+    
+  </div>
+
+  <div class="activity-list">
+    <h2>Eddigi játékok:</h2>
+    <ul>
+      <li>123</li>
+      <li>123</li>
+      <li>123</li>
+      
+    </ul>
+  </div>
+</div>

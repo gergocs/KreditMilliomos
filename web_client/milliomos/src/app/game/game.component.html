@@ -1,0 +1,71 @@
+<div class="intro-background" id="introBox">
+  <button type="submit" class="btn btn-secondary" (click)="skipIntro()" id="skipButton">Átugrás</button>
+  <div class="wrapper">
+    <div class="head"></div>
+    <div class="mouth"></div>
+    <div class="eye"></div>
+    <div class="torso"></div>
+    <div class="leftarm"></div>
+    <div class="rightarm"></div>
+    <div class="leftleg"></div>
+    <div class="rightleg"></div>
+    <img class="dot" [@dotRotate]="animationState" (@dotRotate.done)="introDone($event)" src="./assets/images/kreditmilliomos-red.png" alt="logo">
+  </div>
+</div>
+
+<div class="content">
+  <div class="title">
+    <h2>Legyen Ön is kreditmilliomos!</h2>
+  </div>
+  <div class="game">
+    <div class="question">
+      <h3>{{ this.currentQuestion?.question }}</h3>
+      <div class="answers">
+        <div class="answer" [class.answer-selected]="selectedA" (click)="mouseClick('A')">
+          <span>{{ this.currentQuestion?.answerA }}</span>
+        </div>
+        <div class="answer" [class.answer-selected]="selectedB" (click)="mouseClick('B')">
+          <span>{{ this.currentQuestion?.answerB }}</span>
+        </div>
+        <div class="answer" [class.answer-selected]="selectedC" (click)="mouseClick('C')">
+          <span>{{ this.currentQuestion?.answerC }}</span>
+        </div>
+        <div class="answer" [class.answer-selected]="selectedD" (click)="mouseClick('D')">
+          <span>{{ this.currentQuestion?.answerD }}</span>
+        </div>
+      </div>
+      <button id="submit-button" [class.button-active]="userCanSubmit" (click)="submit()">Választás megerősítése</button>
+    </div>
+    <div class="sidebar">
+      <a (click)="exitGame()"><i class="material-icons">exit_to_app</i></a>
+      <div class="helps">
+        <div class="help">
+          <i class="material-icons disabled">comments_disabled</i>
+        </div>
+        <div class="help">
+          <i class="material-icons">group</i>
+        </div>
+        <div class="help">
+          <i class="material-icons">refresh</i>
+        </div>
+      </div>
+      <ul>
+        <li>15 kredit</li>
+        <li>14 kredit</li>
+        <li>13 kredit</li>
+        <li>12 kredit</li>
+        <li>11 kredit</li>
+        <li>10 kredit</li>
+        <li>9 kredit</li>
+        <li>8 kredit</li>
+        <li>7 kredit</li>
+        <li>6 kredit</li>
+        <li>5 kredit</li>
+        <li>4 kredit</li>
+        <li class="active">3 kredit</li>
+        <li class="answered">2 kredit</li>
+        <li class="answered">1 kredit</li>
+      </ul>
+    </div>
+  </div>
+</div>

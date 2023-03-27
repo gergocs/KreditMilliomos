@@ -9,12 +9,13 @@ class UserController {
     public router = Router()
 
     constructor() {
-        this.router.get(this.path + '/get', this.getUser)
-        this.router.get(this.path + '/admin/getAllUsers', this.listAllUsers)
-        this.router.get(this.path + '/admin/getBannedUsers', this.getBannedUsers)
-        this.router.post(this.path + '/create', this.createUser)
-        this.router.post(this.path + '/isAdmin', this.isUserAdmin)
-        this.router.post(this.path + '/admin/ban', this.banUser)
+        this.router.get(this.path, this.getUser)
+        this.router.get(this.path + '/admin/allUsers', this.listAllUsers)
+        this.router.get(this.path + '/admin/bannedUsers', this.getBannedUsers)
+        this.router.get(this.path + '/isAdmin', this.isUserAdmin)
+        this.router.post(this.path, this.createUser)
+        this.router.put(this.path + '/admin/ban', this.banUser)
+        this.router.put(this.path, this.updateUser)
     }
 
     getUser = (request: Request, response: Response, next: NextFunction) => {
@@ -25,7 +26,7 @@ class UserController {
                 User.findOne({where: {tokenKey}})
                     .then(user => {
                         if (!user) {
-                            response.status(StatusCodes.IAmATeaPod).send({error: 'User not found'})
+                            response.status(StatusCodes.NotFound).send({error: 'User not found'})
                             response.end()
                         } else {
                             response.send(user)
@@ -53,22 +54,22 @@ class UserController {
                 const lastName = request.headers.lastname
 
                 if (!tokenKey || tokenKey.length != 28) {
-                    response.sendStatus(StatusCodes.IAmATeaPod)
+                    response.sendStatus(StatusCodes.BadRequest)
                     response.end()
                 }
 
                 if (!name || name.length == 0 || name == "undefined") {
-                    response.sendStatus(StatusCodes.IAmATeaPod)
+                    response.sendStatus(StatusCodes.BadRequest)
                     response.end()
                 }
 
                 if (!firstName || firstName.length == 0 || firstName == "undefined") {
-                    response.sendStatus(StatusCodes.IAmATeaPod)
+                    response.sendStatus(StatusCodes.BadRequest)
                     response.end()
                 }
 
                 if (!lastName || lastName.length == 0 || lastName == "undefined") {
-                    response.sendStatus(StatusCodes.IAmATeaPod)
+                    response.sendStatus(StatusCodes.BadRequest)
                     response.end()
                 }
 
@@ -85,7 +86,6 @@ class UserController {
                         response.end()
                     })
                     .catch(error => {
-                        console.log(error)
                         response.sendStatus(StatusCodes.InternalError)
                         response.end()
                     })
@@ -184,6 +184,54 @@ class UserController {
             response.sendStatus(StatusCodes.UnprocessableContent)
             response.end()
         }
+    }
+
+    updateUser = (request: Request, response: Response, next: NextFunction) => {
+        const tokenKey = request.headers.tokenkey
+        const name = request.headers.nickname
+        const firstName = request.headers.firstname
+        const lastName = request.headers.lastname
+
+        if (!tokenKey || tokenKey.length != 28) {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+        }
+
+        if (!name || name.length == 0 || name == "undefined") {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+        }
+
+        if (!firstName || firstName.length == 0 || firstName == "undefined") {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+        }
+
+        if (!lastName || lastName.length == 0 || lastName == "undefined") {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+        }
+
+        sequelize.sync()
+            .then(() => {
+                User.update({
+                    name: <string>name,
+                    firstName: <string>firstName,
+                    lastName: <string>lastName,
+                }, {where: {tokenKey: tokenKey}})
+                    .then(r => {
+                        response.sendStatus(StatusCodes.Ok)
+                        response.end()
+                    })
+                    .catch(error => {
+                        response.sendStatus(StatusCodes.InternalError)
+                        response.end()
+                    })
+            })
+            .catch(error => {
+                response.sendStatus(StatusCodes.ServiceUnavailable)
+                response.end()
+            })
     }
 }
 

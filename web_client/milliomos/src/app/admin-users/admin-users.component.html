@@ -1,0 +1,39 @@
+<div [hidden]="!loading" class="loading">
+  <img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading animation">
+</div>
+
+<nav>
+  <ul>
+    <li><a routerLink="/profile"><i class="material-icons">account_circle</i>Profil</a></li>
+    <li><a routerLink="/admin-users" class="active"><i class="material-icons">supervisor_account</i>Felhasználók kezelése</a></li>
+    <li><a routerLink="/admin-questions"><i class="material-icons">help_outline</i>Kérdések kezelése</a></li>
+    <li><a (click)="this.authservice.logout()"><i class="material-icons">exit_to_app</i>Kijelentkezés</a></li>
+  </ul>
+</nav>
+
+<div class="content">
+  <div class="box">
+    <h2>Felhasználók kezelése</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>felhasználónév</th>
+          <th>e-mail cím</th>
+          <th>vezetéknév</th>
+          <th>keresztnév</th>
+          <th style="width: 3%;" align="center"></th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let user of this.userList; let i = index" [attr.data-index]="i">
+              <td>{{user.name}}</td>
+              <td>{{user.email}}</td>
+              <td>{{user.firstName}}</td>
+              <td>{{user.lastName}}</td>
+              <td align="center" *ngIf="this.helperListArray[i]" (click)="this.banUser(user.tokenKey, false, i)"><button class="unban material-icons">check</button></td>
+              <td align="center" *ngIf="!this.helperListArray[i]" (click)="this.banUser(user.tokenKey, true, i)"><button clasS="ban material-icons">block</button></td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -18,11 +18,8 @@ export class AuthService {
     loggedOut: 1,
     loggedIn: 2,
   }
-  bannedUserIDs: string[] | undefined;
-  helperListArray: boolean[] = new Array(1);
   user: firebase.User | undefined;
   userdata: UserModell | undefined;
-  userList: UserModell[] | undefined;
   authState = this.authStates.unknown;
 
   hostname: string;
@@ -59,12 +56,13 @@ export class AuthService {
     let token = this.user.uid;
     let header = new HttpHeaders()
       .set("tokenkey", token)
-    await this.http.get<UserModell>(this.hostname + "user/get", {headers: header}).toPromise().then(body =>{
+    await this.http.get<UserModell>(this.hostname + "user", {headers: header}).toPromise().then(body =>{
 
       this.userdata = body
+      window.localStorage.setItem("userdatas", JSON.stringify(body))
         if(body?.isAdmin){
           this.zone.run(() => {
-            this.router.navigate(['/admin']);
+            this.router.navigate(['/admin-users']);
         });
         }else {
           this.zone.run(() => {
@@ -78,10 +76,7 @@ export class AuthService {
   }
 
   async isLoggedIn() {
-    if (this.user)
-      return true;
-
-    return false;
+    return !!this.user;
   }
 
   async login(email: string, password: string) {
@@ -90,7 +85,11 @@ export class AuthService {
   }
 
   async logout() {
+    window.localStorage.removeItem("userdatas")
     await this.auth.signOut();
+    this.zone.run(() => {
+      this.router.navigate(['/login']);
+  });
   }
 
   async GoogleAuth() {
@@ -125,9 +124,14 @@ export class AuthService {
 
       let token = this.user.uid;
       let header = new HttpHeaders()
-        .set("tokenkey", token).set("isoauth", 'true').set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname)
+        .set("tokenkey", token)
+        .set("isoauth", 'true')
+        .set("email", encodeURIComponent(email))
+        .set("nickname", encodeURIComponent(nickname))
+        .set("firstname", encodeURIComponent(firstname))
+        .set("lastname", encodeURIComponent(lastname))
       if(firstlogin){
-          await this.http.post(this.hostname + "user/create", header, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
+          await this.http.post(this.hostname + "user", header, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
             if (body == null){
               throw new Error() //remeljuk mukodik
             }
@@ -161,8 +165,13 @@ export class AuthService {
 
       let token = this.user.uid;
       let header = new HttpHeaders()
-        .set("tokenkey", token).set("email", email).set("nickname",nickname).set("firstname", firstname).set("lastname", lastname).set("admin", "false")
-      await this.http.post(this.hostname + "user/create", null, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
+        .set("tokenkey", token)
+        .set("email", encodeURIComponent(email))
+        .set("nickname", encodeURIComponent(nickname))
+        .set("firstname", encodeURIComponent(firstname))
+        .set("lastname", encodeURIComponent(lastname))
+        .set("admin", "false")
+      await this.http.post(this.hostname + "user", null, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
         console.log(body)
         if (body == null){
           throw new Error() //remeljuk mukodik
@@ -181,34 +190,22 @@ export class AuthService {
         return new Promise((resolve, reject) => {reject();}) //tesztre var TODO
       })
     });
-
-
   }
 
-  async getAllUsers(){
-    try{
-      if (!this.user)
-        return
-      let token = this.user.uid;
-      let header = new HttpHeaders()
-        .set("tokenkey", token)
-      await this.http.get<UserModell[]>(this.hostname + "user/admin/getAllUsers", {headers: header})
-        .subscribe(async (body) => {
-          this.userList = body;
-         this.helperListArray = new Array(body.length);
-          await this.bannedUserList();
-          body.forEach((user, index) => {
-            if(this.bannedUserIDs && this.helperListArray)
-            {
-              this.helperListArray[index] = this.bannedUserIDs?.includes(user.tokenKey);
-            }
+  async updateuser(userdata: UserModell){
+    let header = new HttpHeaders()
+      .set("tokenkey", userdata.tokenKey)
+      .set("nickname", encodeURIComponent(userdata.name))
+      .set("firstname", encodeURIComponent(userdata.firstName))
+      .set("lastname", encodeURIComponent(userdata.lastName))
+    return await this.http.put(this.hostname + "user", null, {headers: header, responseType: 'text'}).toPromise()
+  }
 
-          });
-        })
-    }catch(error){
-      console.log(error);
-      return new Promise((resolve, reject) => {reject();})
-    }
+  async getAllUsers(tokenkey: string){
+      let header = new HttpHeaders()
+        .set("tokenkey", tokenkey)
+      return await this.http.get<UserModell[]>(this.hostname + "user/admin/allUsers", {headers: header}).toPromise()
+
   }
 
 
@@ -219,17 +216,7 @@ export class AuthService {
 
     let token = this.user.uid;
     let header = new HttpHeaders().set("tokenkey",token)//json egyből alakítható
-    await this.http.get<string[]>(this.hostname + "user/admin/getBannedUsers", {headers: header}).toPromise().then(async body => {
-      if (body == null) {
-        throw new Error()
-      }
-
-      this.bannedUserIDs = body;
-
-    }).catch(error =>{
-
-      console.log(error)
-    })
+    return await this.http.get<string[]>(this.hostname + "user/admin/bannedUsers", {headers: header}).toPromise()
 
   }
 

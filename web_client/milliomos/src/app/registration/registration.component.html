@@ -1,49 +1,70 @@
-<div [hidden]="!loading" class="loading"><img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading_animation"></div>
-<div [formGroup]="regForm" class="container-lg my-5 p-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-primary" style="max-width: 500px;">
-    <h3>Regisztráció</h3>
-    <br>
+<div [hidden]="!loading" class="loading">
+  <img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading animation">
+</div>
+
+<div class="content">
+  <div [formGroup]="regForm" class="register">
+    <h2>Regisztráció</h2>
     <div *ngIf="error" class="alert alert-danger" role="alert">
-        {{errorMsg}}
+      {{errorMsg}}
     </div>
-    <div class="form-group">
-        <label for="username"> Felhasználónév:</label>
-        <input id="username" type="text" formControlName="username" class="form-control" #nickname/>
+    <div class="input-box">
+      <label for="username">felhasználónév</label>
+      <input id="username" type="text" formControlName="username" #nickname/>
     </div>
-    <br>
-      <div class="form-group">
-        <label for="email"> Email:</label>
-        <input id="email" type="text" formControlName="email" class="form-control" #email/>
+    <div class="input-box">
+      <label for="email">e-mail cím</label>
+      <input id="email" type="text" formControlName="email" class="form-control" #email/>
+    </div>
+    <div class="row">
+      <div class="input-box">
+        <label for="lastName">vezetéknév</label>
+        <input id="lastName" type="text" formControlName="lastName" #firstname/>
       </div>
-    <br>
-    <div class="form-group">
-        <label for="lastName"> Vezetéknév:</label>
-        <input id="lastName" type="text" formControlName="lastName" class="form-control" #firstname/>
+      <div class="input-box">
+        <label for="firstName">keresztnév</label>
+        <input id="firstName" type="text" formControlName="firstName" #lastname/>
+      </div>
     </div>
-    <br>
-    <div class="form-group">
-        <label for="firstName"> Keresztnév:</label>
-        <input id="firstName" type="text" formControlName="firstName" class="form-control" #lastname/>
+    <div class="row">
+      <div class="input-box">
+        <label for="password">jelszó</label>
+        <input id="password" type="password" formControlName="password" #password/>
+      </div>
+      <div class="input-box">
+        <label for="passwordAgain">jelszó megerősítése</label>
+        <input id="passwordAgain" type="password" formControlName="passwordAgain" #passwordagain/>
+      </div>
     </div>
-    <br>
-    <div class="form-group">
-        <label for="password"> Jelszó:</label>
-        <input id="password" type="password" formControlName="password" class="form-control" #password/>
+    <button class="register-button" (click)="this.onRegisterClicked(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value);">Regisztráció</button>
+    <div class="separator">
+      <div class="line"></div>
+      <div class="text">vagy</div>
+      <div class="line"></div>
     </div>
-    <br>
-    <div class="form-group">
-        <label for="passwordAgain"> Jelszó ismétlése:</label>
-        <input id="passwordAgain" type="password" formControlName="passwordAgain" class="form-control" #passwordagain/>
+    <div class="google">
+      <button (click)="auth.GoogleAuth()"><img src="../../assets/images/google-logo.png"> Folytatás Google-fiókkal</button>
     </div>
-    <br>
-    
-<button class="btn btn-success m-2" (click)="this.onRegisterClicked(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value); ">Regisztráció</button>
-<button class="btn btn-primary m-2" (click)="auth.GoogleAuth()">Bejelentkezés Google fiókkal</button>
-
+    <div class="login">
+      Van már fiókod? <a routerLink="/login">Jelentkezz be!</a>
+    </div>
+  </div>
 </div>
 
 
 
-<div class="container-lg my-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-primary" style="max-width: 500px;">
-    <h6>Ha már van felhasználói fiókod kattints ide: </h6>
-    <a class="link-info" routerLink="/login">Bejelentkezés</a>
-</div>
+    <div class="form-group">
+
+    </div>
+    <br>
+    <div class="form-group">
+
+    </div>
+    <br>
+    <div class="form-group">
+
+    </div>
+    <br>
+    <div class="form-group">
+
+    </div>

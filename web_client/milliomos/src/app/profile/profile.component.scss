@@ -1,0 +1,29 @@
+@import '../app.component.scss';
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3.725em;
+    padding: 0 1.125em;
+    background-color: #333;
+    color: #fff;
+  }
+
+.container {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.user-info, .activity-list {
+
+    width: 50%;
+    height: 40em;
+    background-color: #ccc;
+    box-sizing: border-box;
+    border: 1px solid black;
+    margin: 5em 0.45em;
+}
+h2{
+  margin-bottom: 1.25em;
+}

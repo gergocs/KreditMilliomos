@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.loading = false;
   }
+
   async onGoogleLogin(){
     this.loading = true
     await this.auth.GoogleAuth().catch(error=>{
@@ -35,34 +36,39 @@ export class LoginComponent implements OnInit {
   }
 
   async onLoginClicked(email: string, password: string) {
-    
+
     if (email == "") {
-      this.errorMsg = "Az e-mail cím mező nem lehet üres!"
+      this.errorMsg = "Az e-mail cím mező kitöltése kötelező!"
       this.error = true
       return;
     }
 
     if (password == "") {
-      this.errorMsg = "A jelszó mező nem lehet üres!"
+      this.errorMsg = "A jelszó mező kitöltése kötelező!"
       this.error = true
       return;
     }
 
-    if (email.length > 64 || password.length > 24) {
-      this.errorMsg = "Túl hosszú inputok"
+    if (email.length > 64) {
+      this.errorMsg = "Az email cím maximum 64 karakter hosszúságú lehet!"
       this.error = true
       return;
     }
+
+    if (password.length > 24) {
+      this.errorMsg = "A jelszó maximum 24 karakter hosszúságú lehet!"
+      this.error = true
+      return;
+    }
+
     this.loading = true;
     try {
       await this.auth.login(email, password).catch(error=>{
+        this.error = true
+        this.errorMsg = "Hibás e-mail cím vagy jelszó!"
         this.loading=false
       })
       //this.router.navigate(["/main"]);
-    } catch {
-      this.errorMsg = "Hibás e-mail cím vagy jelszó!"
-      this.error = true;
-      this.loading = false;
-    }
+    } catch {}
   }
 }
