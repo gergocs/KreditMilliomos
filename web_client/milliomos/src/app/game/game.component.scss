@@ -1,57 +1,194 @@
-// Page settings
-:host {
-  display: block;
-  background-color: rgb(152, 54, 48);
-  overflow: hidden;
-}
-
-#game-window-container {
-  color: var(--col-pale);
+.content {
+  width: 100%;
   height: 100vh;
-  width: 100vw;
-  overflow-y: hidden;
-  overflow-x: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #983630;
 }
 
-// Title
-#title {
-  color: white;
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  font-size: 2em;
+.content .title {
+  left: auto;
+}
+
+.content .title h2 {
+  color: #ffffff;
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.content .game {
+  padding: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.content .game .question {
+  padding: 32px 64px;
+  margin-right: 60px;
+  width: 950px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 16px;
+}
+
+.content .game .question h3 {
+  margin-top: 100px;
+  color: #333333;
+  font-size: 28px;
+  font-weight: 600;
   text-align: center;
 }
 
-#main-panel {
-  margin-left: 2%;
+.content .game .question .answers {
+  margin-top: 30px;
+  margin-bottom: 40px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 24px;
 }
 
-// Answers
-#answers {
-  font-family: "Roboto", sans-serif;
+.content .game .question .answers .answer {
+  padding: 24px;
+  width: 100%;
+  color: #333333;
+  font-size: 18px;
   font-weight: 500;
+  text-align: center;
+  border: 2px solid #efa044;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background-color 0.4s;
 }
 
-.answer-box:hover {
-  background-color: #ffc107;
-  color: white;
+.content .game .question .answers .answer:hover {
+  color: #ffffff;
+  background-color: #efa044;
+}
+
+.content .game .question .answers .answer.answer-selected {
+  color: #ffffff;
+  background-color: #efa044;
+}
+
+.content .game .question button {
+  padding: 16px 32px;
+  margin: 14px 0 60px 0;
+  background-color: #b3b3b3;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: 0.5s;
+  cursor: not-allowed;
+}
+
+.content .game .question button.button-active {
+  background-color: #efa044;
+  color: #ffffff;
   cursor: pointer;
 }
 
-.answer-box-selected {
-  background-color: #ffc107;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  color: aliceblue;
+.content .game .question button.button-active:hover {
+  background-color: #ee8c1d;
 }
 
-// Button
-#submit-button {
-  color: white;
+.content .game .sidebar {
+  padding: 20px 16px;
+  width: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 16px;
 }
 
-.submit-button-active {
-  background-color: #ffc107;
-  border-color: #ffc107;
-  color: white;
+.content .game .sidebar a {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   cursor: pointer;
+}
+
+.content .game .sidebar a i {
+  color: #333333;
+  font-size: 20px;
+  transition: 0.4s;
+}
+
+.content .game .sidebar .helps {
+  display: flex;
+}
+
+.content .game .sidebar .helps .help {
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.content .game .sidebar .helps .help i {
+  padding: 8px;
+  color: #333333;
+  font-size: 22px;
+  border: 2px solid #efa044;
+  border-radius: 50%;
+  transition: background-color 0.4s;
+}
+
+.content .game .sidebar .helps .help i:not(.disabled):hover {
+  color: #ffffff;
+  background-color: #efa044;
+}
+
+.content .game .sidebar .helps .help i.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.content .game .sidebar ul {
+  width: 90%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.content .game .sidebar ul li {
+  padding: 4px 0;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  border-bottom: 0.2px solid #75717130;
+}
+
+.content .game .sidebar ul li.active {
+  color: #ffffff;
+  background-color: #efa044;
+  border-radius: 16px;
+}
+
+.content .game .sidebar ul li.answered {
+  color: #333333;
+  opacity: 0.5;
+}
+
+.content .game .sidebar ul li:nth-child(6),
+.content .game .sidebar ul li:nth-child(11),
+.content .game .sidebar ul li:first-child {
+  color: #efa044;
+}
+
+.content .game .sidebar ul li:last-child {
+  border: none;
 }
