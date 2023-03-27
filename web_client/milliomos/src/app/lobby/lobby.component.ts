@@ -20,7 +20,12 @@ export class LobbyComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userid = this.auth.user?.uid;
+    let userdatas = window.localStorage.getItem("userdatas")
+    if(!userdatas){
+      this.authservice.logout()
+      return
+    }
+    this.userid = JSON.parse(userdatas).tokenKey;
   }
 
   // Needs proper implementation

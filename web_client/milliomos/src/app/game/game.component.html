@@ -1,3 +1,18 @@
+<div class="intro-background" id="introBox">
+  <button type="submit" class="btn btn-secondary" (click)="skipIntro()" id="skipButton">Átugrás</button>
+  <div class="wrapper">
+    <div class="head"></div>
+    <div class="mouth"></div>
+    <div class="eye"></div>
+    <div class="torso"></div>
+    <div class="leftarm"></div>
+    <div class="rightarm"></div>
+    <div class="leftleg"></div>
+    <div class="rightleg"></div>
+    <img class="dot" [@dotRotate]="animationState" (@dotRotate.done)="introDone($event)" src="./assets/images/kreditmilliomos-red.png" alt="logo">
+  </div>
+</div>
+
 <div class="content">
   <div class="title">
     <h2>Legyen Ön is kreditmilliomos!</h2>
