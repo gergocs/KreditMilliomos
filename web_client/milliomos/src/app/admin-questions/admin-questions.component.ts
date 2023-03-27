@@ -4,6 +4,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Question } from '../models/question';
+import { QuestionCategory } from '../models/questionCategory';
 import { AuthService } from '../services/auth.service';
 import { QuestionService } from '../services/question.service';
 
@@ -28,6 +29,12 @@ export class AdminQuestionsComponent implements OnInit {
   public hostname: string = 'localhost';
 
   public allquestion: Question[] = [];
+
+  public allQuestionCategories: QuestionCategory[] = []
+
+  categoryForm = new FormGroup({
+    category: new FormControl(''),
+  }) 
 
   questionForm = new FormGroup({
     category: new FormControl(''),
@@ -88,8 +95,46 @@ export class AdminQuestionsComponent implements OnInit {
           this.loading = false;
         }
       );
+
+      this.questionService.getQuestionCategories(this.userid).subscribe(body =>{
+        this.allQuestionCategories = body;
+        this.allQuestionCategories.forEach(qc => {
+          qc.category = decodeURIComponent(qc.category)
+        })
+    },(error:any)=>{
+      let qcat: QuestionCategory = {
+        category: "Hiba",
+      }
+      this.allQuestionCategories.push(qcat)
+    })
+
     });
   }
+
+  async createQuestionCategory(){
+    this.loading=true
+    let newQC: QuestionCategory = {
+      category: this.categoryForm.get('category')?.value,
+    }
+    this.questionService.createQuestionCategory(newQC, this.userid)
+    .subscribe(body => {
+      if( body == null){
+        throw new Error()
+      }
+      console.log("Created question category in DB")
+      console.log(body);
+      this.allQuestionCategories.push(newQC);
+      this.loading=false
+    },(error) => {
+      console.log(error)
+      if(error.status == 200){
+        this.allQuestionCategories.push(newQC);
+      }
+      this.loading=false
+    }
+    );
+  }
+
   onCreateQuestion() {
     //validity check
     this.loading = true;

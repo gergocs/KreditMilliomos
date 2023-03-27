@@ -1,4 +1,4 @@
 <h1>Sikeresen beléptél!</h1>
-<button *ngIf="auth.userdata?.isAdmin == true" routerLink="/admin"> Admin oldal</button>
+<button *ngIf="this.userdata?.isAdmin" routerLink="/admin-users"> Admin oldal</button>
 <button routerLink="/profile">Profil</button>
 <button (click)="onLogoutPress()">Kijelentkezés</button>
