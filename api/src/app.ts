@@ -9,6 +9,7 @@ import * as https from 'https'
 import {StatusCodes} from "./utilites/StatusCodes";
 import {sequelize} from './db/sequelizeConnector'
 import User from "./models/user";
+import TrustedTokenHandler from "./utilites/trustedTokenHandler";
 
 class App {
     public app: express.Application
@@ -42,12 +43,17 @@ class App {
                 return
             }
 
-            this.fireAuth.getUser(req.headers.tokenkey as string).then(r => {
+            if (TrustedTokenHandler.instance().isValidToken(req.headers.tokenkey as string)){
                 next()
-            }).catch(er => {
-                res.status(StatusCodes.Unauthorized).send('Invalid token')
-                res.end()
-            })
+            } else {
+                this.fireAuth.getUser(req.headers.tokenkey as string).then(r => {
+                    TrustedTokenHandler.instance().addToken(req.headers.tokenkey as string)
+                    next()
+                }).catch(er => {
+                    res.status(StatusCodes.Unauthorized).send('Invalid token')
+                    res.end()
+                })
+            }
         })
         this.app.use((req, res, next): void => {
             if (!req.path.includes('admin')) {
