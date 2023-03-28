@@ -8,6 +8,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { GameComponent } from './game/game.component';
 import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
+import {DataprivacyComponent} from "./dataprivacy/dataprivacy.component";
 const routes: Routes = [
   {
     path: 'lobby',
@@ -46,6 +47,10 @@ const routes: Routes = [
     component: LoginComponent
     //redirectTo: 'main',
     //pathMatch: 'full'
+  },
+  {
+    path: 'dataprivacy',
+    component: DataprivacyComponent
   },
 
 ];
