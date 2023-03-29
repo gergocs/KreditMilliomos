@@ -2,7 +2,7 @@ import Question from "../models/question";
 import {sequelize} from "../db/sequelizeConnector";
 import {GameModes} from "./gameModes";
 import question from "../models/question";
-import { GameException } from "../exceptions/GameException";
+import {GameException} from "../exceptions/GameException";
 import {Op} from "sequelize";
 
 class Game {
@@ -157,7 +157,7 @@ class Game {
         return await question
     }
 
-    useAudience(): string {
+    useAudience(): Array<number> {
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
@@ -166,17 +166,32 @@ class Game {
             throw new GameException("The user already used audience")
         }
 
-        const myAnswers = [this.question.answerA, this.question.answerB, this.question.answerC, this.question.answerD]
-        const probabilityMassOfMyAnswers: Array<number> = [
-            (this.question.answerA == this.question.answerCorrect ? 0.8 : 0.5) as number,
-            (this.question.answerB == this.question.answerCorrect ? 0.8 : 0.1) as number,
-            (this.question.answerC == this.question.answerCorrect ? 0.8 : 0.3) as number,
-            (this.question.answerD == this.question.answerCorrect ? 0.8 : 0.5) as number
-        ]
-        const answerIGot = this.getWeightedRandom(myAnswers, probabilityMassOfMyAnswers)
+        // Please god send us help again
+        let correctQuestion = ('A' == this.question.answerCorrect
+            ? 0 : 'B' == this.question.answerCorrect
+                ? 1 : 'C' == this.question.answerCorrect
+                    ? 2 : 3) + this.randomOffset()
+
+        if (correctQuestion >= 4) {
+            correctQuestion -= 4
+        }
+
+        console.log(this.question.answerCorrect)
+
+        let arrayOfRandoms = new Array<number>(10)
+        let counts = new Array<number>()
+
+        for (let i = 0; i < arrayOfRandoms.length; i++) {
+            arrayOfRandoms.push(this.weightedRandom(correctQuestion))
+        }
+
+        arrayOfRandoms.forEach(function (x) {
+            counts[x] = (counts[x] || 0) + 1;
+        });
 
         this.audience = false
-        return answerIGot
+
+        return counts
     }
 
     private generateQuestion(offset = 1): Promise<Question> {
@@ -222,17 +237,46 @@ class Game {
         return answer.toLowerCase() === this.question.answerCorrect.toLowerCase()
     }
 
-    private getRandomInt(min, max): number {
+    private getRandomInt(min: number, max: number): number {
         min = Math.ceil(min)
         return Math.floor(Math.random() * (Math.floor(max) - min + 1)) + min
     }
 
-    private getWeightedRandom(answerOptions: Array<string>, probabilityMassOfMyAnswers: Array<number>) {
-        const cumulativeDistribution = probabilityMassOfMyAnswers.map((sum => value => sum += value)(0))
-        const myRandom = Math.random()
-        const indexOfWeightedRandom = cumulativeDistribution.filter(e => myRandom >= e).length
+    // Random offset between 0 and 3
+    private randomOffset(): number {
+        let rand = Math.random()
+        if (rand < 0.5) { // ~0.5
+            return 0
+        } else if (rand >= 0.5 && rand < 0.6) {  // ~0.1
+            return 1
+        } else if (rand >= 0.6 && rand < 0.75) { // ~0.15
+            return 2
+        } else { // ~0.25
+            return 3
+        }
+    }
 
-        return answerOptions[indexOfWeightedRandom]
+    private weightedRandom(correct: number): number {
+        let val = this.gaussianRandom();
+
+        if (Math.abs(val) < 1) { // ~0.6827
+            return correct
+        } else if (val <= -1 && val > -2) { // ~0.136
+            return correct == 0 ? 1 : (correct == 1 ? 2 : (correct == 2 ? 3 : 0))
+        } else if (val >= 1 && val < 2) { // ~0.136
+            return correct == 0 ? 2 : (correct == 1 ? 3 : (correct == 2 ? 0 : 1))
+        } else { // ~0.0455
+            return correct == 0 ? 3 : (correct == 1 ? 0 : (correct == 2 ? 1 : 2))
+        }
+    }
+
+    // Gaussian random number https://en.wikipedia.org/wiki/Normal_distribution
+    private gaussianRandom(mean = 0, stdev = 1) {
+        let u = 1 - Math.random(); // Converting [0,1) to (0,1]
+        let v = Math.random();
+        let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+        // Transform to the desired mean and standard deviation:
+        return z * stdev + mean;
     }
 }
 
