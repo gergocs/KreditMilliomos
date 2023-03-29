@@ -330,7 +330,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
         if(r){
         let answerdiv
-        if(r.guess == this.currentQuestion?.answerA){
+        /*if(r.guess == this.currentQuestion?.answerA){
           answerdiv = document.getElementById('answerA')
         }else if(r.guess == this.currentQuestion?.answerB){
           answerdiv = document.getElementById('answerB')
@@ -341,7 +341,7 @@ export class GameComponent implements OnInit, OnDestroy {
         }
         if(answerdiv){
           answerdiv.style.background = 'rgba(111,211,20,0.5)'
-        }
+        }*/
         }
         console.log()
 
@@ -360,17 +360,17 @@ export class GameComponent implements OnInit, OnDestroy {
   async use_skip(){
     if(this.userid){
       await this.gameService.useSwitch(this.userid).then(r => {
-        
+
         if(r){
         this.currentQuestion = r.question}
-  
+
         let button = document.getElementById('skip_help')
         if(button){button.classList.add("disabled")}
         let line = document.getElementById('skip_line')
         if(line){line.hidden = false}
       }).catch(e => {
         console.log(e);
-  
+
         //TODO: process error
       });
     }

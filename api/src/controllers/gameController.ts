@@ -3,7 +3,7 @@ import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
 import RunningGameStorage from "../utilites/RunningGameStorage"
-import { GameException } from "../exceptions/GameException";
+import {GameException} from "../exceptions/GameException";
 
 class GameController {
 

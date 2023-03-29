@@ -203,7 +203,7 @@ class RunningGameStorage {
         }
     }
 
-    useAudience(token: string): string | undefined {
+    useAudience(token: string): Array<number> | undefined {
         try {
 
             if (!this.isGameRunning(token)) {
