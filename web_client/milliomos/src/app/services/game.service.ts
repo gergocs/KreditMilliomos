@@ -60,45 +60,21 @@ export class GameService {
   }
 
   async useHalf(uid: string) {
-    await this.http.get<Question>(this.hostname + 'game/useHalf', {
+    return await this.http.get<Question>(this.hostname + 'game/useHalf', {
       headers: new HttpHeaders().set('tokenkey', uid),
-    }).toPromise().then(r => {
-      console.log(r);
-
-      return r; // the 2 removed questions are empty strings
-    }).catch(e => {
-      console.log(e);
-
-      //TODO: process error
-    });
+    }).toPromise()
   }
 
   async useSwitch(uid: string) {
-    await this.http.get<Question>(this.hostname + 'game/useSwitch', {
+    return await this.http.get<{question: Question, win: boolean | undefined}>(this.hostname + 'game/useSwitch', {
       headers: new HttpHeaders().set('tokenkey', uid),
-    }).toPromise().then(r => {
-      console.log(r);
-
-      return r;
-    }).catch(e => {
-      console.log(e);
-
-      //TODO: process error
-    });
+    }).toPromise()
   }
 
   async useAudience(uid: string) {
-    await this.http.get<Audience>(this.hostname + 'game/useAudience', {
+    return await this.http.get<Audience>(this.hostname + 'game/useAudience', {
       headers: new HttpHeaders().set('tokenkey', uid),
-    }).toPromise().then(r => {
-      console.log(r);
-
-      return r;
-    }).catch(e => {
-      console.log(e);
-
-      //TODO: process error
-    });
+    }).toPromise()
   }
 
   async giveUp(uid: string, save: boolean) {

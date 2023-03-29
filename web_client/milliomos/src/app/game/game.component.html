@@ -21,18 +21,26 @@
     <div class="question">
       <h3>{{ this.currentQuestion?.question }}</h3>
       <div class="answers">
-        <div class="answer" [class.answer-selected]="selectedA" (click)="mouseClick('A')">
+        <span id="answerA" class="answerbackground">
+        <div [class.disabled]="this.currentQuestion?.answerA === ''" class="answer" [class.answer-selected]="selectedA" (click)="mouseClick('A')">
           <span>{{ this.currentQuestion?.answerA }}</span>
         </div>
-        <div class="answer" [class.answer-selected]="selectedB" (click)="mouseClick('B')">
+      </span>
+      <span id="answerB" class="answerbackground">
+        <div [class.disabled]="this.currentQuestion?.answerB === ''" class="answer" class="answer" [class.answer-selected]="selectedB" (click)="mouseClick('B')">
           <span>{{ this.currentQuestion?.answerB }}</span>
         </div>
-        <div class="answer" [class.answer-selected]="selectedC" (click)="mouseClick('C')">
+      </span>
+        <span id="answerC" class="answerbackground">
+        <div [class.disabled]="this.currentQuestion?.answerC === ''" class="answer" class="answer" [class.answer-selected]="selectedC" (click)="mouseClick('C')">
           <span>{{ this.currentQuestion?.answerC }}</span>
         </div>
-        <div class="answer" [class.answer-selected]="selectedD" (click)="mouseClick('D')">
+      </span>
+        <span id="answerD" class="answerbackground">
+        <div [class.disabled]="this.currentQuestion?.answerD === ''" class="answer" class="answer" [class.answer-selected]="selectedD" (click)="mouseClick('D')">
           <span>{{ this.currentQuestion?.answerD }}</span>
         </div>
+      </span>
       </div>
       <button id="submit-button" [class.button-active]="userCanSubmit" (click)="submit()">Választás megerősítése</button>
     </div>
@@ -40,13 +48,16 @@
       <a (click)="exitGame()"><i class="material-icons">exit_to_app</i></a>
       <div class="helps">
         <div class="help">
-          <i class="material-icons disabled">comments_disabled</i>
+          <i id="halving_help" class="material-icons" (click)="use_halving()">balance</i>
+          <div id="halving_line" class="line" hidden></div>
         </div>
         <div class="help">
-          <i class="material-icons">group</i>
+          <i id="group_help" class="material-icons" (click)="use_audience()">group</i>
+          <div id="group_line" class="line" hidden></div>
         </div>
         <div class="help">
-          <i class="material-icons">refresh</i>
+          <i id="skip_help" class="material-icons" (click)="use_skip()">cached</i>
+          <div id="skip_line" class="line" hidden></div>
         </div>
       </div>
       <ul>

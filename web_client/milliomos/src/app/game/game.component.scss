@@ -154,6 +154,13 @@
 }
 
 .content .game .sidebar .helps .help i.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+div.disabled {
+  pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -193,4 +200,20 @@
 
 .content .game .sidebar ul li:last-child {
   border: none;
+}
+
+.line {
+  margin: 0;
+  position: relative;
+  bottom: 100%;
+  left: 0;
+  width: 141.421356237%;
+  height: 2px;
+  background-color: black;
+  transform: rotate(45deg);
+  transform-origin: 0 0;
+}
+
+.answerbackground{
+  border-radius: 16px;
 }

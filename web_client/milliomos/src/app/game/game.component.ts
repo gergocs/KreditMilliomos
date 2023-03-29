@@ -108,24 +108,28 @@ export class GameComponent implements OnInit, OnDestroy {
         break;
 
       case 'a':
+        if(this.currentQuestion?.answerA === ""){break}
         this.clearSelection();
         this.selectedA = true;
         this.userCanSubmit = true;
         break;
 
       case 'b':
+        if(this.currentQuestion?.answerB === ""){break}
         this.clearSelection();
         this.selectedB = true;
         this.userCanSubmit = true;
         break;
 
       case 'c':
+        if(this.currentQuestion?.answerC === ""){break}
         this.clearSelection();
         this.selectedC = true;
         this.userCanSubmit = true;
         break;
 
       case 'd':
+        if(this.currentQuestion?.answerD === ""){break}
         this.clearSelection();
         this.selectedD = true;
         this.userCanSubmit = true;
@@ -138,24 +142,28 @@ export class GameComponent implements OnInit, OnDestroy {
     if (!this.userCanSelect) return;
     switch (what) {
       case 'A':
+        if(this.currentQuestion?.answerA === ""){break}
         this.clearSelection();
         this.selectedA = true;
         this.userCanSubmit = true;
         break;
 
       case 'B':
+        if(this.currentQuestion?.answerB === ""){break}
         this.clearSelection();
         this.selectedB = true;
         this.userCanSubmit = true;
         break;
 
       case 'C':
+        if(this.currentQuestion?.answerC === ""){break}
         this.clearSelection();
         this.selectedC = true;
         this.userCanSubmit = true;
         break;
 
       case 'D':
+        if(this.currentQuestion?.answerD === ""){break}
         this.clearSelection();
         this.selectedD = true;
         this.userCanSubmit = true;
@@ -207,6 +215,14 @@ export class GameComponent implements OnInit, OnDestroy {
             document.getElementsByClassName('answer-selected') as HTMLCollectionOf<HTMLElement>,
           );
           selected[0].style.backgroundColor = "green"
+
+          let backgrounds = Array.from(
+            document.getElementsByClassName('answerbackground') as HTMLCollectionOf<HTMLElement>,
+          );
+          backgrounds.forEach(element => {
+            element.style.background = ''
+          });
+
           this.correctAnswerSound.play()
           await new Promise(f => setTimeout(f,1500))
           selected[0].style.backgroundColor = ""
@@ -288,5 +304,75 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameService.endGame(this.userid, true).then(()=>{
       this.router.navigateByUrl("/lobby")
     })
+  }
+
+  async use_halving() {
+    if(this.userid){
+      await this.gameService.useHalf(this.userid).then(r => {
+        console.log(r)
+        this.currentQuestion = r;
+
+        let button = document.getElementById('halving_help')
+        if(button){button.classList.add("disabled")}
+        let line = document.getElementById('halving_line')
+        if(line){line.hidden = false}
+      }).catch(e => {
+        console.log(e);
+        //TODO: process error
+      });
+    }
+  }
+
+  async use_audience(){
+    if(this.userid){
+      await this.gameService.useAudience(this.userid).then(r => {
+        console.log(r);
+
+        if(r){
+        let answerdiv
+        if(r.guess == this.currentQuestion?.answerA){
+          answerdiv = document.getElementById('answerA')
+        }else if(r.guess == this.currentQuestion?.answerB){
+          answerdiv = document.getElementById('answerB')
+        }else if(r.guess == this.currentQuestion?.answerC){
+          answerdiv = document.getElementById('answerC')
+        }else if(r.guess == this.currentQuestion?.answerD){
+          answerdiv = document.getElementById('answerD')
+        }
+        if(answerdiv){
+          answerdiv.style.background = 'rgba(111,211,20,0.5)'
+        }
+        }
+        console.log()
+
+        let button = document.getElementById('group_help')
+        if(button){button.classList.add("disabled")}
+        let line = document.getElementById('group_line')
+        if(line){line.hidden = false}
+      }).catch(e => {
+        console.log(e);
+
+        //TODO: process error
+      });
+    }
+  }
+
+  async use_skip(){
+    if(this.userid){
+      await this.gameService.useSwitch(this.userid).then(r => {
+        
+        if(r){
+        this.currentQuestion = r.question}
+  
+        let button = document.getElementById('skip_help')
+        if(button){button.classList.add("disabled")}
+        let line = document.getElementById('skip_line')
+        if(line){line.hidden = false}
+      }).catch(e => {
+        console.log(e);
+  
+        //TODO: process error
+      });
+    }
   }
 }

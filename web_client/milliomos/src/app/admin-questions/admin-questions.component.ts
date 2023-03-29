@@ -136,6 +136,7 @@ export class AdminQuestionsComponent implements OnInit {
   }
 
   onCreateQuestion() {
+    if(this.questionForm.get('category')?.value == '')return
     //validity check
     this.loading = true;
     let newQ: Question = {

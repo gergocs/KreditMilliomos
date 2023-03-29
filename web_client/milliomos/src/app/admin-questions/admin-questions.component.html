@@ -98,6 +98,7 @@
           <div class="input-box">
             <label for="category">kategória</label>
             <select formControlName="category" required>
+              <option [defaultSelected]=true [ngValue]="">Válassz kategóriát!</option>
               <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">{{category.category}}</option>
           </select>
           </div>
