@@ -3,6 +3,7 @@ import {sequelize} from "../db/sequelizeConnector";
 import {GameModes} from "./gameModes";
 import question from "../models/question";
 import { GameException } from "../exceptions/GameException";
+import {Op} from "sequelize";
 
 class Game {
 
@@ -14,6 +15,7 @@ class Game {
     private audience: boolean /* random help */
     private difficulty: GameModes /* difficulty of the game*/
     private _level: number /* current level */
+    private previousQuestion: Array<string> /* previous questions */
 
     constructor(time: bigint, subject: string, difficulty: GameModes) {
         this._time = time
@@ -24,6 +26,7 @@ class Game {
         this.audience = true
         this.difficulty = difficulty
         this._level = 1
+        this.previousQuestion = new Array<string>()
     }
 
     get time(): bigint {
@@ -70,9 +73,9 @@ class Game {
         }
 
         // Please god send us help
-        let correctQuestion = this.question.answerA == this.question.answerCorrect
-            ? 0 : this.question.answerB == this.question.answerCorrect
-                ? 1 : this.question.answerC == this.question.answerCorrect
+        let correctQuestion = 'A' == this.question.answerCorrect
+            ? 0 : 'B' == this.question.answerCorrect
+                ? 1 : 'C' == this.question.answerCorrect
                     ? 2 : 3
 
         let randomNumber1 = this.getRandomInt(0, 2) // Random number between 0-2
@@ -136,7 +139,7 @@ class Game {
         }
 
         this.half = false
-        return this.question
+        return JSON.parse(JSON.stringify(this.question))
     }
 
     async useSwitch(): Promise<Question> {
@@ -189,11 +192,15 @@ class Game {
                     Question.findAndCountAll({
                         where: {
                             level: (!this.question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this.question.level + offset), 15))), // TODO: Check if this is good
-                            category: this.category
+                            category: this.category,
+                            question: {
+                                [Op.notIn]: this.previousQuestion
+                            }
                         }
                     })
                         .then(({count, rows}) => {
                             this.question = rows[this.getRandomInt(0, count - 1)]
+                            this.previousQuestion.push(this.question.question)
                             this._level += offset
                             resolve(this.question)
                         })
