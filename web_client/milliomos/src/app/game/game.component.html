@@ -13,6 +13,11 @@
   </div>
 </div>
 
+<div class="volume material-icons help">
+  volume_up
+  <input type="range" min="0" max="100" [value]="hangero" #volume (input)="onVolumeChange(volume.value)">
+</div>
+
 <div class="content">
   <div class="title">
     <h2>Legyen Ön is kreditmilliomos!</h2>
@@ -20,6 +25,16 @@
   <div class="game">
     <div class="question">
       <h3>{{ this.currentQuestion?.question }}</h3>
+
+      <div id="chart" [ngStyle]="{ 'display': audienceused ? 'block' : 'none' }" class="chart-wrap vertical">
+        <div class="grid">
+            <div id="chartA" class="bar" style="--bar-value:0%;" data-name="A"></div>
+            <div id="chartB" class="bar" style="--bar-value:0%;" data-name="B"></div>
+            <div id="chartC" class="bar" style="--bar-value:0%;" data-name="C"></div>
+            <div id="chartD" class="bar" style="--bar-value:0%;" data-name="D"></div>
+        </div>
+      </div>
+
       <div class="answers">
         <span id="answerA" class="answerbackground">
         <div [class.disabled]="this.currentQuestion?.answerA === ''" class="answer" [class.answer-selected]="selectedA" (click)="mouseClick('A')">
@@ -61,21 +76,21 @@
         </div>
       </div>
       <ul>
-        <li>15 kredit</li>
-        <li>14 kredit</li>
-        <li>13 kredit</li>
-        <li>12 kredit</li>
-        <li>11 kredit</li>
-        <li>10 kredit</li>
-        <li>9 kredit</li>
-        <li>8 kredit</li>
-        <li>7 kredit</li>
-        <li>6 kredit</li>
-        <li>5 kredit</li>
-        <li>4 kredit</li>
-        <li class="active">3 kredit</li>
-        <li class="answered">2 kredit</li>
-        <li class="answered">1 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '15','answered': (currentQuestion?.level || 0 ) > 15}">15 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '14','answered': (currentQuestion?.level || 0 ) > 14}">14 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '13','answered': (currentQuestion?.level || 0 ) > 13}">13 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '12','answered': (currentQuestion?.level || 0 ) > 12}">12 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '11','answered': (currentQuestion?.level || 0 ) > 11}">11 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '10','answered': (currentQuestion?.level || 0 ) > 10}">10 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '9','answered': (currentQuestion?.level || 0 ) > 9}">9 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '8','answered': (currentQuestion?.level || 0 ) > 8}">8 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '7','answered': (currentQuestion?.level || 0 ) > 7}">7 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '6','answered': (currentQuestion?.level || 0 ) > 6}">6 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '5','answered': (currentQuestion?.level || 0 ) > 5}">5 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '4','answered': (currentQuestion?.level || 0 ) > 4}">4 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '3','answered': (currentQuestion?.level || 0 ) > 3}">3 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '2','answered': (currentQuestion?.level || 0 ) > 2}">2 kredit</li>
+        <li [ngClass]="{'active': currentQuestion?.level == '1','answered': (currentQuestion?.level || 0 ) > 1}">1 kredit</li>
       </ul>
     </div>
   </div>

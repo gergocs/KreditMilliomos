@@ -178,10 +178,10 @@ class Game {
 
         console.log(this.question.answerCorrect)
 
-        let arrayOfRandoms = new Array<number>(10)
-        let counts = new Array<number>()
+        let arrayOfRandoms = new Array<number>(0)
+        let counts = new Array<number>(4)
 
-        for (let i = 0; i < arrayOfRandoms.length; i++) {
+        for (let i = 0; i < 100; i++) {
             arrayOfRandoms.push(this.weightedRandom(correctQuestion))
         }
 
@@ -196,7 +196,7 @@ class Game {
 
     private generateQuestion(offset = 1): Promise<Question> {
         // TODO: _level = 16
-        if (this._level == 3) {
+        if (this._level == 16) {
             throw new GameException("", true)
         }
 

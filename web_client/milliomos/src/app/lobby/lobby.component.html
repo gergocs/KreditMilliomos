@@ -5,9 +5,8 @@
   <h3>Lobby</h3>
   <br />
   <select class="form-select" aria-label="Default select example" #category>
-    <option selected>Kategória választása</option>
-    <option value="grafika">grafika</option>
-    <option value="pihenés">pihenés</option>
+    <option [defaultSelected]=true [ngValue]="">Válassz kategóriát!</option>
+    <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">{{category.category}}</option>
   </select>
   <br />
   <select class="form-select" aria-label="Default select example" #difficulty>

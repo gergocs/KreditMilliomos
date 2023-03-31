@@ -48,6 +48,17 @@ export class QuestionService {
     }
 
     importQuestions(q: Question[], uid: any){
+      for (let index = 0; index < q.length; index++) {
+        q[index].category= encodeURIComponent(q[index].category),
+        q[index].question= encodeURIComponent(q[index].question),
+        q[index].level= encodeURIComponent(q[index].level),
+        q[index].answerA= encodeURIComponent(q[index].answerA),
+        q[index].answerB= encodeURIComponent(q[index].answerB),
+        q[index].answerC= encodeURIComponent(q[index].answerC),
+        q[index].answerD= encodeURIComponent(q[index].answerD),
+        q[index].answerCorrect= encodeURIComponent(q[index].answerCorrect)
+      }
+
       let header = new HttpHeaders()
       .set("tokenkey", uid)
 
