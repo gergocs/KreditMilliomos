@@ -95,7 +95,7 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnInit() {
     let hangero2 = window.localStorage.getItem('hangero')
     if(hangero2){
-      
+
       this.hangero = JSON.parse(hangero2)
     } else{
       this.hangero = 50
@@ -360,20 +360,20 @@ export class GameComponent implements OnInit, OnDestroy {
     const increment = value / numSteps;
     const initialWaitTime = animationDuration / numSteps;
     const lastSteps = 2;
-  
+
     let chartdiv = document.getElementById(id);
     let answerdiv = document.getElementById(id2)
     if (chartdiv && answerdiv) {
       for (let index = 0; index < value; index += increment) {
         let waitTime = initialWaitTime;
-  
+
         // Az utolsó pár lépésnél növelem a várakozási időt
         if (value - index <= lastSteps * increment) {
           const diff = value - index;
           const extraWaitTime = (lastSteps - diff / increment) * initialWaitTime;
           waitTime += extraWaitTime;
         }
-  
+
         chartdiv.style.setProperty("--bar-value", index + "%");
         answerdiv.style.background = 'linear-gradient(to right, rgba(111,211,20,0.5), rgba(111,211,20,0.5) '+ index + '%, rgba(0,0,0,0) '+ (index+5) +'%)'
         await new Promise(f => setTimeout(f, waitTime));
@@ -386,7 +386,7 @@ export class GameComponent implements OnInit, OnDestroy {
       await this.gameService.useAudience(this.userid).then(async r => {
 
         if(r && r.guess){
-          
+
             for (let index = 0; index <= 20; index++) {
               setTimeout(() => {
                 let chartdiv = document.getElementById('chart')
@@ -395,10 +395,10 @@ export class GameComponent implements OnInit, OnDestroy {
               }, index * 20);
             }
 
-          
+
 
           let osszeg = (r.guess[0]+r.guess[1]+r.guess[2]+r.guess[3])/100
-          
+
           this.animatedchart('chartA', 'answerA', r.guess[0]/osszeg)
           this.animatedchart('chartB', 'answerB', r.guess[1]/osszeg)
           this.animatedchart('chartC', 'answerC', r.guess[2]/osszeg)
@@ -424,6 +424,24 @@ export class GameComponent implements OnInit, OnDestroy {
 
         if(r){
         this.currentQuestion = r.question}
+
+        for (let index = 0; index <= 20; index++) {
+          setTimeout(() => {
+            let chartdiv = document.getElementById('chart')
+            if(chartdiv){
+              chartdiv.style.width = 20-index + "%"}
+            if(index == 20){
+              this.audienceused = false
+            }
+          }, index * 40);
+        }
+
+        let backgrounds = Array.from(
+          document.getElementsByClassName('answerbackground') as HTMLCollectionOf<HTMLElement>,
+        );
+        backgrounds.forEach(element => {
+          element.style.background = ''
+        });
 
         let button = document.getElementById('skip_help')
         if(button){button.classList.add("disabled")}

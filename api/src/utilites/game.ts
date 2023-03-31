@@ -1,13 +1,14 @@
 import Question from "../models/question";
 import {sequelize} from "../db/sequelizeConnector";
 import {GameModes} from "./gameModes";
-import question from "../models/question";
 import {GameException} from "../exceptions/GameException";
 import {Op} from "sequelize";
 
 class Game {
 
-    private readonly _time: bigint /* end of (game) time represented in unix epoch */
+    private readonly _time: bigint /* start of (game) time represented in unix epoch */
+    private readonly maxTimePerQuestion: number /* may time per Question */
+    private endOfQuestionTime: number /* time when the answer will be invalid */
     private question: Question | undefined /* current question */
     private _category: string /* current question */
     private half: boolean /* half the questions */
@@ -17,7 +18,7 @@ class Game {
     private _level: number /* current level */
     private previousQuestion: Array<string> /* previous questions */
 
-    constructor(time: bigint, subject: string, difficulty: GameModes) {
+    constructor(time: bigint, subject: string, difficulty: GameModes, maxTimePerQuestion: number) {
         this._time = time
         this.question = undefined
         this._category = subject
@@ -27,6 +28,7 @@ class Game {
         this.difficulty = difficulty
         this._level = 1
         this.previousQuestion = new Array<string>()
+        this.maxTimePerQuestion = maxTimePerQuestion
     }
 
     get time(): bigint {
@@ -170,19 +172,30 @@ class Game {
         let correctQuestion = ('A' == this.question.answerCorrect
             ? 0 : 'B' == this.question.answerCorrect
                 ? 1 : 'C' == this.question.answerCorrect
-                    ? 2 : 3) + this.randomOffset()
+                    ? 2 : 3) + (((this.question.answerA === ''
+            || this.question.answerB === ''
+            || this.question.answerC === ''
+            || this.question.answerD === '') ? 0 : 1) * this.randomOffset())
+
+        let skip1 = (this.question.answerA === ''
+            ? 0 : this.question.answerB === ''
+                ? 1 : this.question.answerC === ''
+                    ? 2 : this.question.answerD === '' ? 3 : NaN)
+
+        let skip2 = (this.question.answerD === ''
+            ? 3 : this.question.answerC === ''
+                ? 2 : this.question.answerB === ''
+                    ? 1 : this.question.answerA === '' ? 0 : NaN)
 
         if (correctQuestion >= 4) {
             correctQuestion -= 4
         }
 
-        console.log(this.question.answerCorrect)
-
         let arrayOfRandoms = new Array<number>(0)
         let counts = new Array<number>(4)
 
         for (let i = 0; i < 100; i++) {
-            arrayOfRandoms.push(this.weightedRandom(correctQuestion))
+            arrayOfRandoms.push(this.weightedRandom(correctQuestion, skip1, skip2))
         }
 
         arrayOfRandoms.forEach(function (x) {
@@ -200,7 +213,7 @@ class Game {
             throw new GameException("", true)
         }
 
-        return new Promise<Question>((resolve, reject) => {
+        return new Promise<Question>((resolve) => {
             // TODO: catch sequelize errors
             sequelize.sync()
                 .then(() => {
@@ -217,6 +230,7 @@ class Game {
                             this.question = rows[this.getRandomInt(0, count - 1)]
                             this.previousQuestion.push(this.question.question)
                             this._level += offset
+                            this.endOfQuestionTime = new Date().getTime() + this.maxTimePerQuestion // number + Infinity = Infinity
                             resolve(this.question)
                         })
                         .catch(error => {
@@ -234,7 +248,7 @@ class Game {
             throw new GameException("The game dont generated question")
         }
 
-        return answer.toLowerCase() === this.question.answerCorrect.toLowerCase()
+        return new Date().getTime() < this.endOfQuestionTime && answer.toLowerCase() === this.question.answerCorrect.toLowerCase()
     }
 
     private getRandomInt(min: number, max: number): number {
@@ -256,17 +270,35 @@ class Game {
         }
     }
 
-    private weightedRandom(correct: number): number {
+    private weightedRandom(correct: number, skip1: number, skip2: number): number {
         let val = this.gaussianRandom();
 
         if (Math.abs(val) < 1) { // ~0.6827
             return correct
         } else if (val <= -1 && val > -2) { // ~0.136
-            return correct == 0 ? 1 : (correct == 1 ? 2 : (correct == 2 ? 3 : 0))
+            let guess = correct == 0 ? 1 : (correct == 1 ? 2 : (correct == 2 ? 3 : 0))
+
+            if (!isNaN(skip1)) {
+                return correct
+            }
+
+            return guess
         } else if (val >= 1 && val < 2) { // ~0.136
-            return correct == 0 ? 2 : (correct == 1 ? 3 : (correct == 2 ? 0 : 1))
+            let guess = correct == 0 ? 2 : (correct == 1 ? 3 : (correct == 2 ? 0 : 1))
+
+            if (!isNaN(skip1) && (guess === skip1 || guess === skip2)) {
+                return correct
+            }
+
+            return guess
         } else { // ~0.0455
-            return correct == 0 ? 3 : (correct == 1 ? 0 : (correct == 2 ? 1 : 2))
+            let guess = correct == 0 ? 3 : (correct == 1 ? 0 : (correct == 2 ? 1 : 2))
+
+            if (!isNaN(skip1) && (guess === skip1 || guess === skip2)) {
+                return correct
+            }
+
+            return guess
         }
     }
 
