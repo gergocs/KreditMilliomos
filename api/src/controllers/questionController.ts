@@ -11,7 +11,7 @@ class QuestionController {
 
     constructor() {
         this.router.get(this.path + '/admin/allQuestion', this.getAllQuestion)
-        this.router.get(this.path + '/admin/allQuestionCategories', this.getAllCategories)
+        this.router.get(this.path + '/allQuestionCategories', this.getAllCategories)
         this.router.post(this.path + '/admin/import', this.importQuestion)
         this.router.post(this.path + '/admin', this.createQuestion)
         this.router.post(this.path + '/admin/createQuestionCategory', this.createCategory)
@@ -109,7 +109,6 @@ class QuestionController {
                 response.send(data)
                 response.end()
             }).catch(error => {
-                console.log(error)
                 response.sendStatus(StatusCodes.InternalError)
                 response.end()
             })
