@@ -53,12 +53,16 @@ export class GameComponent implements OnInit, OnDestroy {
   // Question - temporary only for testing
   public currentQuestion: Question | undefined;
 
+  //ChartBoolean
+  audienceused: boolean = false
+
   // Sounds
   private submitAnswerSound = new Audio('../assets/sounds/final_answer.mp3');
   private correctAnswerSound = new Audio('../assets/sounds/correct_answer.mp3');
   private wrongAnswerSound = new Audio('../assets/sounds/wrong_answer.mp3');
   private backgroundMusic = new Audio('../assets/sounds/background_music.mp3');
   private introMusic = new Audio('../assets/sounds/intro_music.mp3');
+  public hangero: any
 
   animationState: string = 'rotationEnd';
   constructor(
@@ -89,13 +93,30 @@ export class GameComponent implements OnInit, OnDestroy {
 
   // Needs proper implementation -> gets the first question on init
   ngOnInit() {
+    let hangero2 = window.localStorage.getItem('hangero')
+    if(hangero2){
+      
+      this.hangero = JSON.parse(hangero2)
+    } else{
+      this.hangero = 50
+    }
     this.backgroundMusic.loop = true
-    this.submitAnswerSound.volume=0.05;
-    this.correctAnswerSound.volume=0.05;
-    this.wrongAnswerSound.volume=0.05;
-    this.backgroundMusic.volume=0.1;
-    this.introMusic.volume=0.05;
+    this.submitAnswerSound.volume=this.hangero/100;
+    this.correctAnswerSound.volume=this.hangero/100;
+    this.wrongAnswerSound.volume=this.hangero/100;
+    this.backgroundMusic.volume=this.hangero/100;
+    this.introMusic.volume=this.hangero/100;
     this.introMusic.play();
+  }
+
+  onVolumeChange(volume: any){
+    this.hangero = volume
+    window.localStorage.setItem("hangero",JSON.stringify(this.hangero))
+    this.submitAnswerSound.volume=this.hangero/100;
+    this.correctAnswerSound.volume=this.hangero/100;
+    this.wrongAnswerSound.volume=this.hangero/100;
+    this.backgroundMusic.volume=this.hangero/100;
+    this.introMusic.volume=this.hangero/100;
   }
 
   // Handle keyboard input
@@ -188,12 +209,24 @@ export class GameComponent implements OnInit, OnDestroy {
     this.submitAnswerSound.play().then(() => {
     });
 
+    for (let index = 0; index <= 20; index++) {
+      setTimeout(() => {
+        let chartdiv = document.getElementById('chart')
+        if(chartdiv){
+        chartdiv.style.width = 20-index + "%"}
+        if(index == 20){
+          this.audienceused = false
+        }
+      }, index * 40);
+    }
+
     await new Promise(f => setTimeout(f, 5000))
 
     this.gameService.evaluateGame(this.userid, this.getAnswer()).then(async r => {
       if (!r) {
         //TODO: Error
       } else {
+
         if (r.win !== undefined) {
           console.log(r.win) //TODO: Win or lose
           let selected = Array.from(
@@ -231,7 +264,6 @@ export class GameComponent implements OnInit, OnDestroy {
           this.clearSelection();
           this.userCanSelect = true;
           this.userCanSubmit = false;
-          console.log(this.currentQuestion)
         } else {
           console.log(r);
           // TODO: More error
@@ -285,7 +317,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
   introDone(event:AnimationEvent) {
     if(this.alreadyspeeched){return}
-    console.log(event);
     if(event.toState == "rotationEnd"){
       this.animationState = "scaleStart"
     }
@@ -309,7 +340,6 @@ export class GameComponent implements OnInit, OnDestroy {
   async use_halving() {
     if(this.userid){
       await this.gameService.useHalf(this.userid).then(r => {
-        console.log(r)
         this.currentQuestion = r;
 
         let button = document.getElementById('halving_help')
@@ -323,32 +353,63 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
+  async animatedchart(id: string, id2 : string, value: number){
+    await new Promise(f => setTimeout(f, 1000));
+    const animationDuration = 1000; // 1.5 másodperc
+    const numSteps = 100;
+    const increment = value / numSteps;
+    const initialWaitTime = animationDuration / numSteps;
+    const lastSteps = 2;
+  
+    let chartdiv = document.getElementById(id);
+    let answerdiv = document.getElementById(id2)
+    if (chartdiv && answerdiv) {
+      for (let index = 0; index < value; index += increment) {
+        let waitTime = initialWaitTime;
+  
+        // Az utolsó pár lépésnél növelem a várakozási időt
+        if (value - index <= lastSteps * increment) {
+          const diff = value - index;
+          const extraWaitTime = (lastSteps - diff / increment) * initialWaitTime;
+          waitTime += extraWaitTime;
+        }
+  
+        chartdiv.style.setProperty("--bar-value", index + "%");
+        answerdiv.style.background = 'linear-gradient(to right, rgba(111,211,20,0.5), rgba(111,211,20,0.5) '+ index + '%, rgba(0,0,0,0) '+ (index+5) +'%)'
+        await new Promise(f => setTimeout(f, waitTime));
+      }
+    }
+  }
+
   async use_audience(){
     if(this.userid){
-      await this.gameService.useAudience(this.userid).then(r => {
-        console.log(r);
+      await this.gameService.useAudience(this.userid).then(async r => {
 
-        if(r){
-        let answerdiv
-        /*if(r.guess == this.currentQuestion?.answerA){
-          answerdiv = document.getElementById('answerA')
-        }else if(r.guess == this.currentQuestion?.answerB){
-          answerdiv = document.getElementById('answerB')
-        }else if(r.guess == this.currentQuestion?.answerC){
-          answerdiv = document.getElementById('answerC')
-        }else if(r.guess == this.currentQuestion?.answerD){
-          answerdiv = document.getElementById('answerD')
+        if(r && r.guess){
+          
+            for (let index = 0; index <= 20; index++) {
+              setTimeout(() => {
+                let chartdiv = document.getElementById('chart')
+                if(chartdiv){
+                chartdiv.style.width = index + "%"}
+              }, index * 20);
+            }
+
+          
+
+          let osszeg = (r.guess[0]+r.guess[1]+r.guess[2]+r.guess[3])/100
+          
+          this.animatedchart('chartA', 'answerA', r.guess[0]/osszeg)
+          this.animatedchart('chartB', 'answerB', r.guess[1]/osszeg)
+          this.animatedchart('chartC', 'answerC', r.guess[2]/osszeg)
+          this.animatedchart('chartD', 'answerD', r.guess[3]/osszeg)
         }
-        if(answerdiv){
-          answerdiv.style.background = 'rgba(111,211,20,0.5)'
-        }*/
-        }
-        console.log()
 
         let button = document.getElementById('group_help')
         if(button){button.classList.add("disabled")}
         let line = document.getElementById('group_line')
         if(line){line.hidden = false}
+        this.audienceused = true
       }).catch(e => {
         console.log(e);
 

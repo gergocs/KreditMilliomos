@@ -1,4 +1,5 @@
 @import './intro.scss';
+@import './chart.scss';
 
 .content {
   width: 100%;
@@ -167,24 +168,24 @@ div.disabled {
 
 .content .game .sidebar ul {
   width: 90%;
+  height: 100%;
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
 .content .game .sidebar ul li {
+  height: calc(100%/15);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   padding: 4px 0;
   color: #333333;
   font-size: 16px;
   font-weight: 500;
   text-align: center;
   border-bottom: 0.2px solid #75717130;
-}
-
-.content .game .sidebar ul li.active {
-  color: #ffffff;
-  background-color: #efa044;
-  border-radius: 16px;
 }
 
 .content .game .sidebar ul li.answered {
@@ -196,6 +197,12 @@ div.disabled {
 .content .game .sidebar ul li:nth-child(11),
 .content .game .sidebar ul li:first-child {
   color: #efa044;
+}
+
+.content .game .sidebar ul li.active {
+  color: #ffffff;
+  background-color: #efa044;
+  border-radius: 16px;
 }
 
 .content .game .sidebar ul li:last-child {
@@ -216,4 +223,21 @@ div.disabled {
 
 .answerbackground{
   border-radius: 16px;
+}
+
+.volume {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #efa044;
+  border-radius: 16px;
+  border: 3px solid #333;
+  z-index: 1001;
+}
+
+.volume input {
+  margin: 0;
 }

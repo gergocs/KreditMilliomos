@@ -78,7 +78,7 @@
   position: absolute;
   top: 7%;
   left: 18%;
-  rotate: 25deg;
+  transform: rotate(25deg);
   transform-origin: center bottom;
 }
 .mouth {
@@ -89,7 +89,7 @@
   border-color: red;
   border-radius:0 0 0 70%;
   border-width:0 0 0.3vw 0;
-  rotate: 25deg;
+  transform: rotate(25deg);
   top: 20%;
   left:22.5%;
   z-index: -1;
@@ -105,7 +105,7 @@
   position: absolute;
   top: 15%;
   left: 23.5%;
-  rotate: 25deg;
+  transform: rotate(25deg);
   transform-origin: center bottom;
 }
 @keyframes moving1 {
@@ -125,7 +125,7 @@
   position: absolute;
   top: 23%;
   left: 20.8%;
-  rotate: 5deg;
+  transform: rotate(5deg);
   background-color: black;
 
 }
@@ -168,7 +168,7 @@
   position: absolute;
   top: 7%;
   left: 28%;
-  rotate: -100deg;
+  transform: rotate(-100deg);
   transform-origin: 100%;
   background-color: black;
 }
@@ -190,7 +190,7 @@
   position: absolute;
   top: 20%;
   left: 28%;
-  rotate: -60deg;
+  transform: rotate(-60deg);
   transform-origin: 0%;
   background-color: black;
 }
