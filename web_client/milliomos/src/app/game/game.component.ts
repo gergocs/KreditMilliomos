@@ -50,8 +50,9 @@ export class GameComponent implements OnInit, OnDestroy {
   public userCanSelect: Boolean = true; // Wait for the first question to load, then set it to true
   public userCanSubmit: Boolean = false; // If no answer selected, or already submitted, this should be false
 
-  // Question - temporary only for testing
+  // Question
   public currentQuestion: Question | undefined;
+  public helps: boolean[] = [false, false, false]
 
   //ChartBoolean
   audienceused: boolean = false
@@ -76,26 +77,33 @@ export class GameComponent implements OnInit, OnDestroy {
       return
     }
     this.userid = JSON.parse(userdatas).tokenKey
+
+    let startedquestion = window.localStorage.getItem('startedQuestion')
+    let storagehelps = window.localStorage.getItem('helps')
+    if(startedquestion && storagehelps){
+      this.currentQuestion = JSON.parse(startedquestion)
+      this.helps = JSON.parse(storagehelps)
+    }else{
     this.gameService.evaluateGame(this.userid).then(r => {
       if (!r) {
         //TODO: Error
       } else {
         if (r.win !== undefined) {
-          console.log(r.win) //TODO: Win or lose
+           //TODO: Win or lose
         } else if (r.question !== undefined) {
           this.currentQuestion = r.question;
+          window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
         } else {
           // TODO: More error
         }
       }
-    })
+    })}
   }
 
   // Needs proper implementation -> gets the first question on init
   ngOnInit() {
     let hangero2 = window.localStorage.getItem('hangero')
     if(hangero2){
-
       this.hangero = JSON.parse(hangero2)
     } else{
       this.hangero = 50
@@ -107,6 +115,29 @@ export class GameComponent implements OnInit, OnDestroy {
     this.backgroundMusic.volume=this.hangero/100;
     this.introMusic.volume=this.hangero/100;
     this.introMusic.play();
+
+    let storagehelps = window.localStorage.getItem('helps')
+    if(storagehelps){
+    this.helps = JSON.parse(storagehelps)
+      if(this.helps[0]){
+        let button = document.getElementById('halving_help')
+        if(button){button.classList.add("disabled")}
+        let line = document.getElementById('halving_line')
+        if(line){line.hidden = false}
+      }
+      if(this.helps[1]){
+        let button = document.getElementById('group_help')
+        if(button){button.classList.add("disabled")}
+        let line = document.getElementById('group_line')
+        if(line){line.hidden = false}
+      }
+      if(this.helps[2]){
+        let button = document.getElementById('skip_help')
+        if(button){button.classList.add("disabled")}
+        let line = document.getElementById('skip_line')
+        if(line){line.hidden = false}
+      }
+    }
   }
 
   onVolumeChange(volume: any){
@@ -228,7 +259,10 @@ export class GameComponent implements OnInit, OnDestroy {
       } else {
 
         if (r.win !== undefined) {
-          console.log(r.win) //TODO: Win or lose
+           //TODO: Win or lose
+           window.localStorage.removeItem('startedQuestion')
+           window.localStorage.removeItem('helps')
+
           let selected = Array.from(
             document.getElementsByClassName('answer-selected') as HTMLCollectionOf<HTMLElement>,
           );
@@ -261,6 +295,7 @@ export class GameComponent implements OnInit, OnDestroy {
           selected[0].style.backgroundColor = ""
           this.backgroundMusic.play()
           this.currentQuestion = r.question;
+          window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
           this.clearSelection();
           this.userCanSelect = true;
           this.userCanSubmit = false;
@@ -270,7 +305,6 @@ export class GameComponent implements OnInit, OnDestroy {
         }
       }
     })
-    console.log(`Answer [${this.getAnswer()}] was submitted!`);
 
   }
 
@@ -332,6 +366,8 @@ export class GameComponent implements OnInit, OnDestroy {
   exitGame() {
     this.backgroundMusic.pause()
     this.wrongAnswerSound.play()
+    window.localStorage.removeItem('startedQuestion')
+    window.localStorage.removeItem('helps')
     this.gameService.endGame(this.userid, true).then(()=>{
       this.router.navigateByUrl("/lobby")
     })
@@ -341,11 +377,25 @@ export class GameComponent implements OnInit, OnDestroy {
     if(this.userid){
       await this.gameService.useHalf(this.userid).then(r => {
         this.currentQuestion = r;
+        window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
+        this.helps[0] = true
+        window.localStorage.setItem('helps',JSON.stringify(this.helps))
 
         let button = document.getElementById('halving_help')
         if(button){button.classList.add("disabled")}
         let line = document.getElementById('halving_line')
         if(line){line.hidden = false}
+
+        if(this.audienceused){
+          if(this.currentQuestion?.answerA == ''){
+            this.animatedchart('chartA', 'answerA', 0, 0)}
+          if(this.currentQuestion?.answerB == ''){
+            this.animatedchart('chartB', 'answerB', 0, 0)}
+          if(this.currentQuestion?.answerC == ''){
+            this.animatedchart('chartC', 'answerC', 0, 0)}
+          if(this.currentQuestion?.answerD == ''){
+            this.animatedchart('chartD', 'answerD', 0, 0)}
+        }
       }).catch(e => {
         console.log(e);
         //TODO: process error
@@ -353,8 +403,8 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-  async animatedchart(id: string, id2 : string, value: number){
-    await new Promise(f => setTimeout(f, 1000));
+  async animatedchart(id: string, id2 : string, value: number, timeout: number){
+    await new Promise(f => setTimeout(f, timeout));
     const animationDuration = 1000; // 1.5 másodperc
     const numSteps = 100;
     const increment = value / numSteps;
@@ -364,7 +414,7 @@ export class GameComponent implements OnInit, OnDestroy {
     let chartdiv = document.getElementById(id);
     let answerdiv = document.getElementById(id2)
     if (chartdiv && answerdiv) {
-      for (let index = 0; index < value; index += increment) {
+      for (let index = 0; index <= value; index += increment) {
         let waitTime = initialWaitTime;
 
         // Az utolsó pár lépésnél növelem a várakozási időt
@@ -375,7 +425,7 @@ export class GameComponent implements OnInit, OnDestroy {
         }
 
         chartdiv.style.setProperty("--bar-value", index + "%");
-        answerdiv.style.background = 'linear-gradient(to right, rgba(111,211,20,0.5), rgba(111,211,20,0.5) '+ index + '%, rgba(0,0,0,0) '+ (index+5) +'%)'
+        answerdiv.style.background = 'linear-gradient(to right, rgba(111,211,20,0.5), rgba(111,211,20,0.5) '+ index + '%, rgba(0,0,0,0) '+ (index == 0 ? 0 : index+5) +'%)'
         await new Promise(f => setTimeout(f, waitTime));
       }
     }
@@ -395,14 +445,15 @@ export class GameComponent implements OnInit, OnDestroy {
               }, index * 20);
             }
 
-
+          this.helps[1] = true
+          window.localStorage.setItem('helps',JSON.stringify(this.helps))
 
           let osszeg = (r.guess[0]+r.guess[1]+r.guess[2]+r.guess[3])/100
 
-          this.animatedchart('chartA', 'answerA', r.guess[0]/osszeg)
-          this.animatedchart('chartB', 'answerB', r.guess[1]/osszeg)
-          this.animatedchart('chartC', 'answerC', r.guess[2]/osszeg)
-          this.animatedchart('chartD', 'answerD', r.guess[3]/osszeg)
+          this.animatedchart('chartA', 'answerA', r.guess[0]/osszeg, 1000)
+          this.animatedchart('chartB', 'answerB', r.guess[1]/osszeg, 1000)
+          this.animatedchart('chartC', 'answerC', r.guess[2]/osszeg, 1000)
+          this.animatedchart('chartD', 'answerD', r.guess[3]/osszeg, 1000)
         }
 
         let button = document.getElementById('group_help')
@@ -423,7 +474,11 @@ export class GameComponent implements OnInit, OnDestroy {
       await this.gameService.useSwitch(this.userid).then(r => {
 
         if(r){
-        this.currentQuestion = r.question}
+          this.currentQuestion = r.question
+          window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
+          this.helps[2] = true
+          window.localStorage.setItem('helps',JSON.stringify(this.helps))
+        }
 
         for (let index = 0; index <= 20; index++) {
           setTimeout(() => {

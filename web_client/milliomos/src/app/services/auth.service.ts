@@ -5,7 +5,7 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular
 import firebase from 'firebase/compat/app';
 import {FacebookAuthProvider, getAdditionalUserInfo, GoogleAuthProvider} from '@angular/fire/auth';
 import { UserModell } from '../models/usermodell';
-import { catchError, map, throwError } from 'rxjs';
+import { catchError, map, Observable, Subject, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +31,17 @@ export class AuthService {
       this.hostname = "https://kreditmilliomos.mooo.com:80/"
     }
 
+    this.auth.user.subscribe(user=>{
+      if(user){
+        this.authState = this.authStates.loggedIn;
+        this.user = user
+      } else {
+        this.authState = this.authStates.loggedOut;
+        this.user = undefined
+        this.router.navigate(['/login']);
+      }
+    })
+    
     this.auth.onAuthStateChanged((credential) => {
       if (credential) {
 
@@ -47,6 +58,23 @@ export class AuthService {
       });
       }
     })
+  }
+
+  async isAdmin(){
+    try {
+      if (this.user) {
+        const res = await this.http.get<boolean>(this.hostname + "user/isAdmin", {headers: new HttpHeaders().set('tokenKey', this.user.uid)}).toPromise();
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err: any) {
+      if (err.status === 200) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   async getUserData() {
@@ -101,8 +129,6 @@ export class AuthService {
   async AuthLogin(provider: any) {
     try {
       const result = await this.auth.signInWithPopup(provider);
-
-      console.log(result)
 
       let firstlogin = result.additionalUserInfo?.isNewUser;
 

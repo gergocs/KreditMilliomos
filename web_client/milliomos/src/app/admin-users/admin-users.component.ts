@@ -33,6 +33,13 @@ export class AdminUsersComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    await this.authservice.isAdmin().then(res => {
+      if(res == false){
+        this.router.navigate(['/main'])
+        return
+      }
+    })
+
     this.loading = true;
     let userdatas = window.localStorage.getItem('userdatas');
     if (!userdatas) {
