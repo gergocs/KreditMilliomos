@@ -55,9 +55,13 @@ export class LobbyComponent implements OnInit {
       return;
     }
 
+    if(window.localStorage.getItem('startedQuestion')){
+      alert('Már van folyamatban játékod ezért azt indítjük el!');
+      this.router.navigate(['/game']);
+    }else{
     // Start new game
     this.gameService.startNewGame(category, difficulty, <string>this.userid).then(r => {
       this.router.navigate(['/game']);
     });
-  }
+  }}
 }

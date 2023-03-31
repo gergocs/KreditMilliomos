@@ -56,6 +56,12 @@ export class AdminQuestionsComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    await this.authservice.isAdmin().then(res => {
+      if(res == false){
+        this.router.navigate(['/main'])
+        return
+      }
+    })
     this.loading = true;
     let userdatas = window.localStorage.getItem('userdatas');
     if (!userdatas) {
@@ -65,8 +71,9 @@ export class AdminQuestionsComponent implements OnInit {
 
     this.auth.onAuthStateChanged((credential) => {
       this.userid = credential?.uid;
-      this.questionService.getAllQuestion(this.userid).subscribe(
+      this.questionService.getAllQuestion(this.userid).toPromise().then(
         (body) => {
+          if(body)
           this.allquestion = body;
 
           this.allquestion.forEach((q) => {
@@ -79,8 +86,7 @@ export class AdminQuestionsComponent implements OnInit {
           });
 
           this.loading = false;
-        },
-        (error: any) => {
+        }).catch((error) => {
           let question: Question = {
             category: 'Hiba',
             question: 'Sikerült az adatbázis elérése?',
@@ -94,7 +100,7 @@ export class AdminQuestionsComponent implements OnInit {
           this.allquestion.push(question);
           this.loading = false;
         }
-      );
+      )
 
       this.questionService.getQuestionCategories(this.userid).subscribe(body =>{
         this.allQuestionCategories = body;
