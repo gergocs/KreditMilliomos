@@ -30,11 +30,11 @@ export class AdminQuestionsComponent implements OnInit {
 
   public allquestion: Question[] = [];
 
-  public allQuestionCategories: QuestionCategory[] = []
+  public allQuestionCategories: QuestionCategory[] = [];
 
   categoryForm = new FormGroup({
     category: new FormControl(''),
-  }) 
+  });
 
   questionForm = new FormGroup({
     category: new FormControl(''),
@@ -56,12 +56,12 @@ export class AdminQuestionsComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    await this.authservice.isAdmin().then(res => {
-      if(res == false){
-        this.router.navigate(['/main'])
-        return
+    await this.authservice.isAdmin().then((res) => {
+      if (res == false) {
+        this.router.navigate(['/main']);
+        return;
       }
-    })
+    });
     this.loading = true;
     let userdatas = window.localStorage.getItem('userdatas');
     if (!userdatas) {
@@ -71,10 +71,11 @@ export class AdminQuestionsComponent implements OnInit {
 
     this.auth.onAuthStateChanged((credential) => {
       this.userid = credential?.uid;
-      this.questionService.getAllQuestion(this.userid).toPromise().then(
-        (body) => {
-          if(body)
-          this.allquestion = body;
+      this.questionService
+        .getAllQuestion(this.userid)
+        .toPromise()
+        .then((body) => {
+          if (body) this.allquestion = body;
 
           this.allquestion.forEach((q) => {
             q.category = decodeURIComponent(q.category);
@@ -86,7 +87,8 @@ export class AdminQuestionsComponent implements OnInit {
           });
 
           this.loading = false;
-        }).catch((error) => {
+        })
+        .catch((error) => {
           let question: Question = {
             category: 'Hiba',
             question: 'Sikerült az adatbázis elérése?',
@@ -99,50 +101,52 @@ export class AdminQuestionsComponent implements OnInit {
           };
           this.allquestion.push(question);
           this.loading = false;
+        });
+
+      this.questionService.getQuestionCategories(this.userid).subscribe(
+        (body) => {
+          this.allQuestionCategories = body;
+          this.allQuestionCategories.forEach((qc) => {
+            qc.category = decodeURIComponent(qc.category);
+          });
+        },
+        (error: any) => {
+          let qcat: QuestionCategory = {
+            category: 'Hiba',
+          };
+          this.allQuestionCategories.push(qcat);
         }
-      )
-
-      this.questionService.getQuestionCategories(this.userid).subscribe(body =>{
-        this.allQuestionCategories = body;
-        this.allQuestionCategories.forEach(qc => {
-          qc.category = decodeURIComponent(qc.category)
-        })
-    },(error:any)=>{
-      let qcat: QuestionCategory = {
-        category: "Hiba",
-      }
-      this.allQuestionCategories.push(qcat)
-    })
-
+      );
     });
   }
 
-  async createQuestionCategory(){
-    this.loading=true
+  async createQuestionCategory() {
+    this.loading = true;
     let newQC: QuestionCategory = {
       category: this.categoryForm.get('category')?.value,
-    }
-    this.questionService.createQuestionCategory(newQC, this.userid)
-    .subscribe(body => {
-      if( body == null){
-        throw new Error()
-      }
-      console.log("Created question category in DB")
-      console.log(body);
-      this.allQuestionCategories.push(newQC);
-      this.loading=false
-    },(error) => {
-      console.log(error)
-      if(error.status == 200){
+    };
+    this.questionService.createQuestionCategory(newQC, this.userid).subscribe(
+      (body) => {
+        if (body == null) {
+          throw new Error();
+        }
+        console.log('Created question category in DB');
+        console.log(body);
         this.allQuestionCategories.push(newQC);
+        this.loading = false;
+      },
+      (error) => {
+        console.log(error);
+        if (error.status == 200) {
+          this.allQuestionCategories.push(newQC);
+        }
+        this.loading = false;
       }
-      this.loading=false
-    }
     );
   }
 
   onCreateQuestion() {
-    if(this.questionForm.get('category')?.value == '')return
+    if (this.questionForm.get('category')?.value == '') return;
     //validity check
     this.loading = true;
     let newQ: Question = {
@@ -189,20 +193,41 @@ export class AdminQuestionsComponent implements OnInit {
       this.importError = false;
       this.readFile(this.file);
       await this.sleep(500);
+      if (this.importError) {
+        this.Importeditems.length = 0;
+        this.importErrorMsg = this.importErrorMsg.substring(
+          0,
+          this.importErrorMsg.length - 2
+        );
+        return;
+      }
       this.display();
     }
   }
 
-  readFile(inputFile: any): void {
+  readFile(inputFile: any): any {
     const fileReader = new FileReader();
     fileReader.readAsText(inputFile);
+
+    this.importError = false;
+    this.importErrorMsg = '';
 
     fileReader.onload = () => {
       const fileContent = fileReader.result as string;
       const lines = fileContent.split('\n');
+      let lineCount = 0;
 
       lines.forEach((line: string) => {
         const words = line.split(';');
+        lineCount++;
+
+        // Error handling
+        if (words.length != 8) {
+          this.importErrorMsg += `Hiba a ${lineCount}. sorban | `;
+          this.importError = true;
+          return;
+        }
+
         const obj: Question = {
           category: words[0],
           question: words[1],
