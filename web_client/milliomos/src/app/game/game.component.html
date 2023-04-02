@@ -1,21 +1,22 @@
-<div class="intro-background" id="introBox">
-  <button type="submit" class="btn btn-secondary" (click)="skipIntro()" id="skipButton">Átugrás</button>
-  <div class="wrapper">
-    <div class="head"></div>
-    <div class="mouth"></div>
-    <div class="eye"></div>
-    <div class="torso"></div>
-    <div class="leftarm"></div>
-    <div class="rightarm"></div>
-    <div class="leftleg"></div>
-    <div class="rightleg"></div>
-    <img class="dot" [@dotRotate]="animationState" (@dotRotate.done)="introDone($event)" src="./assets/images/kreditmilliomos-red.png" alt="logo">
+<div class="modal" id="introBox">
+  <div class="modal-content">
+    <div class="volume material-icons">
+      volume_up
+      <input type="range" min="0" max="100" [value]="hangero" #volume2 (input)="onVolumeChange(volume2.value)">
+    </div>
+    <div class="wrapper">
+      <div class="head"></div>
+      <div class="mouth"></div>
+      <div class="eye"></div>
+      <div class="torso"></div>
+      <div class="leftarm"></div>
+      <div class="rightarm"></div>
+      <div class="leftleg"></div>
+      <div class="rightleg"></div>
+      <img class="dot" [@dotRotate]="animationState" (@dotRotate.done)="introDone($event)" src="./assets/images/kreditmilliomos-red.png" alt="logo">
+    </div>
+    <button type="submit" (click)="skipIntro()">Átugrás</button>
   </div>
-</div>
-
-<div class="volume material-icons help">
-  volume_up
-  <input type="range" min="0" max="100" [value]="hangero" #volume (input)="onVolumeChange(volume.value)">
 </div>
 
 <div class="content">
@@ -24,6 +25,11 @@
   </div>
   <div class="game">
     <div class="question">
+      <div class="volume material-icons">
+        volume_up
+        <input type="range" min="0" max="100" [value]="hangero" #volume (input)="onVolumeChange(volume.value)">
+      </div>
+
       <h3>{{ this.currentQuestion?.question }}</h3>
 
       <div id="chart" [ngStyle]="{ 'display': audienceused ? 'block' : 'none' }" class="chart-wrap vertical">
@@ -42,17 +48,17 @@
         </div>
       </span>
       <span id="answerB" class="answerbackground">
-        <div [class.disabled]="this.currentQuestion?.answerB === ''" class="answer" class="answer" [class.answer-selected]="selectedB" (click)="mouseClick('B')">
+        <div [class.disabled]="this.currentQuestion?.answerB === ''" class="answer" [class.answer-selected]="selectedB" (click)="mouseClick('B')">
           <span>{{ this.currentQuestion?.answerB }}</span>
         </div>
       </span>
         <span id="answerC" class="answerbackground">
-        <div [class.disabled]="this.currentQuestion?.answerC === ''" class="answer" class="answer" [class.answer-selected]="selectedC" (click)="mouseClick('C')">
+        <div [class.disabled]="this.currentQuestion?.answerC === ''" class="answer" [class.answer-selected]="selectedC" (click)="mouseClick('C')">
           <span>{{ this.currentQuestion?.answerC }}</span>
         </div>
       </span>
         <span id="answerD" class="answerbackground">
-        <div [class.disabled]="this.currentQuestion?.answerD === ''" class="answer" class="answer" [class.answer-selected]="selectedD" (click)="mouseClick('D')">
+        <div [class.disabled]="this.currentQuestion?.answerD === ''" class="answer" [class.answer-selected]="selectedD" (click)="mouseClick('D')">
           <span>{{ this.currentQuestion?.answerD }}</span>
         </div>
       </span>
@@ -62,16 +68,16 @@
     <div class="sidebar">
       <a (click)="exitGame()"><i class="material-icons">exit_to_app</i></a>
       <div class="helps">
-        <div class="help">
-          <i id="halving_help" class="material-icons" (click)="use_halving()">balance</i>
+        <div class="help" id="halving_help">
+          <i class="material-icons" (click)="use_halving()">balance</i>
           <div id="halving_line" class="line" hidden></div>
         </div>
-        <div class="help">
-          <i id="group_help" class="material-icons" (click)="use_audience()">group</i>
+        <div class="help" id="group_help">
+          <i class="material-icons" (click)="use_audience()">group</i>
           <div id="group_line" class="line" hidden></div>
         </div>
-        <div class="help">
-          <i id="skip_help" class="material-icons" (click)="use_skip()">cached</i>
+        <div class="help" id="skip_help">
+          <i class="material-icons" (click)="use_skip()">cached</i>
           <div id="skip_line" class="line" hidden></div>
         </div>
       </div>

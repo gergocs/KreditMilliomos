@@ -10,6 +10,7 @@ import { GameComponent } from './game/game.component';
 import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
 import {DataprivacyComponent} from "./dataprivacy/dataprivacy.component";
 import {AngularFireAuthGuard, redirectUnauthorizedTo} from "@angular/fire/compat/auth-guard";
+import { AdminCategoryComponent } from './admin-category/admin-category.component';
 
 const redirectUnauthorizedToLanding = () => redirectUnauthorizedTo(['login']);
 
@@ -42,9 +43,7 @@ const routes: Routes = [
   },
   {
     path: 'main',
-    component: MainComponent,
-    canActivate: [AngularFireAuthGuard], 
-    data: { authGuardPipe: redirectUnauthorizedToLanding}
+    component: MainComponent
   },
   {
     path: 'admin-users',
@@ -55,6 +54,12 @@ const routes: Routes = [
   {
     path: 'admin-questions',
     component: AdminQuestionsComponent,
+    canActivate: [AngularFireAuthGuard], 
+    data: { authGuardPipe: redirectUnauthorizedToLanding}
+  },
+  {
+    path: 'admin-category',
+    component: AdminCategoryComponent,
     canActivate: [AngularFireAuthGuard], 
     data: { authGuardPipe: redirectUnauthorizedToLanding}
   },

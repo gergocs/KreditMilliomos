@@ -44,23 +44,38 @@ export class LobbyComponent implements OnInit {
   })
   }
 
+  public difficulty: string = '0';
+
+  mouseClick(what: number) {
+    switch (what) {
+      case 0:
+        this.difficulty = '0';
+        break;
+
+      case 1:
+        this.difficulty = '1';
+        break;
+
+      case 2:
+        this.difficulty = '2';
+        break;
+    }
+  }
+
   // Needs proper implementation
-  startNewGame(category: String, difficulty: String) {
+  startNewGame(category: String) {
     // Hande errors
-    if (
-      category == 'Kategória választása' ||
-      difficulty == 'Nehézség választása'
-    ) {
-      alert('Válassz nehézséget és kategóriát!');
+    if (category == 'Válassz kategóriát') {
+      alert('Kérlek válassz kategóriát!');
       return;
     }
 
     if(window.localStorage.getItem('startedQuestion')){
-      alert('Már van folyamatban játékod ezért azt indítjük el!');
+      alert('Egy játék már folyamatban van!');
       this.router.navigate(['/game']);
     }else{
     // Start new game
-    this.gameService.startNewGame(category, difficulty, <string>this.userid).then(r => {
+    this.gameService.startNewGame(category, this.difficulty, <string>this.userid).then(r => {
       this.router.navigate(['/game']);
     });
   }}

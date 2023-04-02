@@ -38,10 +38,10 @@ export class AuthService {
       } else {
         this.authState = this.authStates.loggedOut;
         this.user = undefined
-        this.router.navigate(['/login']);
+        this.router.navigate(['/main']);
       }
     })
-    
+
     this.auth.onAuthStateChanged((credential) => {
       if (credential) {
 
@@ -94,7 +94,7 @@ export class AuthService {
         });
         }else {
           this.zone.run(() => {
-            this.router.navigate(['/main']);
+            this.router.navigate(['/profile']);
         })
         }
     }).catch(error =>{
@@ -116,7 +116,7 @@ export class AuthService {
     window.localStorage.removeItem("userdatas")
     await this.auth.signOut();
     this.zone.run(() => {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/main']);
   });
   }
 

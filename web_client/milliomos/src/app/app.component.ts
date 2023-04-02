@@ -20,18 +20,19 @@ export class AppComponent implements OnInit{
     cc.cookieconsent.initialise({
       palette: {
         popup: {
-          background: "#164969" //TODO: Colors
+          background: "#ffffff",
+          text: "#333333"
         },
         button: {
-          background: "#ffe000",
-          text: "#164969"
+          background: "#efa044",
+          text: "#ffffff"
         }
       },
       theme: "classic",
       content: {
-        message: "Az oldal nagyon finom sütiket használ",
-        dismiss: "Rendben",
-        link: "Több információ",
+        message: "A weboldalon sütiket használunk, hogy személyre szabott élményt nyújthassunk.",
+        dismiss: "Elfogadom",
+        link: "Bővebb információ",
         href: "/dataprivacy"
       }
     });

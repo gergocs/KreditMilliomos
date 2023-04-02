@@ -1,20 +1,21 @@
 $chart-width:50%;
 $chart-height:20%;
 
-$grid-color:#000;
-$bar-color:rgba(111,211,20);
+$grid-color: #333333;
+$bar-color: #51dc35;
 $bar-thickness:10%;
 $bar-rounded: 3px;
 $bar-spacing: 30%;
 
 .chart-wrap{
+
   margin-left:2%;
   margin-bottom: -20%;
   font-family:sans-serif;
   &.vertical .grid{
     transform:translateY($chart-height/2 - $chart-width/2) translateX($chart-width/2 - $chart-height/2) rotate(-90deg);
-    
-    
+
+
     .bar::after{
       transform:translateY(-0.66em) rotate(90deg);
       display: block;
@@ -23,7 +24,7 @@ $bar-spacing: 30%;
       transform:translateX(-0.2em) rotate(90deg);
     }
   }
-  
+
   height:$chart-width;
   width:0%;
   .grid{
@@ -32,9 +33,9 @@ $bar-spacing: 30%;
     height:100%;
     width:100%;
     border-left:2px solid $grid-color;
-    
+
     background:repeating-linear-gradient(90deg,transparent,transparent 19%, $grid-color 20%);
-    
+
     &::before{
       font-size:0.8em;
       font-weight:bold;
@@ -52,16 +53,16 @@ $bar-spacing: 30%;
       top:-1.5em;
     }
    }
-  
-  
-  
+
+
+
   .bar {
     width: var(--bar-value);
     height:$bar-thickness;
-    margin:$bar-spacing 0;    
+    margin:$bar-spacing 0;
     background-color:$bar-color;
     border-radius:0 $bar-rounded $bar-rounded 0;
-    
+
     &::after{
       content:attr(data-name);
       margin-left:100%;

@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
     firstName: new FormControl(''),
     lastName: new FormControl('')
   });
-  
+
   constructor(public router: Router, private auth: AuthService) { }
 
   ngOnInit(): void {
@@ -57,6 +57,10 @@ export class ProfileComponent implements OnInit {
       console.log(err)
       this.loading = false
     })
+  }
+
+  async onLogoutPress() {
+    await this.auth.logout();
   }
 
 }
