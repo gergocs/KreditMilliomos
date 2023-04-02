@@ -22,6 +22,7 @@ import { LobbyComponent } from './lobby/lobby.component';
 import { GameComponent } from './game/game.component';
 import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
 import { DataprivacyComponent } from './dataprivacy/dataprivacy.component';
+import { AdminCategoryComponent } from './admin-category/admin-category.component';
 
 
 
@@ -37,7 +38,8 @@ import { DataprivacyComponent } from './dataprivacy/dataprivacy.component';
     ProfileComponent,
     LobbyComponent,
     GameComponent,
-    DataprivacyComponent
+    DataprivacyComponent,
+    AdminCategoryComponent
   ],
   imports: [
     BrowserAnimationsModule,

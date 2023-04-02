@@ -93,6 +93,7 @@ export class GameComponent implements OnInit, OnDestroy {
         } else if (r.question !== undefined) {
           this.currentQuestion = r.question;
           window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
+          window.localStorage.setItem('helps',JSON.stringify(this.helps))
         } else {
           // TODO: More error
         }
@@ -267,10 +268,12 @@ export class GameComponent implements OnInit, OnDestroy {
             document.getElementsByClassName('answer-selected') as HTMLCollectionOf<HTMLElement>,
           );
           if(!r.win){
-            selected[0].style.backgroundColor = "red"
+            selected[0].style.backgroundColor = "#ef0d00"
+            selected[0].style.borderColor = "#ef0d00";
             this.wrongAnswerSound.play()}
           else {
-            selected[0].style.backgroundColor = "green"
+            selected[0].style.backgroundColor = "#51dc35"
+            selected[0].style.borderColor = "#51dc35"
           }
             await new Promise(f => setTimeout(f,1500))
             this.gameService.endGame(this.userid, true).then(()=>{
@@ -281,7 +284,8 @@ export class GameComponent implements OnInit, OnDestroy {
           let selected = Array.from(
             document.getElementsByClassName('answer-selected') as HTMLCollectionOf<HTMLElement>,
           );
-          selected[0].style.backgroundColor = "green"
+          selected[0].style.backgroundColor = "#51dc35"
+          selected[0].style.borderColor = "#51dc35"
 
           let backgrounds = Array.from(
             document.getElementsByClassName('answerbackground') as HTMLCollectionOf<HTMLElement>,
@@ -293,12 +297,14 @@ export class GameComponent implements OnInit, OnDestroy {
           this.correctAnswerSound.play()
           await new Promise(f => setTimeout(f,1500))
           selected[0].style.backgroundColor = ""
+          selected[0].style.borderColor = "#efa044"
           this.backgroundMusic.play()
           this.currentQuestion = r.question;
           window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
           this.clearSelection();
           this.userCanSelect = true;
           this.userCanSubmit = false;
+          document.body.style.backgroundColor = "#f5ebea";
         } else {
           console.log(r);
           // TODO: More error
@@ -404,12 +410,14 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   async animatedchart(id: string, id2 : string, value: number, timeout: number){
+    document.body.style.backgroundColor = "#983630";
     await new Promise(f => setTimeout(f, timeout));
     const animationDuration = 1000; // 1.5 másodperc
     const numSteps = 100;
     const increment = value / numSteps;
     const initialWaitTime = animationDuration / numSteps;
     const lastSteps = 2;
+
 
     let chartdiv = document.getElementById(id);
     let answerdiv = document.getElementById(id2)

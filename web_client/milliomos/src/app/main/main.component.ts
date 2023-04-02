@@ -9,6 +9,7 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
+  loggedin: boolean =false
   userdata: UserModell | undefined
 
   constructor(public auth: AuthService, protected router: Router) {
@@ -24,13 +25,10 @@ export class MainComponent implements OnInit {
   ngOnInit(){
     let userdatas = window.localStorage.getItem("userdatas")
     if(!userdatas){
-      this.auth.logout()
-      return;
-    }
-    this.userdata = JSON.parse(userdatas)
+      this.loggedin = false;
+    }else{
+      this.loggedin = true;
+      this.userdata = JSON.parse(userdatas)
   }
-
-  async onLogoutPress() {
-    await this.auth.logout();
   }
 }

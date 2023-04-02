@@ -35,6 +35,7 @@
   padding: 32px 64px;
   margin-right: 60px;
   width: 950px;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -62,7 +63,8 @@
 
 .content .game .question .answers .answer {
   padding: 24px;
-  width: 100%;
+  width: 400px;
+  height: 75px;
   color: #333333;
   font-size: 18px;
   font-weight: 500;
@@ -73,7 +75,7 @@
   transition: background-color 0.4s;
 }
 
-.content .game .question .answers .answer:hover {
+.content .game .question .answers .answer:not(.disabled):hover {
   color: #ffffff;
   background-color: #efa044;
 }
@@ -83,11 +85,20 @@
   background-color: #efa044;
 }
 
+.content .game .question .answers .answer.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.content .game .question .answers .answerbackground {
+  border-radius: 16px;
+}
+
 .content .game .question button {
   padding: 16px 32px;
   margin: 14px 0 60px 0;
   background-color: #b3b3b3;
-  color: #fff;
+  color: #ffffff;
   font-size: 18px;
   font-weight: 600;
   border: none;
@@ -132,12 +143,18 @@
 }
 
 .content .game .sidebar .helps {
+  margin-top: 10px;
   display: flex;
 }
 
 .content .game .sidebar .helps .help {
   margin: 0 10px;
   cursor: pointer;
+}
+
+.content .game .sidebar .helps .help.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .content .game .sidebar .helps .help i {
@@ -149,21 +166,21 @@
   transition: background-color 0.4s;
 }
 
-.content .game .sidebar .helps .help i:not(.disabled):hover {
+.content .game .sidebar .helps .help:not(.disabled) i:hover {
   color: #ffffff;
   background-color: #efa044;
 }
 
-.content .game .sidebar .helps .help i.disabled {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-div.disabled {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.5;
+.content .game .sidebar .helps .help .line {
+  margin: 0;
+  position: relative;
+  bottom: 100%;
+  left: 0;
+  width: 141.421356237%;
+  height: 2px;
+  background-color: #333333;
+  transform: rotate(45deg);
+  transform-origin: 0 0;
 }
 
 .content .game .sidebar ul {
@@ -185,7 +202,7 @@ div.disabled {
   font-size: 16px;
   font-weight: 500;
   text-align: center;
-  border-bottom: 0.2px solid #75717130;
+  border-top: 0.2px solid #75717130;
 }
 
 .content .game .sidebar ul li.answered {
@@ -205,39 +222,10 @@ div.disabled {
   border-radius: 16px;
 }
 
-.content .game .sidebar ul li:last-child {
+.content .game .sidebar ul li.active + .answered {
+  border-top: none;
+}
+
+.content .game .sidebar ul li:first-child {
   border: none;
-}
-
-.line {
-  margin: 0;
-  position: relative;
-  bottom: 100%;
-  left: 0;
-  width: 141.421356237%;
-  height: 2px;
-  background-color: black;
-  transform: rotate(45deg);
-  transform-origin: 0 0;
-}
-
-.answerbackground{
-  border-radius: 16px;
-}
-
-.volume {
-  position: fixed;
-  left: 10px;
-  bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #efa044;
-  border-radius: 16px;
-  border: 3px solid #333;
-  z-index: 1001;
-}
-
-.volume input {
-  margin: 0;
 }
