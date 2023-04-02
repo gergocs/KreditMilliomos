@@ -20,15 +20,17 @@ export class AdminCategoryComponent implements OnInit {
 
   categoryForm = new FormGroup({
     category: new FormControl(''),
-  }) 
+  })
   userid: string | undefined;
 
-  constructor(    
+  constructor(
     public router: Router,
     protected http: HttpClient,
     public questionService: QuestionService,
     public auth: AngularFireAuth,
     public authservice: AuthService) { }
+
+    public showForm: boolean = false;
 
   async ngOnInit(): Promise<void> {
     await this.authservice.isAdmin().then(res => {
@@ -91,6 +93,7 @@ export class AdminCategoryComponent implements OnInit {
       this.loading=false
     }
     );
+    this.showForm = false;
   }
 
 }
