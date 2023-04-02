@@ -82,6 +82,7 @@ export class GameComponent implements OnInit, OnDestroy {
     let storagehelps = window.localStorage.getItem('helps')
     if(startedquestion && storagehelps){
       this.currentQuestion = JSON.parse(startedquestion)
+      this.decodeCurrentQuestion()
       this.helps = JSON.parse(storagehelps)
     }else{
     this.gameService.evaluateGame(this.userid).then(r => {
@@ -94,11 +95,25 @@ export class GameComponent implements OnInit, OnDestroy {
           this.currentQuestion = r.question;
           window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
           window.localStorage.setItem('helps',JSON.stringify(this.helps))
+          this.decodeCurrentQuestion()
         } else {
           // TODO: More error
         }
       }
     })}
+  }
+
+  decodeCurrentQuestion(){
+    if(this.currentQuestion){
+    this.currentQuestion.category = decodeURIComponent(this.currentQuestion.category)
+    this.currentQuestion.question = decodeURIComponent(this.currentQuestion.question)
+    this.currentQuestion.level = decodeURIComponent(this.currentQuestion.level)
+    this.currentQuestion.answerA = decodeURIComponent(this.currentQuestion.answerA)
+    this.currentQuestion.answerB = decodeURIComponent(this.currentQuestion.answerB)
+    this.currentQuestion.answerC = decodeURIComponent(this.currentQuestion.answerC)
+    this.currentQuestion.answerD = decodeURIComponent(this.currentQuestion.answerD)
+    this.currentQuestion.answerCorrect = decodeURIComponent(this.currentQuestion.answerCorrect)
+    }
   }
 
   // Needs proper implementation -> gets the first question on init
@@ -299,6 +314,7 @@ export class GameComponent implements OnInit, OnDestroy {
           this.backgroundMusic.play()
           this.currentQuestion = r.question;
           window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
+          this.decodeCurrentQuestion()
           this.clearSelection();
           this.userCanSelect = true;
           this.userCanSubmit = false;
@@ -381,6 +397,7 @@ export class GameComponent implements OnInit, OnDestroy {
       await this.gameService.useHalf(this.userid).then(r => {
         this.currentQuestion = r;
         window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
+        this.decodeCurrentQuestion()
         this.helps[0] = true
         window.localStorage.setItem('helps',JSON.stringify(this.helps))
 
@@ -486,6 +503,7 @@ export class GameComponent implements OnInit, OnDestroy {
         if(r){
           this.currentQuestion = r.question
           window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
+          this.decodeCurrentQuestion()
           this.helps[2] = true
           window.localStorage.setItem('helps',JSON.stringify(this.helps))
         }
