@@ -7,6 +7,7 @@ import { Question } from '../models/question';
 import { QuestionCategory } from '../models/questionCategory';
 import { AuthService } from '../services/auth.service';
 import { QuestionService } from '../services/question.service';
+import CSVFileValidator from 'csv-file-validator'
 
 @Component({
   selector: 'app-admin-questions',
@@ -35,6 +36,7 @@ export class AdminQuestionsComponent implements OnInit {
   categoryForm = new FormGroup({
     category: new FormControl(''),
   });
+
 
   questionForm = new FormGroup({
     category: new FormControl(''),
@@ -205,42 +207,91 @@ export class AdminQuestionsComponent implements OnInit {
     }
   }
 
-  readFile(inputFile: any): any {
-    const fileReader = new FileReader();
-    fileReader.readAsText(inputFile);
-
+  readFile(inputFile: any): void {
     this.importError = false;
     this.importErrorMsg = '';
-
-    fileReader.onload = () => {
-      const fileContent = fileReader.result as string;
-      const lines = fileContent.split('\n');
-      let lineCount = 0;
-
-      lines.forEach((line: string) => {
-        const words = line.split(';');
-        lineCount++;
-
-        // Error handling
-        if (words.length != 8) {
-          this.importErrorMsg += `Hiba a ${lineCount}. sorban | `;
-          this.importError = true;
-          return;
+    CSVFileValidator<Question>(inputFile, {
+      headers: [
+        {
+          name: 'category',
+          inputName: 'category',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'question',
+          inputName: 'question',
+          required: true,
+          unique: true,
+          uniqueError: function (headerName) {
+            return `${headerName} nem egyedi`
+          },
+        },
+        {
+          name: 'level',
+          inputName: 'level',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerA',
+          inputName: 'answerA',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerB',
+          inputName: 'answerB',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerC',
+          inputName: 'answerC',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerD',
+          inputName: 'answerD',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerCorrect',
+          inputName: 'answerCorrect',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+      ],
+    }).then(csvData => {
+      if (csvData.inValidData.length == 0){
+        this.Importeditems = csvData.data;
+      } else {
+        for (let i = 0;  i < csvData.inValidData.length; i++) {
+          this.importErrorMsg += 'Hiba ' + csvData.inValidData[i].message + '| ';
         }
 
-        const obj: Question = {
-          category: words[0],
-          question: words[1],
-          level: words[2],
-          answerA: words[3],
-          answerB: words[4],
-          answerC: words[5],
-          answerD: words[6],
-          answerCorrect: words[7].trim(),
-        };
-        this.Importeditems.push(obj);
-      });
-    };
+        this.importError = true;
+      }
+    }).catch(e => {
+        this.importErrorMsg += 'Hiba ' + e.error.message + ' |';
+        this.importError = true;
+    })
   }
 
   display(): void {
