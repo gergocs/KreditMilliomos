@@ -66,6 +66,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public hangero: any
 
   animationState: string = 'rotationEnd';
+  diff: number = 1;
   constructor(
     protected auth: AuthService,
     protected gameService: GameService,
@@ -80,11 +81,14 @@ export class GameComponent implements OnInit, OnDestroy {
 
     let startedquestion = window.localStorage.getItem('startedQuestion')
     let storagehelps = window.localStorage.getItem('helps')
-    if(startedquestion && storagehelps){
+    let diff = window.localStorage.getItem('diff')
+    if(startedquestion && storagehelps && diff){
       this.currentQuestion = JSON.parse(startedquestion)
       this.decodeCurrentQuestion()
       this.helps = JSON.parse(storagehelps)
+      this.diff = Number(JSON.parse(diff))
     }else{
+      this.diff = 1
     this.gameService.evaluateGame(this.userid).then(r => {
       if (!r) {
         //TODO: Error
@@ -276,6 +280,7 @@ export class GameComponent implements OnInit, OnDestroy {
            //TODO: Win or lose
            window.localStorage.removeItem('startedQuestion')
            window.localStorage.removeItem('helps')
+           window.localStorage.removeItem('diff')
 
           let selected = Array.from(
             document.getElementsByClassName('answer-selected') as HTMLCollectionOf<HTMLElement>,
@@ -294,6 +299,7 @@ export class GameComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl("/lobby")
           })
         } else if (r.question !== undefined) {
+          this.diff ++;
           let selected = Array.from(
             document.getElementsByClassName('answer-selected') as HTMLCollectionOf<HTMLElement>,
           );
@@ -314,6 +320,7 @@ export class GameComponent implements OnInit, OnDestroy {
           this.backgroundMusic.play()
           this.currentQuestion = r.question;
           window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
+          window.localStorage.setItem('diff',JSON.stringify(this.diff))
           this.decodeCurrentQuestion()
           this.clearSelection();
           this.userCanSelect = true;
@@ -387,6 +394,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this.wrongAnswerSound.play()
     window.localStorage.removeItem('startedQuestion')
     window.localStorage.removeItem('helps')
+    window.localStorage.removeItem('diff')
     this.gameService.endGame(this.userid, true).then(()=>{
       this.router.navigateByUrl("/lobby")
     })
