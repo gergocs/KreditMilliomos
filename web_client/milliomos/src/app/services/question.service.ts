@@ -69,7 +69,7 @@ export class QuestionService {
     async deleteQuestion(q: string, uid: any){
       let header = new HttpHeaders()
         .set("tokenkey", uid)
-      await this.http.delete(this.hostname + "question/admin", {headers: header, body: {question: q}}).toPromise().then(r => {
+      await this.http.delete(this.hostname + "question/admin", {headers: header, body: {question: encodeURIComponent(q)}}).toPromise().then(r => {
         if (r){
           return new Promise((resolve, reject) => {resolve(r);})
         }
