@@ -1,4 +1,4 @@
-<div class="modal" id="introBox">
+<div class="intro-modal" id="introBox">
   <div class="modal-content">
     <div class="volume material-icons">
       volume_up
@@ -32,12 +32,17 @@
 
       <h3>{{ this.currentQuestion?.question }}</h3>
 
-      <div id="chart" [ngStyle]="{ 'display': audienceused ? 'block' : 'none' }" class="chart-wrap vertical">
-        <div class="grid">
-            <div id="chartA" class="bar" style="--bar-value:0%;" data-name="A"></div>
-            <div id="chartB" class="bar" style="--bar-value:0%;" data-name="B"></div>
-            <div id="chartC" class="bar" style="--bar-value:0%;" data-name="C"></div>
-            <div id="chartD" class="bar" style="--bar-value:0%;" data-name="D"></div>
+      <div class="chart-modal" id="chart-modal" [ngStyle]="{ 'display': audienceused ? 'flex' : 'none' }" >
+        <div class="modal-content">
+          <div id="chart" class="chart-wrap vertical">
+            <div class="grid">
+                <div id="chartA" class="bar" style="--bar-value:0%;" data-name="A"></div>
+                <div id="chartB" class="bar" style="--bar-value:0%;" data-name="B"></div>
+                <div id="chartC" class="bar" style="--bar-value:0%;" data-name="C"></div>
+                <div id="chartD" class="bar" style="--bar-value:0%;" data-name="D"></div>
+            </div>
+          </div>
+          <button (click)="hideModal()"><i class="material-icons">close</i></button>
         </div>
       </div>
 

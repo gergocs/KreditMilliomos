@@ -477,6 +477,13 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
+  hideModal() {
+    let chartModal = document.getElementById("chart-modal");
+
+    if (chartModal)
+      chartModal.style.display = "none";
+  }
+
   async use_skip(){
     if(this.userid){
       await this.gameService.useSwitch(this.userid).then(r => {
