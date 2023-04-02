@@ -313,6 +313,18 @@ export class AdminQuestionsComponent implements OnInit {
           this.allquestion = this.allquestion.concat(this.Importeditems);
         }
       });
+
+    this.allquestion.forEach(element => {
+      element.category = decodeURIComponent(element.category)
+      element.question = decodeURIComponent(element.question)
+      element.level = decodeURIComponent(element.level)
+      element.answerA = decodeURIComponent(element.answerA)
+      element.answerB = decodeURIComponent(element.answerB)
+      element.answerC = decodeURIComponent(element.answerC)
+      element.answerD = decodeURIComponent(element.answerD)
+      element.answerCorrect = decodeURIComponent(element.answerCorrect)
+    });
+
     this.loading = false;
   }
 
