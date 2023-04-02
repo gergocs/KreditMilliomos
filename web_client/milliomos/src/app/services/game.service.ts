@@ -32,7 +32,6 @@ export class GameService {
     }).toPromise().then(r => {
       //TODO: if 200 then everything is OK
     }).catch(e => {
-      console.log(e);
       //TODO: process error
     });
   }
@@ -44,7 +43,6 @@ export class GameService {
 
       return r;
     }).catch(e => {
-      console.log(e);
 
       //TODO: process error
     });
@@ -82,7 +80,6 @@ export class GameService {
 
       //200 if give up
     }).catch(e => {
-      console.log(e);
 
       //TODO: process error
     });
@@ -95,7 +92,6 @@ export class GameService {
 
       //200 if give up
     }).catch(e => {
-      console.log(e);
 
       //TODO: process error
     });

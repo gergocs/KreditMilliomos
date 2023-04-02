@@ -71,10 +71,8 @@ export class QuestionService {
         .set("tokenkey", uid)
       await this.http.delete(this.hostname + "question/admin", {headers: header, body: {question: q}}).toPromise().then(r => {
         if (r){
-          console.log(r)
           return new Promise((resolve, reject) => {resolve(r);})
         }
-        console.log()
         return new Promise((resolve, reject) => {resolve(r);})
         //window.location.reload() //TODO something nicer and faster
       }).catch(e => {

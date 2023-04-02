@@ -81,12 +81,9 @@ export class AdminCategoryComponent implements OnInit {
       if( body == null){
         throw new Error()
       }
-      console.log("Created question category in DB")
-      console.log(body);
       this.allQuestionCategories.push(newQC);
       this.loading=false
     },(error) => {
-      console.log(error)
       if(error.status == 200){
         this.allQuestionCategories.push(newQC);
       }

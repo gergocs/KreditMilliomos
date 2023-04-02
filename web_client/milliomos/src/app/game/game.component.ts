@@ -227,12 +227,10 @@ export class GameComponent implements OnInit, OnDestroy {
   // Submit a choice
   async submit() {
     if (this.getAnswer() == 'None') {
-      console.log('No answer selected');
       return;
     }
 
     if (!this.userCanSubmit) {
-      console.log("You can't submit your answer!");
       return;
     }
     this.userCanSelect = false;
@@ -306,7 +304,6 @@ export class GameComponent implements OnInit, OnDestroy {
           this.userCanSubmit = false;
           document.body.style.backgroundColor = "#f5ebea";
         } else {
-          console.log(r);
           // TODO: More error
         }
       }
@@ -403,7 +400,6 @@ export class GameComponent implements OnInit, OnDestroy {
             this.animatedchart('chartD', 'answerD', 0, 0)}
         }
       }).catch(e => {
-        console.log(e);
         //TODO: process error
       });
     }
@@ -470,7 +466,6 @@ export class GameComponent implements OnInit, OnDestroy {
         if(line){line.hidden = false}
         this.audienceused = true
       }).catch(e => {
-        console.log(e);
 
         //TODO: process error
       });
@@ -518,7 +513,6 @@ export class GameComponent implements OnInit, OnDestroy {
         let line = document.getElementById('skip_line')
         if(line){line.hidden = false}
       }).catch(e => {
-        console.log(e);
 
         //TODO: process error
       });

@@ -161,12 +161,8 @@ export class AuthService {
             if (body == null){
               throw new Error() //remeljuk mukodik
             }
-            console.log(body)
-            console.log("You have been successfully logged in with a new google account!");
             return await this.getUserData() //mukodik
           }).catch(error =>{
-            console.log(error)
-            console.log("nem sikerult a DB-be letrehozni a usert")
             this.delfromfire()
             return new Promise((resolve, reject) => {reject();}) //mukodik
           })
@@ -198,7 +194,6 @@ export class AuthService {
         .set("lastname", encodeURIComponent(lastname))
         .set("admin", "false")
       await this.http.post(this.hostname + "user", null, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
-        console.log(body)
         if (body == null){
           throw new Error() //remeljuk mukodik
         }
@@ -210,8 +205,6 @@ export class AuthService {
         });
         });
       }).catch(error =>{
-        console.log(error)
-        console.log("nem sikerult a DB-be letrehozni a usert regnel")
         this.delfromfire()
         return new Promise((resolve, reject) => {reject();}) //tesztre var TODO
       })

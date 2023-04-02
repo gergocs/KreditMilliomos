@@ -132,13 +132,10 @@ export class AdminQuestionsComponent implements OnInit {
         if (body == null) {
           throw new Error();
         }
-        console.log('Created question category in DB');
-        console.log(body);
         this.allQuestionCategories.push(newQC);
         this.loading = false;
       },
       (error) => {
-        console.log(error);
         if (error.status == 200) {
           this.allQuestionCategories.push(newQC);
         }
@@ -170,7 +167,6 @@ export class AdminQuestionsComponent implements OnInit {
         this.loading = false;
       },
       (error) => {
-        console.log(error);
         if (error.status == 200) {
           this.allquestion.push(newQ);
         }
@@ -313,7 +309,6 @@ export class AdminQuestionsComponent implements OnInit {
         this.allquestion = this.allquestion.concat(this.Importeditems);
       })
       .catch((error) => {
-        console.log(error);
         if (error.status == 200) {
           this.allquestion = this.allquestion.concat(this.Importeditems);
         }
@@ -338,7 +333,6 @@ export class AdminQuestionsComponent implements OnInit {
         this.loading = false;
       })
       .catch((err) => {
-        console.log(err);
         this.loading = false;
       });
   }
