@@ -80,6 +80,10 @@ export class AuthService {
   async getUserData() {
     if (!this.user)
       return
+    if(!this.user.emailVerified){
+    this.user?.sendEmailVerification()
+    window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet! (Nézd meg a spam mappádat is!)");
+    this.logout();}
 
     let token = this.user.uid;
     let header = new HttpHeaders()
@@ -87,6 +91,12 @@ export class AuthService {
     await this.http.get<UserModell>(this.hostname + "user", {headers: header}).toPromise().then(body =>{
 
       this.userdata = body
+      if(this.userdata){
+      this.userdata.email = decodeURIComponent(this.userdata.email)
+      this.userdata.name = decodeURIComponent(this.userdata.name)
+      this.userdata.firstName = decodeURIComponent(this.userdata.firstName)
+      this.userdata.lastName = decodeURIComponent(this.userdata.lastName)
+      }
       window.localStorage.setItem("userdatas", JSON.stringify(body))
         if(body?.isAdmin){
           this.zone.run(() => {

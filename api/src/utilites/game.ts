@@ -175,7 +175,7 @@ class Game {
                     ? 2 : 3) + (((this.question.answerA === ''
             || this.question.answerB === ''
             || this.question.answerC === ''
-            || this.question.answerD === '') ? 0 : 1) * this.randomOffset())
+            || this.question.answerD === '') ? 0 : 1) * this.randomOffset(this.question.level))
 
         let skip1 = (this.question.answerA === ''
             ? 0 : this.question.answerB === ''
@@ -257,15 +257,15 @@ class Game {
     }
 
     // Random offset between 0 and 3
-    private randomOffset(): number {
+    private randomOffset(level: number): number {
         let rand = Math.random()
-        if (rand < 0.5) { // ~0.5
+        if (rand < (100-level*2)/100) { // 0.98-0.60
             return 0
         } else if (rand >= 0.5 && rand < 0.6) {  // ~0.1
             return 1
         } else if (rand >= 0.6 && rand < 0.75) { // ~0.15
             return 2
-        } else { // ~0.25
+        } else { 
             return 3
         }
     }

@@ -14,7 +14,9 @@ export class MainComponent implements OnInit {
 
   constructor(public auth: AuthService, protected router: Router) {
     if (!auth.user?.emailVerified && auth.authState == 2) {
-      window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet!");
+      auth.user?.sendEmailVerification()
+      console.log(auth.user)
+      window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet! (Nézd meg a spam mappádat is!)");
       auth.logout();
     }
     if (!window.localStorage.getItem("userdatas")){
