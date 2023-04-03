@@ -9,11 +9,14 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
+  loggedin: boolean =false
   userdata: UserModell | undefined
 
   constructor(public auth: AuthService, protected router: Router) {
     if (!auth.user?.emailVerified && auth.authState == 2) {
-      window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet!");
+      auth.user?.sendEmailVerification()
+      console.log(auth.user)
+      window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet! (Nézd meg a spam mappádat is!)");
       auth.logout();
     }
     if (!window.localStorage.getItem("userdatas")){
@@ -24,13 +27,10 @@ export class MainComponent implements OnInit {
   ngOnInit(){
     let userdatas = window.localStorage.getItem("userdatas")
     if(!userdatas){
-      this.auth.logout()
-      return;
-    }
-    this.userdata = JSON.parse(userdatas)
+      this.loggedin = false;
+    }else{
+      this.loggedin = true;
+      this.userdata = JSON.parse(userdatas)
   }
-
-  async onLogoutPress() {
-    await this.auth.logout();
   }
 }

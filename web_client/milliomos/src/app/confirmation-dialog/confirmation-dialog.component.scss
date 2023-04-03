@@ -1,0 +1,23 @@
+.primary {
+  background-color: #efa044;
+  font-family: 'Poppins', sans-serif;
+  border: none;
+  outline: none;
+  transition: 0.5s;
+}
+
+.primary:hover {
+  background-color: #ee8c1d;
+}
+
+.danger {
+  background-color: #ef0d00;
+  font-family: 'Poppins', sans-serif;
+  border: none;
+  outline: none;
+  transition: 0.5s;
+}
+
+.danger:hover {
+  background-color: #be180f;
+}

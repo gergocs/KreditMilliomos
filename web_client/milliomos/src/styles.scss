@@ -5,6 +5,17 @@
 
 @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
 
+::-webkit-scrollbar {
+  background-color: rgba(245, 235, 234, 1);
+  width: 5px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(239, 160, 68, 1);
+  border-radius: 5px;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -18,4 +29,48 @@ html {
 
 body {
   background-color: #f5ebea;
+}
+
+.volume {
+  position: absolute;
+  left: 15px;
+  bottom: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333333;
+}
+
+.volume input[type="range"] {
+  appearance: none;
+  margin-left: 8px;
+  position: relative;
+  width: 125px;
+  height: 8px;
+  border-radius: 50px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.volume input[type="range"]::-webkit-slider-runnable-track {
+  background: #eaeaea;
+}
+
+.volume input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  background-color: #379b4e;
+  box-shadow: -200px 0 0 200px #379b4e;
+  border: none;
+  border-radius: 50px;
+}
+
+.cc-btn {
+  text-decoration: none;
+  transition: 0.5s;
+}
+
+.cc-btn:hover {
+  background-color: #ee8c1d !important;
 }

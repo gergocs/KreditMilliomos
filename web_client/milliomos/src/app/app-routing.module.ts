@@ -8,18 +8,30 @@ import { ProfileComponent } from './profile/profile.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { GameComponent } from './game/game.component';
 import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
+import {DataprivacyComponent} from "./dataprivacy/dataprivacy.component";
+import {AngularFireAuthGuard, redirectUnauthorizedTo} from "@angular/fire/compat/auth-guard";
+import { AdminCategoryComponent } from './admin-category/admin-category.component';
+
+const redirectUnauthorizedToLanding = () => redirectUnauthorizedTo(['login']);
+
 const routes: Routes = [
   {
     path: 'lobby',
-    component: LobbyComponent
+    component: LobbyComponent,
+    canActivate: [AngularFireAuthGuard], 
+    data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
     path: 'game',
-    component: GameComponent
+    component: GameComponent,
+    canActivate: [AngularFireAuthGuard], 
+    data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
     path: 'profile',
-    component: ProfileComponent
+    component: ProfileComponent,
+    canActivate: [AngularFireAuthGuard], 
+    data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
     path: 'login',
@@ -35,18 +47,35 @@ const routes: Routes = [
   },
   {
     path: 'admin-users',
-    component: AdminUsersComponent
+    component: AdminUsersComponent,
+    canActivate: [AngularFireAuthGuard], 
+    data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
     path: 'admin-questions',
-    component: AdminQuestionsComponent
+    component: AdminQuestionsComponent,
+    canActivate: [AngularFireAuthGuard], 
+    data: { authGuardPipe: redirectUnauthorizedToLanding}
+  },
+  {
+    path: 'admin-category',
+    component: AdminCategoryComponent,
+    canActivate: [AngularFireAuthGuard], 
+    data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
     path: '',
-    component: LoginComponent
-    //redirectTo: 'main',
-    //pathMatch: 'full'
+    redirectTo: 'main',
+    pathMatch: 'full'
   },
+  {
+    path: 'dataprivacy',
+    component: DataprivacyComponent
+  },
+  {
+    path: '**',
+    component: MainComponent
+  }
 
 ];
 
@@ -54,4 +83,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

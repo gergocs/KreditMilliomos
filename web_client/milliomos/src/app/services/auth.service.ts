@@ -5,7 +5,7 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular
 import firebase from 'firebase/compat/app';
 import {FacebookAuthProvider, getAdditionalUserInfo, GoogleAuthProvider} from '@angular/fire/auth';
 import { UserModell } from '../models/usermodell';
-import { catchError, map, throwError } from 'rxjs';
+import { catchError, map, Observable, Subject, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +31,17 @@ export class AuthService {
       this.hostname = "https://kreditmilliomos.mooo.com:80/"
     }
 
+    this.auth.user.subscribe(user=>{
+      if(user){
+        this.authState = this.authStates.loggedIn;
+        this.user = user
+      } else {
+        this.authState = this.authStates.loggedOut;
+        this.user = undefined
+        this.router.navigate(['/main']);
+      }
+    })
+
     this.auth.onAuthStateChanged((credential) => {
       if (credential) {
 
@@ -49,9 +60,30 @@ export class AuthService {
     })
   }
 
+  async isAdmin(){
+    try {
+      if (this.user) {
+        const res = await this.http.get<boolean>(this.hostname + "user/isAdmin", {headers: new HttpHeaders().set('tokenKey', this.user.uid)}).toPromise();
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err: any) {
+      if (err.status === 200) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
   async getUserData() {
     if (!this.user)
       return
+    if(!this.user.emailVerified){
+    this.user?.sendEmailVerification()
+    window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet! (Nézd meg a spam mappádat is!)");
+    this.logout();}
 
     let token = this.user.uid;
     let header = new HttpHeaders()
@@ -59,6 +91,12 @@ export class AuthService {
     await this.http.get<UserModell>(this.hostname + "user", {headers: header}).toPromise().then(body =>{
 
       this.userdata = body
+      if(this.userdata){
+      this.userdata.email = decodeURIComponent(this.userdata.email)
+      this.userdata.name = decodeURIComponent(this.userdata.name)
+      this.userdata.firstName = decodeURIComponent(this.userdata.firstName)
+      this.userdata.lastName = decodeURIComponent(this.userdata.lastName)
+      }
       window.localStorage.setItem("userdatas", JSON.stringify(body))
         if(body?.isAdmin){
           this.zone.run(() => {
@@ -66,7 +104,7 @@ export class AuthService {
         });
         }else {
           this.zone.run(() => {
-            this.router.navigate(['/main']);
+            this.router.navigate(['/profile']);
         })
         }
     }).catch(error =>{
@@ -88,7 +126,7 @@ export class AuthService {
     window.localStorage.removeItem("userdatas")
     await this.auth.signOut();
     this.zone.run(() => {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/main']);
   });
   }
 
@@ -101,8 +139,6 @@ export class AuthService {
   async AuthLogin(provider: any) {
     try {
       const result = await this.auth.signInWithPopup(provider);
-
-      console.log(result)
 
       let firstlogin = result.additionalUserInfo?.isNewUser;
 
@@ -135,12 +171,8 @@ export class AuthService {
             if (body == null){
               throw new Error() //remeljuk mukodik
             }
-            console.log(body)
-            console.log("You have been successfully logged in with a new google account!");
             return await this.getUserData() //mukodik
           }).catch(error =>{
-            console.log(error)
-            console.log("nem sikerult a DB-be letrehozni a usert")
             this.delfromfire()
             return new Promise((resolve, reject) => {reject();}) //mukodik
           })
@@ -172,7 +204,6 @@ export class AuthService {
         .set("lastname", encodeURIComponent(lastname))
         .set("admin", "false")
       await this.http.post(this.hostname + "user", null, {headers: header, responseType: 'text'}).toPromise().then(async body =>{
-        console.log(body)
         if (body == null){
           throw new Error() //remeljuk mukodik
         }
@@ -184,8 +215,6 @@ export class AuthService {
         });
         });
       }).catch(error =>{
-        console.log(error)
-        console.log("nem sikerult a DB-be letrehozni a usert regnel")
         this.delfromfire()
         return new Promise((resolve, reject) => {reject();}) //tesztre var TODO
       })

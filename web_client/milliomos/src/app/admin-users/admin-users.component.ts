@@ -33,6 +33,13 @@ export class AdminUsersComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    await this.authservice.isAdmin().then(res => {
+      if(res == false){
+        this.router.navigate(['/main'])
+        return
+      }
+    })
+
     this.loading = true;
     let userdatas = window.localStorage.getItem('userdatas');
     if (!userdatas) {
@@ -65,7 +72,6 @@ export class AdminUsersComponent implements OnInit {
             this.bannedUserIDs = body;
           })
           .catch((error) => {
-            console.log(error);
           });
 
         body.forEach((user, index) => {
@@ -78,7 +84,6 @@ export class AdminUsersComponent implements OnInit {
         this.loading = false;
       })
       .catch((err) => {
-        console.log(err);
         this.loading = false;
       });
 
@@ -123,7 +128,6 @@ export class AdminUsersComponent implements OnInit {
               })
               .catch((error) => {
                 this.loading = false;
-                console.log(error);
               });
           }
         }

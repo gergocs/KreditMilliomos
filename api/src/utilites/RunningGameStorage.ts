@@ -10,7 +10,6 @@ class RunningGameStorage {
     private static runningGameStorage: RunningGameStorage
 
     public runningGames = new Map<string, Game>()
-    public readonly mInMS = 60000 //1 minute in ms
 
     private constructor() {
     }
@@ -23,14 +22,12 @@ class RunningGameStorage {
         return this.runningGameStorage
     }
 
-    startGame(token: string, category: string, difficulty: GameModes) {
+    startGame(token: string, category: string, difficulty: GameModes, maxTimePerQuestion = Infinity) {
         if (this.isGameRunning(token)) {
             return StatusCodes.Unauthorized
         }
 
-        //TODO: maybe change time
-        const timeRemaining = BigInt((new Date()).getTime() + (this.mInMS * 15))
-        this.runningGames.set(<string>token, new Game(timeRemaining, category, difficulty))
+        this.runningGames.set(<string>token, new Game(BigInt((new Date()).getTime()), category, difficulty, maxTimePerQuestion))
         return StatusCodes.Ok
     }
 
@@ -87,8 +84,8 @@ class RunningGameStorage {
 
         if (save) {
             const category = game?.category
-            const level = game?.level
-            const time = game?.time
+            const level = game?.level - 1
+            const time = BigInt(new Date().getTime() - Number(game?.time))
             sequelize.sync()
                 .then(() => {
                     ScoreBoard.create({
@@ -114,10 +111,10 @@ class RunningGameStorage {
 
         let game = this.runningGames.get(<string>token)
 
-        if (save) {
+        if (save && !!game) {
             const category = game?.category
-            const level = game?.level
-            const time = game?.time
+            const level = game?.level - 1
+            const time = BigInt(new Date().getTime() - Number(game?.time))
             sequelize.sync()
                 .then(() => {
                     ScoreBoard.create({
@@ -203,7 +200,7 @@ class RunningGameStorage {
         }
     }
 
-    useAudience(token: string): string | undefined {
+    useAudience(token: string): Array<number> | undefined {
         try {
 
             if (!this.isGameRunning(token)) {

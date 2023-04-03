@@ -3,6 +3,7 @@ import {getAuth} from 'firebase-admin/auth'
 import User from '../models/user'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
+import {MailSender} from "../utilites/mailSender";
 
 class UserController {
     private readonly path = '/user'
@@ -171,6 +172,15 @@ class UserController {
                 getAuth().updateUser(token, {
                     disabled: isBan
                 }).then((userRecord) => {
+                    if (isBan){ //TODO: change content
+                        MailSender.instance().sendEmail(userRecord.email,
+                            "Bannolva lettél :(",
+                            "Ki lettél bannolva R.I.P :(")
+                    } else {
+                        MailSender.instance().sendEmail(userRecord.email,
+                            "Garutálok unbannolva lettél :)",
+                            "Üdv újra köztünk :D")
+                    }
                     response.sendStatus(StatusCodes.Ok)
                     response.end()
                 }).catch((error) => {

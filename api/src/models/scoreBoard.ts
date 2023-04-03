@@ -11,7 +11,6 @@ class ScoreBoard extends Model<InferAttributes<ScoreBoard>, InferCreationAttribu
 ScoreBoard.init({
         tokenKey: {
             type: new DataTypes.STRING(28),
-            primaryKey: true
         },
         category: {
             type: new DataTypes.STRING(500)

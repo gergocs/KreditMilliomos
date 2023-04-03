@@ -48,6 +48,17 @@ export class QuestionService {
     }
 
     importQuestions(q: Question[], uid: any){
+      for (let index = 0; index < q.length; index++) {
+        q[index].category= encodeURIComponent(q[index].category),
+        q[index].question= encodeURIComponent(q[index].question),
+        q[index].level= encodeURIComponent(q[index].level),
+        q[index].answerA= encodeURIComponent(q[index].answerA),
+        q[index].answerB= encodeURIComponent(q[index].answerB),
+        q[index].answerC= encodeURIComponent(q[index].answerC),
+        q[index].answerD= encodeURIComponent(q[index].answerD),
+        q[index].answerCorrect= encodeURIComponent(q[index].answerCorrect)
+      }
+
       let header = new HttpHeaders()
       .set("tokenkey", uid)
 
@@ -58,12 +69,10 @@ export class QuestionService {
     async deleteQuestion(q: string, uid: any){
       let header = new HttpHeaders()
         .set("tokenkey", uid)
-      await this.http.delete(this.hostname + "question/admin", {headers: header, body: {question: q}}).toPromise().then(r => {
+      await this.http.delete(this.hostname + "question/admin", {headers: header, body: {question: encodeURIComponent(q)}}).toPromise().then(r => {
         if (r){
-          console.log(r)
           return new Promise((resolve, reject) => {resolve(r);})
         }
-        console.log()
         return new Promise((resolve, reject) => {resolve(r);})
         //window.location.reload() //TODO something nicer and faster
       }).catch(e => {
@@ -73,16 +82,16 @@ export class QuestionService {
 
     getQuestionCategories(uid: any){
       let header = new HttpHeaders().set("tokenkey", uid);
-      return this.http.get<QuestionCategory[]>(this.hostname + "question/admin/allQuestionCategories", { headers: header });
+      return this.http.get<QuestionCategory[]>(this.hostname + "question/allQuestionCategories", { headers: header });
     }
-    
+
     createQuestionCategory(qc:QuestionCategory,uid:any){
       let header = new HttpHeaders()
       .set("tokenkey", uid)
       let body = {
         category: encodeURIComponent(qc.category),
       }
-  
+
       return this.http.post(this.hostname + "question/admin/createQuestionCategory", body, {headers: header, responseType: 'text'});
     }
 }

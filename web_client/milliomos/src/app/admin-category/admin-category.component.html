@@ -1,0 +1,45 @@
+<div [hidden]="!loading" class="loading">
+    <img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading animation">
+</div>
+
+<nav>
+  <ul>
+    <li><a routerLink="/admin-users"><i class="material-icons">supervisor_account</i>Felhasználók kezelése</a></li>
+    <li><a routerLink="/admin-category" class="active"><i class="material-icons">category</i>Kategóriák kezelése</a></li>
+    <li><a routerLink="/admin-questions"><i class="material-icons">help_outline</i>Kérdések kezelése</a></li>
+    <li><a (click)="this.authservice.logout()"><i class="material-icons">exit_to_app</i>Kijelentkezés</a></li>
+  </ul>
+</nav>
+
+<div class="content">
+  <div class="box">
+    <button (click)="showForm = true" class="new-category-button">Új kategória</button>
+    <h2>Összes jelenlegi kategória</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>kategória megnevezése</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">
+            <td>{{category.category}}</td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="new-category" *ngIf="showForm">
+  <div class="content">
+    <form [formGroup]="categoryForm" (ngSubmit)="createQuestionCategory()">
+        <h2>Új kategória</h2>
+        <div class="input-box">
+          <label for="category">kategória</label>
+          <input type="text" id="category" placeholder="Kategória" formControlName="category" required>
+        </div>
+        <button type="submit" class="save-button" id="submit_question_button">Mentés</button>
+        <button (click)="showForm = false" class="cancel-button">Mégse</button>
+    </form>
+  </div>
+</div>

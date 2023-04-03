@@ -23,17 +23,15 @@ export class GameService {
   // Needs proper implementation
   async startNewGame(c: any, d: any, uid: string) {
     let header = new HttpHeaders()
-      .set('category', c)
+      .set('category', encodeURIComponent(c))
       .set('difficulty', d)
       .set('tokenkey', uid);
-
+      
     await this.http.post(this.hostname + 'game/start', {}, {
       headers: header, responseType: 'text'
     }).toPromise().then(r => {
-      console.log(r);
       //TODO: if 200 then everything is OK
     }).catch(e => {
-      console.log(e);
       //TODO: process error
     });
   }
@@ -42,11 +40,9 @@ export class GameService {
     await this.http.get<Time>(this.hostname + 'game/getTime', {
       headers: new HttpHeaders().set('tokenkey', uid),
     }).toPromise().then(r => {
-      console.log(r);
 
       return r;
     }).catch(e => {
-      console.log(e);
 
       //TODO: process error
     });
@@ -60,56 +56,30 @@ export class GameService {
   }
 
   async useHalf(uid: string) {
-    await this.http.get<Question>(this.hostname + 'game/useHalf', {
+    return await this.http.get<Question>(this.hostname + 'game/useHalf', {
       headers: new HttpHeaders().set('tokenkey', uid),
-    }).toPromise().then(r => {
-      console.log(r);
-
-      return r; // the 2 removed questions are empty strings
-    }).catch(e => {
-      console.log(e);
-
-      //TODO: process error
-    });
+    }).toPromise()
   }
 
   async useSwitch(uid: string) {
-    await this.http.get<Question>(this.hostname + 'game/useSwitch', {
+    return await this.http.get<{question: Question, win: boolean | undefined}>(this.hostname + 'game/useSwitch', {
       headers: new HttpHeaders().set('tokenkey', uid),
-    }).toPromise().then(r => {
-      console.log(r);
-
-      return r;
-    }).catch(e => {
-      console.log(e);
-
-      //TODO: process error
-    });
+    }).toPromise()
   }
 
   async useAudience(uid: string) {
-    await this.http.get<Audience>(this.hostname + 'game/useAudience', {
+    return await this.http.get<Audience>(this.hostname + 'game/useAudience', {
       headers: new HttpHeaders().set('tokenkey', uid),
-    }).toPromise().then(r => {
-      console.log(r);
-
-      return r;
-    }).catch(e => {
-      console.log(e);
-
-      //TODO: process error
-    });
+    }).toPromise()
   }
 
   async giveUp(uid: string, save: boolean) {
     await this.http.post(this.hostname + 'game/giveUp', {}, {
       headers: new HttpHeaders().set('tokenkey', uid).set('save', save.toString()),
     }).toPromise().then(r => {
-      console.log(r);
 
       //200 if give up
     }).catch(e => {
-      console.log(e);
 
       //TODO: process error
     });
@@ -119,11 +89,9 @@ export class GameService {
     await this.http.post(this.hostname + 'game/endGame', {}, {
       headers: new HttpHeaders().set('tokenkey', uid).set('save', save.toString()), responseType: 'text'
     }).toPromise().then(r => {
-      console.log(r);
 
       //200 if give up
     }).catch(e => {
-      console.log(e);
 
       //TODO: process error
     });

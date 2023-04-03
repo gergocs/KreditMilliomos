@@ -3,7 +3,7 @@ import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
 import RunningGameStorage from "../utilites/RunningGameStorage"
-import { GameException } from "../exceptions/GameException";
+import {GameException} from "../exceptions/GameException";
 
 class GameController {
 
@@ -24,6 +24,7 @@ class GameController {
     startGame(request: Request, response: Response, next: NextFunction): void {
         let myCategory = request.headers.category
         let difficulty = request.headers.difficulty
+        let maxTimePerQuestion = request.headers.maxTimePerQuestion
 
         if (!myCategory || typeof myCategory !== "string" || Array.isArray(myCategory) || myCategory.length > 255) {
             response.sendStatus(StatusCodes.NotFound)
@@ -35,12 +36,16 @@ class GameController {
             response.end()
         }
 
+        if (!maxTimePerQuestion || isNaN(Number(difficulty)) || Array.isArray(difficulty)) {
+            maxTimePerQuestion = "NaN"
+        }
+
         sequelize.sync().then(() => {
             Question.findOne({where: {category: myCategory}})
                 .then(data => {
                     //if there's data in category it's valid
                     if (data != null || data != undefined) {
-                        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>myCategory, <number><unknown>difficulty))
+                        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>myCategory, <number><unknown>difficulty, maxTimePerQuestion == "NaN" ? Infinity : Number(maxTimePerQuestion), ))
                         response.end()
                     } else {
                         response.sendStatus(StatusCodes.NotFound)

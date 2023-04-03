@@ -7,6 +7,7 @@ import { Question } from '../models/question';
 import { QuestionCategory } from '../models/questionCategory';
 import { AuthService } from '../services/auth.service';
 import { QuestionService } from '../services/question.service';
+import CSVFileValidator from 'csv-file-validator'
 
 @Component({
   selector: 'app-admin-questions',
@@ -30,11 +31,12 @@ export class AdminQuestionsComponent implements OnInit {
 
   public allquestion: Question[] = [];
 
-  public allQuestionCategories: QuestionCategory[] = []
+  public allQuestionCategories: QuestionCategory[] = [];
 
   categoryForm = new FormGroup({
     category: new FormControl(''),
-  }) 
+  });
+
 
   questionForm = new FormGroup({
     category: new FormControl(''),
@@ -56,6 +58,12 @@ export class AdminQuestionsComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    await this.authservice.isAdmin().then((res) => {
+      if (res == false) {
+        this.router.navigate(['/main']);
+        return;
+      }
+    });
     this.loading = true;
     let userdatas = window.localStorage.getItem('userdatas');
     if (!userdatas) {
@@ -65,9 +73,11 @@ export class AdminQuestionsComponent implements OnInit {
 
     this.auth.onAuthStateChanged((credential) => {
       this.userid = credential?.uid;
-      this.questionService.getAllQuestion(this.userid).subscribe(
-        (body) => {
-          this.allquestion = body;
+      this.questionService
+        .getAllQuestion(this.userid)
+        .toPromise()
+        .then((body) => {
+          if (body) this.allquestion = body;
 
           this.allquestion.forEach((q) => {
             q.category = decodeURIComponent(q.category);
@@ -79,8 +89,8 @@ export class AdminQuestionsComponent implements OnInit {
           });
 
           this.loading = false;
-        },
-        (error: any) => {
+        })
+        .catch((error) => {
           let question: Question = {
             category: 'Hiba',
             question: 'Sikerült az adatbázis elérése?',
@@ -93,49 +103,49 @@ export class AdminQuestionsComponent implements OnInit {
           };
           this.allquestion.push(question);
           this.loading = false;
+        });
+
+      this.questionService.getQuestionCategories(this.userid).subscribe(
+        (body) => {
+          this.allQuestionCategories = body;
+          this.allQuestionCategories.forEach((qc) => {
+            qc.category = decodeURIComponent(qc.category);
+          });
+        },
+        (error: any) => {
+          let qcat: QuestionCategory = {
+            category: 'Hiba',
+          };
+          this.allQuestionCategories.push(qcat);
         }
       );
-
-      this.questionService.getQuestionCategories(this.userid).subscribe(body =>{
-        this.allQuestionCategories = body;
-        this.allQuestionCategories.forEach(qc => {
-          qc.category = decodeURIComponent(qc.category)
-        })
-    },(error:any)=>{
-      let qcat: QuestionCategory = {
-        category: "Hiba",
-      }
-      this.allQuestionCategories.push(qcat)
-    })
-
     });
   }
 
-  async createQuestionCategory(){
-    this.loading=true
+  async createQuestionCategory() {
+    this.loading = true;
     let newQC: QuestionCategory = {
       category: this.categoryForm.get('category')?.value,
-    }
-    this.questionService.createQuestionCategory(newQC, this.userid)
-    .subscribe(body => {
-      if( body == null){
-        throw new Error()
-      }
-      console.log("Created question category in DB")
-      console.log(body);
-      this.allQuestionCategories.push(newQC);
-      this.loading=false
-    },(error) => {
-      console.log(error)
-      if(error.status == 200){
+    };
+    this.questionService.createQuestionCategory(newQC, this.userid).subscribe(
+      (body) => {
+        if (body == null) {
+          throw new Error();
+        }
         this.allQuestionCategories.push(newQC);
+        this.loading = false;
+      },
+      (error) => {
+        if (error.status == 200) {
+          this.allQuestionCategories.push(newQC);
+        }
+        this.loading = false;
       }
-      this.loading=false
-    }
     );
   }
 
   onCreateQuestion() {
+    if (this.questionForm.get('category')?.value == '') return;
     //validity check
     this.loading = true;
     let newQ: Question = {
@@ -157,7 +167,6 @@ export class AdminQuestionsComponent implements OnInit {
         this.loading = false;
       },
       (error) => {
-        console.log(error);
         if (error.status == 200) {
           this.allquestion.push(newQ);
         }
@@ -182,33 +191,103 @@ export class AdminQuestionsComponent implements OnInit {
       this.importError = false;
       this.readFile(this.file);
       await this.sleep(500);
+      if (this.importError) {
+        this.Importeditems.length = 0;
+        this.importErrorMsg = this.importErrorMsg.substring(
+          0,
+          this.importErrorMsg.length - 2
+        );
+        return;
+      }
       this.display();
     }
   }
 
   readFile(inputFile: any): void {
-    const fileReader = new FileReader();
-    fileReader.readAsText(inputFile);
+    this.importError = false;
+    this.importErrorMsg = '';
+    CSVFileValidator<Question>(inputFile, {
+      headers: [
+        {
+          name: 'category',
+          inputName: 'category',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'question',
+          inputName: 'question',
+          required: true,
+          unique: true,
+          uniqueError: function (headerName) {
+            return `${headerName} nem egyedi`
+          },
+        },
+        {
+          name: 'level',
+          inputName: 'level',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerA',
+          inputName: 'answerA',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerB',
+          inputName: 'answerB',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerC',
+          inputName: 'answerC',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerD',
+          inputName: 'answerD',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+        {
+          name: 'answerCorrect',
+          inputName: 'answerCorrect',
+          required: true,
+          requiredError: function (headerName, rowNumber, columnNumber) {
+            return `${headerName} a ${rowNumber}. sorban ${columnNumber}. oszlopban`
+          }
+        },
+      ],
+    }).then(csvData => {
+      if (csvData.inValidData.length == 0){
+        this.Importeditems = csvData.data;
+      } else {
+        for (let i = 0;  i < csvData.inValidData.length; i++) {
+          this.importErrorMsg += 'Hiba ' + csvData.inValidData[i].message + '| ';
+        }
 
-    fileReader.onload = () => {
-      const fileContent = fileReader.result as string;
-      const lines = fileContent.split('\n');
-
-      lines.forEach((line: string) => {
-        const words = line.split(';');
-        const obj: Question = {
-          category: words[0],
-          question: words[1],
-          level: words[2],
-          answerA: words[3],
-          answerB: words[4],
-          answerC: words[5],
-          answerD: words[6],
-          answerCorrect: words[7].trim(),
-        };
-        this.Importeditems.push(obj);
-      });
-    };
+        this.importError = true;
+      }
+    }).catch(e => {
+        this.importErrorMsg += 'Hiba ' + e.error.message + ' |';
+        this.importError = true;
+    })
   }
 
   display(): void {
@@ -230,11 +309,22 @@ export class AdminQuestionsComponent implements OnInit {
         this.allquestion = this.allquestion.concat(this.Importeditems);
       })
       .catch((error) => {
-        console.log(error);
         if (error.status == 200) {
           this.allquestion = this.allquestion.concat(this.Importeditems);
         }
       });
+
+    this.allquestion.forEach(element => {
+      element.category = decodeURIComponent(element.category)
+      element.question = decodeURIComponent(element.question)
+      element.level = decodeURIComponent(element.level)
+      element.answerA = decodeURIComponent(element.answerA)
+      element.answerB = decodeURIComponent(element.answerB)
+      element.answerC = decodeURIComponent(element.answerC)
+      element.answerD = decodeURIComponent(element.answerD)
+      element.answerCorrect = decodeURIComponent(element.answerCorrect)
+    });
+
     this.loading = false;
   }
 
@@ -255,7 +345,6 @@ export class AdminQuestionsComponent implements OnInit {
         this.loading = false;
       })
       .catch((err) => {
-        console.log(err);
         this.loading = false;
       });
   }

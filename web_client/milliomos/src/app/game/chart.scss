@@ -1,0 +1,63 @@
+$grid-color: #333333;
+$bar-color: #51dc35;
+$bar-thickness: 10%;
+$bar-rounded: 3px;
+$bar-spacing: 30%;
+
+.chart-wrap {
+  &.vertical .grid {
+    transform: rotate(-90deg);
+    .bar::after {
+      display: block;
+      transform:translateY(-0.66em) rotate(90deg);
+    }
+
+    &::before,&::after {
+      transform:translateX(-0.2em) rotate(90deg);
+    }
+  }
+
+  .grid {
+    padding: 5px 0 5px 0;
+    position:relative;
+    width: 100%;
+    background: repeating-linear-gradient(90deg,transparent,transparent 19%, $grid-color 20%);
+    border-left: 2px solid $grid-color;
+
+    &::before {
+      content: "0%";
+      position: absolute;
+      top: -1.5em;
+      left: -0.5em;
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+
+    &::after{
+      content: "100%";
+      position: absolute;
+      top: -1.5em;
+      right: -1.5em;
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+   }
+
+  .bar {
+    margin:$bar-spacing 0;
+    width: var(--bar-value);
+    height: $bar-thickness;
+    background-color:$bar-color;
+    border-radius:0 $bar-rounded $bar-rounded 0;
+
+    &::after {
+      content: attr(data-name);
+      padding: 10px;
+      margin-left: 100%;
+      display: inline-block;
+      white-space: nowrap;
+    }
+  }
+
+  width: 30% !important;
+}

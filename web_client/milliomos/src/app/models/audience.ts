@@ -1,3 +1,3 @@
 export interface Audience {
-  guess: string | undefined
+  guess: number[] | undefined
 }

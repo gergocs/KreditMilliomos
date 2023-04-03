@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+import { QuestionCategory } from '../models/questionCategory';
 import { AuthService } from '../services/auth.service';
 import { GameService } from '../services/game.service';
+import { QuestionService } from '../services/question.service';
 
 @Component({
   selector: 'app-lobby',
@@ -11,12 +13,14 @@ import { GameService } from '../services/game.service';
 })
 export class LobbyComponent implements OnInit {
   public userid: string | undefined;
+  public allQuestionCategories: QuestionCategory[] = []
 
   constructor(
     protected router: Router,
     protected gameService: GameService,
     protected auth: AuthService,
-    protected authservice: AuthService
+    protected authservice: AuthService,
+    protected questionService: QuestionService
   ) {}
 
   ngOnInit(): void {
@@ -26,23 +30,53 @@ export class LobbyComponent implements OnInit {
       return
     }
     this.userid = JSON.parse(userdatas).tokenKey;
+
+    this.questionService.getQuestionCategories(this.userid).subscribe(body =>{
+      this.allQuestionCategories = body;
+      this.allQuestionCategories.forEach(qc => {
+        qc.category = decodeURIComponent(qc.category)
+      })
+  },(error:any)=>{
+    let qcat: QuestionCategory = {
+      category: "Hiba",
+    }
+    this.allQuestionCategories.push(qcat)
+  })
+  }
+
+  public difficulty: string = '0';
+
+  mouseClick(what: number) {
+    switch (what) {
+      case 0:
+        this.difficulty = '0';
+        break;
+
+      case 1:
+        this.difficulty = '1';
+        break;
+
+      case 2:
+        this.difficulty = '2';
+        break;
+    }
   }
 
   // Needs proper implementation
-  startNewGame(category: String, difficulty: String) {
+  startNewGame(category: String) {
     // Hande errors
-    if (
-      category == 'Kategória választása' ||
-      difficulty == 'Nehézség választása'
-    ) {
-      alert('Válassz nehézséget és kategóriát!');
+    if (category == 'Válassz kategóriát') {
+      alert('Kérlek válassz kategóriát!');
       return;
     }
 
+    if(window.localStorage.getItem('startedQuestion')){
+      alert('Egy játék már folyamatban van!');
+      this.router.navigate(['/game']);
+    }else{
     // Start new game
-    console.log(this.userid);
-    this.gameService.startNewGame(category, difficulty, <string>this.userid).then(r => {
+    this.gameService.startNewGame(category, this.difficulty, <string>this.userid).then(r => {
       this.router.navigate(['/game']);
     });
-  }
+  }}
 }

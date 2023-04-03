@@ -1,15 +1,21 @@
-<div class="intro-background" id="introBox">
-  <button type="submit" class="btn btn-secondary" (click)="skipIntro()" id="skipButton">Átugrás</button>
-  <div class="wrapper">
-    <div class="head"></div>
-    <div class="mouth"></div>
-    <div class="eye"></div>
-    <div class="torso"></div>
-    <div class="leftarm"></div>
-    <div class="rightarm"></div>
-    <div class="leftleg"></div>
-    <div class="rightleg"></div>
-    <img class="dot" [@dotRotate]="animationState" (@dotRotate.done)="introDone($event)" src="./assets/images/kreditmilliomos-red.png" alt="logo">
+<div class="intro-modal" id="introBox">
+  <div class="modal-content">
+    <div class="volume material-icons">
+      volume_up
+      <input type="range" min="0" max="100" [value]="hangero" #volume2 (input)="onVolumeChange(volume2.value)">
+    </div>
+    <div class="wrapper">
+      <div class="head"></div>
+      <div class="mouth"></div>
+      <div class="eye"></div>
+      <div class="torso"></div>
+      <div class="leftarm"></div>
+      <div class="rightarm"></div>
+      <div class="leftleg"></div>
+      <div class="rightleg"></div>
+      <img class="dot" [@dotRotate]="animationState" (@dotRotate.done)="introDone($event)" src="./assets/images/kreditmilliomos-red.png" alt="logo">
+    </div>
+    <button type="submit" (click)="skipIntro()">Átugrás</button>
   </div>
 </div>
 
@@ -19,52 +25,83 @@
   </div>
   <div class="game">
     <div class="question">
+      <div class="volume material-icons">
+        volume_up
+        <input type="range" min="0" max="100" [value]="hangero" #volume (input)="onVolumeChange(volume.value)">
+      </div>
+
       <h3>{{ this.currentQuestion?.question }}</h3>
+
+      <div class="chart-modal" id="chart-modal" [ngStyle]="{ 'display': audienceused ? 'flex' : 'none' }" >
+        <div class="modal-content">
+          <div id="chart" class="chart-wrap vertical">
+            <div class="grid">
+                <div id="chartA" class="bar" style="--bar-value:0%;" data-name="A"></div>
+                <div id="chartB" class="bar" style="--bar-value:0%;" data-name="B"></div>
+                <div id="chartC" class="bar" style="--bar-value:0%;" data-name="C"></div>
+                <div id="chartD" class="bar" style="--bar-value:0%;" data-name="D"></div>
+            </div>
+          </div>
+          <button (click)="hideModal()"><i class="material-icons">close</i></button>
+        </div>
+      </div>
+
       <div class="answers">
-        <div class="answer" [class.answer-selected]="selectedA" (click)="mouseClick('A')">
+        <span id="answerA" class="answerbackground">
+        <div [class.disabled]="this.currentQuestion?.answerA === ''" class="answer" [class.answer-selected]="selectedA" (click)="mouseClick('A')">
           <span>{{ this.currentQuestion?.answerA }}</span>
         </div>
-        <div class="answer" [class.answer-selected]="selectedB" (click)="mouseClick('B')">
+      </span>
+      <span id="answerB" class="answerbackground">
+        <div [class.disabled]="this.currentQuestion?.answerB === ''" class="answer" [class.answer-selected]="selectedB" (click)="mouseClick('B')">
           <span>{{ this.currentQuestion?.answerB }}</span>
         </div>
-        <div class="answer" [class.answer-selected]="selectedC" (click)="mouseClick('C')">
+      </span>
+        <span id="answerC" class="answerbackground">
+        <div [class.disabled]="this.currentQuestion?.answerC === ''" class="answer" [class.answer-selected]="selectedC" (click)="mouseClick('C')">
           <span>{{ this.currentQuestion?.answerC }}</span>
         </div>
-        <div class="answer" [class.answer-selected]="selectedD" (click)="mouseClick('D')">
+      </span>
+        <span id="answerD" class="answerbackground">
+        <div [class.disabled]="this.currentQuestion?.answerD === ''" class="answer" [class.answer-selected]="selectedD" (click)="mouseClick('D')">
           <span>{{ this.currentQuestion?.answerD }}</span>
         </div>
+      </span>
       </div>
       <button id="submit-button" [class.button-active]="userCanSubmit" (click)="submit()">Választás megerősítése</button>
     </div>
     <div class="sidebar">
       <a (click)="exitGame()"><i class="material-icons">exit_to_app</i></a>
       <div class="helps">
-        <div class="help">
-          <i class="material-icons disabled">comments_disabled</i>
+        <div class="help" id="halving_help">
+          <i class="material-icons" (click)="use_halving()">balance</i>
+          <div id="halving_line" class="line" hidden></div>
         </div>
-        <div class="help">
-          <i class="material-icons">group</i>
+        <div class="help" id="group_help">
+          <i class="material-icons" (click)="use_audience()">group</i>
+          <div id="group_line" class="line" hidden></div>
         </div>
-        <div class="help">
-          <i class="material-icons">refresh</i>
+        <div class="help" id="skip_help">
+          <i class="material-icons" (click)="use_skip()">cached</i>
+          <div id="skip_line" class="line" hidden></div>
         </div>
       </div>
       <ul>
-        <li>15 kredit</li>
-        <li>14 kredit</li>
-        <li>13 kredit</li>
-        <li>12 kredit</li>
-        <li>11 kredit</li>
-        <li>10 kredit</li>
-        <li>9 kredit</li>
-        <li>8 kredit</li>
-        <li>7 kredit</li>
-        <li>6 kredit</li>
-        <li>5 kredit</li>
-        <li>4 kredit</li>
-        <li class="active">3 kredit</li>
-        <li class="answered">2 kredit</li>
-        <li class="answered">1 kredit</li>
+        <li [ngClass]="{'active': 15 == diff,'answered': diff > 15}">15 kredit</li>
+        <li [ngClass]="{'active': 14 == diff,'answered': diff > 14}">14 kredit</li>
+        <li [ngClass]="{'active': 13 == diff,'answered': diff > 13}">13 kredit</li>
+        <li [ngClass]="{'active': 12 == diff,'answered': diff > 12}">12 kredit</li>
+        <li [ngClass]="{'active': 11 == diff,'answered': diff > 11}">11 kredit</li>
+        <li [ngClass]="{'active': 10 == diff,'answered': diff > 10}">10 kredit</li>
+        <li [ngClass]="{'active': 9 == diff,'answered': diff > 9}">9 kredit</li>
+        <li [ngClass]="{'active': 8 == diff,'answered': diff > 8}">8 kredit</li>
+        <li [ngClass]="{'active': 7 == diff,'answered': diff > 7}">7 kredit</li>
+        <li [ngClass]="{'active': 6 == diff,'answered': diff > 6}">6 kredit</li>
+        <li [ngClass]="{'active': 5 == diff,'answered': diff > 5}">5 kredit</li>
+        <li [ngClass]="{'active': 4 == diff,'answered': diff > 4}">4 kredit</li>
+        <li [ngClass]="{'active': 3 == diff,'answered': diff > 3}">3 kredit</li>
+        <li [ngClass]="{'active': 2 == diff,'answered': diff > 2}">2 kredit</li>
+        <li [ngClass]="{'active': 1 == diff,'answered': diff > 1}">1 kredit</li>
       </ul>
     </div>
   </div>

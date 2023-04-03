@@ -1,27 +1,33 @@
-<div
-  class="container-lg my-5 p-5 shadow-lg p-3 mb-5 bg-white rounded rounded border border-primary"
-  style="max-width: 500px"
->
-  <h3>Lobby</h3>
-  <br />
-  <select class="form-select" aria-label="Default select example" #category>
-    <option selected>Kategória választása</option>
-    <option value="grafika">grafika</option>
-    <option value="pihenés">pihenés</option>
-  </select>
-  <br />
-  <select class="form-select" aria-label="Default select example" #difficulty>
-    <option selected>Nehézség választása</option>
-    <option value="0">könnyű</option>
-    <option value="1">közepes</option>
-    <option value="2">nehéz</option>
-  </select>
-  <br />
-  <button
-    type="button"
-    class="btn btn-primary"
-    (click)="startNewGame(category.value, difficulty.value)"
-  >
-    Játék indítása
-  </button>
+<div class="content">
+  <div class="title">
+    <h2>Legyen Ön is kreditmilliomos!</h2>
+  </div>
+  <div class="lobby">
+    <div class="menu">
+      <a routerLink="/profile"><i class="material-icons">exit_to_app</i></a>
+      <h3>Játék beállítása</h3>
+      <div class="category">
+        <label>kategória</label>
+        <select #category>
+          <option [defaultSelected]=true [ngValue]="" value="Válassz kategóriát">Válassz kategóriát!</option>
+          <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">{{category.category}}</option>
+        </select>
+      </div>
+      <div class="difficulty">
+        <label>nehézségi szint</label>
+        <div class="buttons">
+          <div class="button">
+            <button (click)="mouseClick(0)" [ngClass]="{'active': difficulty == '0'}">Könnyű</button>
+          </div>
+          <div class="button">
+            <button (click)="mouseClick(1)" [ngClass]="{'active': difficulty == '1'}">Közepes</button>
+          </div>
+          <div class="button">
+            <button (click)="mouseClick(2)" [ngClass]="{'active': difficulty == '2'}">Nehéz</button>
+          </div>
+        </div>
+      </div>
+      <button (click)="startNewGame(category.value)">Játék indítása</button>
+    </div>
+  </div>
 </div>

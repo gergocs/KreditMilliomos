@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
     firstName: new FormControl(''),
     lastName: new FormControl('')
   });
-  
+
   constructor(public router: Router, private auth: AuthService) { }
 
   ngOnInit(): void {
@@ -49,14 +49,15 @@ export class ProfileComponent implements OnInit {
 
     this.loading = true
     await this.auth.updateuser(this.userdata).then(body => {
-      console.log("sikeres frissités")
-      console.log(body)
       window.localStorage.setItem("userdatas", JSON.stringify(this.userdata))
       this.loading = false
     }).catch(err =>{
-      console.log(err)
       this.loading = false
     })
+  }
+
+  async onLogoutPress() {
+    await this.auth.logout();
   }
 
 }
