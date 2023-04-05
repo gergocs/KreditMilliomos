@@ -45,7 +45,7 @@ class GameController {
                 .then(data => {
                     //if there's data in category it's valid
                     if (data != null || data != undefined) {
-                        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>myCategory, <number><unknown>difficulty, maxTimePerQuestion == "NaN" ? Infinity : Number(maxTimePerQuestion), ))
+                        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>myCategory, <number><unknown>difficulty, maxTimePerQuestion == "NaN" ? Infinity : Number(maxTimePerQuestion),))
                         response.end()
                     } else {
                         response.sendStatus(StatusCodes.NotFound)
