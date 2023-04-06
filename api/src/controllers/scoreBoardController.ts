@@ -13,8 +13,20 @@ export class ScoreBoardController {
     }
 
     getAll(request: Request, response: Response, next: NextFunction): void {
+        let token = request.headers.tokenkey
+        let isTokenNeeded = true
+
+        if (request.headers.isToken !== "true") {
+            isTokenNeeded = false
+        }
+
         sequelize.sync().then(() => {
-            ScoreBoard.findAll().then(r => {
+            ScoreBoard.findAll(isTokenNeeded ? {
+                    where: {
+                        tokenKey: token
+                    }
+                } : undefined
+            ).then(r => {
                 response.send(r)
                 response.end()
             }).catch(e => {

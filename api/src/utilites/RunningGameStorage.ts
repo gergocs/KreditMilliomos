@@ -112,8 +112,34 @@ class RunningGameStorage {
         let game = this.runningGames.get(<string>token)
 
         if (save && !!game) {
+            let level = 0
+            switch (game?.level - 1) {
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9: {
+                    level = 5
+                    break
+                }
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                case 14: {
+                    level = 10
+                    break
+                }
+                case 15: {
+                    level = 15
+                    break
+                }
+                default: {
+                    level = 0
+                }
+            }
+
             const category = game?.category
-            const level = game?.level - 1
             const time = BigInt(new Date().getTime() - Number(game?.time))
             sequelize.sync()
                 .then(() => {
