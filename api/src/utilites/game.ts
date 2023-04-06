@@ -3,6 +3,8 @@ import {sequelize} from "../db/sequelizeConnector";
 import {GameModes} from "./gameModes";
 import {GameException} from "../exceptions/GameException";
 import {Op} from "sequelize";
+import User from "../models/user";
+import {StatusCodes} from "./StatusCodes";
 
 class Game {
 
@@ -14,11 +16,11 @@ class Game {
     private half: boolean /* half the questions */
     private switch: boolean /* switch help */
     private audience: boolean /* random help */
-    private difficulty: GameModes /* difficulty of the game*/
+    difficulty: GameModes /* difficulty of the game*/
     private _level: number /* current level */
     private previousQuestion: Array<string> /* previous questions */
 
-    constructor(time: bigint, subject: string, difficulty: GameModes, maxTimePerQuestion: number) {
+    constructor(time: bigint, subject: string, difficulty: GameModes, maxTimePerQuestion: number, tokenKey: string) {
         this._time = time
         this.question = undefined
         this._category = subject
@@ -26,9 +28,27 @@ class Game {
         this.switch = true
         this.audience = true
         this.difficulty = difficulty
-        this._level = 1
+
         this.previousQuestion = new Array<string>()
         this.maxTimePerQuestion = maxTimePerQuestion
+
+        sequelize.sync()
+            .then(() => {
+                User.findOne({where: {tokenKey}})
+                    .then(user => {
+                        if (user && user.isAdmin) {
+                            this._level = 13;
+                        } else {
+                            this._level = 1;
+                        }
+                    })
+                    .catch(error => {
+                        this._level = 1;
+                    })
+            })
+            .catch(error => {
+                this._level = 1;
+            })
     }
 
     get time(): bigint {
@@ -259,13 +279,13 @@ class Game {
     // Random offset between 0 and 3
     private randomOffset(level: number): number {
         let rand = Math.random()
-        if (rand < (100-level*2)/100) { // 0.98-0.60
+        if (rand < (100 - level * 2) / 100) { // 0.98-0.60
             return 0
         } else if (rand >= 0.5 && rand < 0.6) {  // ~0.1
             return 1
         } else if (rand >= 0.6 && rand < 0.75) { // ~0.15
             return 2
-        } else { 
+        } else {
             return 3
         }
     }

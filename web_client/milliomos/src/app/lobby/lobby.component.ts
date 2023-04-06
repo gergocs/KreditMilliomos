@@ -31,7 +31,7 @@ export class LobbyComponent implements OnInit {
     }
     this.userid = JSON.parse(userdatas).tokenKey;
 
-    this.questionService.getQuestionCategories(this.userid).subscribe(body =>{
+    this.questionService.getPlayableQuestionCategories(this.userid).subscribe(body =>{
       this.allQuestionCategories = body;
       this.allQuestionCategories.forEach(qc => {
         qc.category = decodeURIComponent(qc.category)

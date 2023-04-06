@@ -85,6 +85,11 @@ export class QuestionService {
       return this.http.get<QuestionCategory[]>(this.hostname + "question/allQuestionCategories", { headers: header });
     }
 
+  getPlayableQuestionCategories(uid: any){
+    let header = new HttpHeaders().set("tokenkey", uid);
+    return this.http.get<QuestionCategory[]>(this.hostname + "question/playableQuestionCategories", { headers: header });
+  }
+
     createQuestionCategory(qc:QuestionCategory,uid:any){
       let header = new HttpHeaders()
       .set("tokenkey", uid)

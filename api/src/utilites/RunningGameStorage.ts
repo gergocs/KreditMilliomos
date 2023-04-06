@@ -27,7 +27,7 @@ class RunningGameStorage {
             return StatusCodes.Unauthorized
         }
 
-        this.runningGames.set(<string>token, new Game(BigInt((new Date()).getTime()), category, difficulty, maxTimePerQuestion))
+        this.runningGames.set(<string>token, new Game(BigInt((new Date()).getTime()), category, difficulty, maxTimePerQuestion, <string>token))
         return StatusCodes.Ok
     }
 
@@ -245,6 +245,34 @@ class RunningGameStorage {
 
             throw new GameException('Error in RunninGameStorage:useAudience method\n' + error)
         }
+    }
+
+    getLevel(token: string): number | undefined {
+        if (!this.isGameRunning(token)) {
+            return undefined
+        }
+
+        let game = this.runningGames.get(<string>token)
+
+        if (!game) {
+            return undefined
+        }
+
+        return game.level
+    }
+
+    getDifficulty(token: string): GameModes | undefined {
+        if (!this.isGameRunning(token)) {
+            return undefined
+        }
+
+        let game = this.runningGames.get(<string>token)
+
+        if (!game) {
+            return undefined
+        }
+
+        return game.difficulty
     }
 
     private isGameRunning(token: string): boolean {
