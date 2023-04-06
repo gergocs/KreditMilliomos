@@ -83,7 +83,12 @@ class GameController {
             if (typeof r == "boolean") {
                 response.send({
                     question: undefined,
-                    win: r
+                    win: {
+                        time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
+                        level: RunningGameStorage.instance().getLevel(token),
+                        difficulty: RunningGameStorage.instance().getDifficulty(token),
+                        win: r
+                    }
                 })
             } else if (r instanceof Question) {
                 let q = JSON.parse(JSON.stringify(r))
@@ -157,8 +162,23 @@ class GameController {
     giveUp(request: Request, response: Response, next: NextFunction): void {
         let token = <string>request.headers.tokenkey
         let save = (<string>request.headers.save).toLowerCase() == 'true'
+        let canGiveUp = RunningGameStorage.instance().giveUpGame(token, save)
 
-        response.sendStatus(RunningGameStorage.instance().giveUpGame(token, save) ? StatusCodes.Ok : StatusCodes.BadRequest)
+        if (!canGiveUp) {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+        } else {
+            response.send(response.send({
+                question: undefined,
+                win: {
+                    time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
+                    level: RunningGameStorage.instance().getLevel(token),
+                    difficulty: RunningGameStorage.instance().getDifficulty(token),
+                    win: true
+                }
+            }))
+        }
+
         response.end()
     }
 
@@ -168,7 +188,18 @@ class GameController {
 
         RunningGameStorage.instance().endGame(token, save)
 
-        response.sendStatus(StatusCodes.Ok)
+        response.status(StatusCodes.Ok)
+
+        response.send(response.send({
+            question: undefined,
+            win: {
+                time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
+                level: RunningGameStorage.instance().getLevel(token),
+                difficulty: RunningGameStorage.instance().getDifficulty(token),
+                win: false
+            }
+        }))
+
         response.end()
     }
 }

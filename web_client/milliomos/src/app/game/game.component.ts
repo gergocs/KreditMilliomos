@@ -285,7 +285,7 @@ export class GameComponent implements OnInit, OnDestroy {
           let selected = Array.from(
             document.getElementsByClassName('answer-selected') as HTMLCollectionOf<HTMLElement>,
           );
-          if(!r.win){
+          if(!r.win.win){
             selected[0].style.backgroundColor = "#ef0d00"
             selected[0].style.borderColor = "#ef0d00";
             this.wrongAnswerSound.play()}

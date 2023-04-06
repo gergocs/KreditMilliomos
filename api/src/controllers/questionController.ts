@@ -3,6 +3,7 @@ import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
 import QuestionCategory from '../models/questionCategory'
+import {Op} from "sequelize";
 
 class QuestionController {
 
@@ -12,6 +13,7 @@ class QuestionController {
     constructor() {
         this.router.get(this.path + '/admin/allQuestion', this.getAllQuestion)
         this.router.get(this.path + '/allQuestionCategories', this.getAllCategories)
+        this.router.get(this.path + '/playableQuestionCategories', this.getPlayableCategories)
         this.router.post(this.path + '/admin/import', this.importQuestion)
         this.router.post(this.path + '/admin', this.createQuestion)
         this.router.post(this.path + '/admin/createQuestionCategory', this.createCategory)
@@ -108,6 +110,47 @@ class QuestionController {
             QuestionCategory.findAll().then(data => {
                 response.send(data)
                 response.end()
+            }).catch(error => {
+                response.sendStatus(StatusCodes.InternalError)
+                response.end()
+            })
+        }).catch(error => {
+            response.sendStatus(StatusCodes.ServiceUnavailable)
+            response.end()
+        })
+    }
+
+    getPlayableCategories(request: Request, response: Response, next: NextFunction) {
+        sequelize.sync().then(() => {
+            QuestionCategory.findAll().then(data => {
+                let result = new Array<QuestionCategory>();
+                let counter = data.length;
+
+                data.forEach(r => {
+                    sequelize.sync().then(() => {
+                        Question.count({
+                            where: {
+                                category: r.category
+                            }
+                        }).then(count => {
+                            if (count >= 15) { //TODO: Maybe change value
+                                result.push(r);
+                            }
+                        }).finally(() => {
+                            counter--;
+                            if (counter == 0) {
+                                response.send(result)
+                                response.end()
+                            }
+                        })
+                    })
+                })
+
+                if (counter == 0) {
+                    response.send(result)
+                    response.end()
+                }
+
             }).catch(error => {
                 response.sendStatus(StatusCodes.InternalError)
                 response.end()
