@@ -186,7 +186,6 @@ class RunningGameStorage {
         return game.time - BigInt((new Date()).getTime())
     }
 
-    //TODO: Wrap the game.use... methods in to try catch
     useHalf(token: string): Question | undefined {
         try {
             if (!this.isGameRunning(token)) {
@@ -248,35 +247,58 @@ class RunningGameStorage {
     }
 
     getLevel(token: string): number | undefined {
-        if (!this.isGameRunning(token)) {
-            return undefined
+        try {
+
+            if (!this.isGameRunning(token)) {
+                return undefined
+            }
+    
+            let game = this.runningGames.get(<string>token)
+    
+            if (!game) {
+                return undefined
+            }
+    
+            return game.level
+
+        } catch (error) {
+
+            throw new GameException('Error in RunninGameStorage:getLevel method\n' + error)
         }
-
-        let game = this.runningGames.get(<string>token)
-
-        if (!game) {
-            return undefined
-        }
-
-        return game.level
     }
 
     getDifficulty(token: string): GameModes | undefined {
-        if (!this.isGameRunning(token)) {
-            return undefined
+
+        try {
+
+            if (!this.isGameRunning(token)) {
+                return undefined
+            }
+    
+            let game = this.runningGames.get(<string>token)
+    
+            if (!game) {
+                return undefined
+            }
+    
+            return game.difficulty
+
+        } catch (error) {
+
+            throw new GameException('Error in RunninGameStorage:getDifficulty method\n' + error)
         }
-
-        let game = this.runningGames.get(<string>token)
-
-        if (!game) {
-            return undefined
-        }
-
-        return game.difficulty
     }
 
     private isGameRunning(token: string): boolean {
-        return this.runningGames.has(<string>token) || !this.runningGames.get(token) == undefined
+
+        try {
+            
+            return this.runningGames.has(<string>token) || !this.runningGames.get(token) == undefined
+
+        } catch (error) {
+
+            throw new GameException('Error in RunninGameStorage:isGameRunning method\n' + error)
+        }
     }
 }
 

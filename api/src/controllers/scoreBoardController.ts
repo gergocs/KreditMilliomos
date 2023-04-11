@@ -16,9 +16,16 @@ export class ScoreBoardController {
         let token = request.headers.tokenkey
         let isTokenNeeded = true
 
+        if (!token || typeof token !== "string" || token.length > 28 || Array.isArray(token) || Number.isNaN(Number(token))) {
+            response.sendStatus(StatusCodes.NotFound)
+            response.end()
+        }
+
         if (request.headers.isToken !== "true") {
             isTokenNeeded = false
         }
+
+        token = <string>token
 
         sequelize.sync().then(() => {
             ScoreBoard.findAll(isTokenNeeded ? {
@@ -41,6 +48,12 @@ export class ScoreBoardController {
 
     getTopX(request: Request, response: Response, next: NextFunction): void {
         let x = Number(request.headers.topx)
+
+        if (!x || typeof x !== "number" || Array.isArray(x) || Number.isNaN(x)) {
+            response.sendStatus(StatusCodes.NotFound)
+            response.end()
+        }
+
         sequelize.sync().then(() => {
             ScoreBoard.findAll().then(r => {
                 let results = new Array<ScoreBoard>()

@@ -265,7 +265,7 @@ class Game {
 
     private checkAnswer(answer: string): boolean {
         if (!this.question) {
-            throw new GameException("The game dont generated question")
+            throw new GameException("The game doesn't generated any questions!")
         }
 
         return new Date().getTime() < this.endOfQuestionTime && answer.toLowerCase() === this.question.answerCorrect.toLowerCase()
