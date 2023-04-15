@@ -4,7 +4,7 @@ import User from '../models/user'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
 import {MailSender} from "../utilites/mailSender";
-import { RegExPatterns } from 'utilites/RegExPatterns'
+import {RegExPatterns} from '../utilites/RegExPatterns'
 
 class UserController {
     private readonly path = '/user'
@@ -54,7 +54,7 @@ class UserController {
                 let email = request.headers.email
                 const firstName = request.headers.firstname
                 const lastName = request.headers.lastname
-                
+
                 if (!email || email.length == 0 || email == "undefined" || typeof email !== "string" || Array.isArray(email)) {
                     response.sendStatus(StatusCodes.BadRequest)
                     response.end()
@@ -188,25 +188,25 @@ class UserController {
             const todayDate = new Date()
             const banSubject = "Kreditmilliomos felhasználói fiók felfüggesztése"
             const bannMessage = "Tisztelt Felhasználó!\n" +
-            "Sajnálattal értesítjük, hogy felhasználói fiókja határozatlan időre felfüggesztésre került!\n" +
-            "Moderátoraink visszajelzése alapján a tevékenységei sértették a Kreditmilliomos felhasználói szabályzatát.\n" +
-            "Felhasználói fiókja jelen helyzetben (" + todayDate.toLocaleString() + ") nem elérhető.\n"
+                "Sajnálattal értesítjük, hogy felhasználói fiókja határozatlan időre felfüggesztésre került!\n" +
+                "Moderátoraink visszajelzése alapján a tevékenységei sértették a Kreditmilliomos felhasználói szabályzatát.\n" +
+                "Felhasználói fiókja jelen helyzetben (" + todayDate.toLocaleString() + ") nem elérhető.\n"
             "A további korlátozások feloldásának feltételeiért, keresse a weboldalon megdott elérhetőségen kollégáinkat!\n" +
             "Köszönettel:\n" +
             "Kreditmilliomos csapata"
 
             const unBanSubject = "Kreditmilliomos felhasználói fiók feloldása"
             const unBanMessage = "Tisztelt Felhasználó!\n" +
-            "Örömmel értesítjük, hogy felhasználói fiókját kollégáink visszaállították!\n" +
-            "Felhasználói fiókja jelen helyzetben (" + todayDate.toLocaleString() + ") ismét elérhető.\n" +
-            "További kellemes játékot kíván!\n" +
-            "Kreditmilliomos csapata"
+                "Örömmel értesítjük, hogy felhasználói fiókját kollégáink visszaállították!\n" +
+                "Felhasználói fiókja jelen helyzetben (" + todayDate.toLocaleString() + ") ismét elérhető.\n" +
+                "További kellemes játékot kíván!\n" +
+                "Kreditmilliomos csapata"
 
             if (typeof token === "string") {
                 getAuth().updateUser(token, {
                     disabled: isBan
                 }).then((userRecord) => {
-                    if (isBan){
+                    if (isBan) {
                         MailSender.instance().sendEmail(
                             userRecord.email,
                             banSubject,

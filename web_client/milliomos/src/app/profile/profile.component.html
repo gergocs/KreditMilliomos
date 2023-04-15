@@ -29,4 +29,10 @@
       <button (click)="updateuser()">Profil frissítése</button>
     </form>
   </div>
+  <div class="scoreBoard"> <!-- TODO: CSS -->
+    categoria | szint | idő
+    <div *ngFor="let score of scores">
+      {{score.category}} | {{score.level}} | {{score.time}}
+    </div>
+  </div>
 </div>

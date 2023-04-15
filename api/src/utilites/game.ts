@@ -30,7 +30,7 @@ class Game {
         this.difficulty = difficulty
 
         this.previousQuestion = new Array<string>()
-        this.maxTimePerQuestion = maxTimePerQuestion
+        this.maxTimePerQuestion = (maxTimePerQuestion + 7) * 1000 // s to ms extra 7 seconds for music and similar things
 
         sequelize.sync()
             .then(() => {
@@ -268,7 +268,7 @@ class Game {
             throw new GameException("The game doesn't generated any questions!")
         }
 
-        return new Date().getTime() < this.endOfQuestionTime && answer.toLowerCase() === this.question.answerCorrect.toLowerCase()
+        return ((new Date()).getTime() < this.endOfQuestionTime) && answer.toLowerCase() === this.question.answerCorrect.toLowerCase()
     }
 
     private getRandomInt(min: number, max: number): number {

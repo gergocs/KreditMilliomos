@@ -8,4 +8,12 @@
     <button *ngIf="this.loggedin" routerLink="/profile">Profil</button>
     <button *ngIf="this.loggedin" (click)="this.auth.logout()">Kijelentkezés</button>
   </div>
+
+  <div class="scoreBoard"> <!-- TODO: CSS -->
+    categoria | szint | idő
+    <div *ngFor="let score of scores">
+      {{score.category}} | {{score.level}} | {{score.time}}
+    </div>
+  </div>
+
 </div>

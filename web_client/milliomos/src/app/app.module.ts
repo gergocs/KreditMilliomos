@@ -13,7 +13,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminUsersComponent } from './admin-users/admin-users.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import {MatButtonModule} from "@angular/material/button";
@@ -23,6 +23,7 @@ import { GameComponent } from './game/game.component';
 import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
 import { DataprivacyComponent } from './dataprivacy/dataprivacy.component';
 import { AdminCategoryComponent } from './admin-category/admin-category.component';
+import {MatSliderModule} from "@angular/material/slider";
 
 
 
@@ -52,7 +53,9 @@ import { AdminCategoryComponent } from './admin-category/admin-category.componen
     NgbModule,
     ReactiveFormsModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSliderModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
