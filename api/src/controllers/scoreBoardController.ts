@@ -16,12 +16,12 @@ export class ScoreBoardController {
         let token = request.headers.tokenkey
         let isTokenNeeded = true
 
-        if (!token || typeof token !== "string" || token.length > 28 || Array.isArray(token) || Number.isNaN(Number(token))) {
+        if (!token || typeof token !== "string" || token.length > 28 || Array.isArray(token)) {
             response.sendStatus(StatusCodes.NotFound)
             response.end()
         }
 
-        if (request.headers.isToken !== "true") {
+        if (request.headers.istoken !== "true") {
             isTokenNeeded = false
         }
 
@@ -49,6 +49,8 @@ export class ScoreBoardController {
     getTopX(request: Request, response: Response, next: NextFunction): void {
         let x = Number(request.headers.topx)
 
+        console.log(x)
+
         if (!x || typeof x !== "number" || Array.isArray(x) || Number.isNaN(x)) {
             response.sendStatus(StatusCodes.NotFound)
             response.end()
@@ -62,7 +64,7 @@ export class ScoreBoardController {
                 for (let i = 0; i < r.length; i++) {
                     let item = r.at(i)
                     if (item) {
-                        scores.set(i, item.level * (1 / Number(item.time)))
+                        scores.set(i, item.level + (1 / Number(item.time)))
                     }
                 }
 

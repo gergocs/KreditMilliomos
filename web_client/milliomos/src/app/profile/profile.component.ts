@@ -3,6 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserModell } from '../models/usermodell';
 import { AuthService } from '../services/auth.service';
+import {Score} from "../models/score";
+import {ScoreService} from "../services/score.service";
 
 @Component({
   selector: 'app-profile',
@@ -21,9 +23,9 @@ export class ProfileComponent implements OnInit {
     lastName: new FormControl('')
   });
 
-  constructor(public router: Router, private auth: AuthService) { }
+  scores: Score[] = [];
 
-  ngOnInit(): void {
+  constructor(public router: Router, private auth: AuthService, private scoreService: ScoreService) {
     let userdatas = window.localStorage.getItem("userdatas")
     if (userdatas){
       this.userdata = JSON.parse(userdatas)
@@ -33,7 +35,21 @@ export class ProfileComponent implements OnInit {
       this.updateForm.get('lastName')?.setValue(decodeURIComponent(userdata.lastName))
     } else {
       this.router.navigate(['/login']);
+    }
+
+    this.scoreService.getUserScores(<string>this.userdata?.tokenKey).subscribe(score => {
+      score.forEach(element => {
+        this.scores.push({
+          category: decodeURI(element.category),
+          level: element.level,
+          time: element.time,
+          tokenKey: ""
+        });
+      })
+    })
   }
+
+  ngOnInit(): void {
   }
 
   redirectToLobby(){
@@ -60,4 +76,5 @@ export class ProfileComponent implements OnInit {
     await this.auth.logout();
   }
 
+  protected readonly decodeURI = decodeURI;
 }

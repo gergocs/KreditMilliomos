@@ -24,7 +24,7 @@ class GameController {
     startGame(request: Request, response: Response, next: NextFunction): void {
         let myCategory = request.headers.category
         let difficulty = request.headers.difficulty
-        let maxTimePerQuestion = request.headers.maxTimePerQuestion
+        let maxTimePerQuestion = request.headers.maxtimeperquestion
 
         if (!myCategory || typeof myCategory !== "string" || Array.isArray(myCategory) || myCategory.length > 255) {
             response.sendStatus(StatusCodes.NotFound)
@@ -186,11 +186,8 @@ class GameController {
         let token = <string>request.headers.tokenkey
         let save = (<string>request.headers.save).toLowerCase() == 'true'
 
-        RunningGameStorage.instance().endGame(token, save)
-
         response.status(StatusCodes.Ok)
-
-        response.send(response.send({
+        response.send({
             question: undefined,
             win: {
                 time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
@@ -198,7 +195,9 @@ class GameController {
                 difficulty: RunningGameStorage.instance().getDifficulty(token),
                 win: false
             }
-        }))
+        })
+
+        RunningGameStorage.instance().endGame(token, save)
 
         response.end()
     }
