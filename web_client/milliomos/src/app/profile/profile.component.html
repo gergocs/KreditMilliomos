@@ -27,6 +27,8 @@
         <input id="lastName" value="{{this.userdata?.lastName}}" type="text" formControlName="lastName">
       </div>
       <button (click)="updateuser()">Profil frissítése</button>
+      <button *ngIf="introSkip" style="background-color: green;" (click)="introToggle()">Intro bekapcsolása</button>
+      <button *ngIf="!introSkip" style="background-color: brown;" (click)="introToggle()">Intro kikapcsolása</button>
     </form>
   </div>
   <div class="scoreBoard"> <!-- TODO: CSS -->

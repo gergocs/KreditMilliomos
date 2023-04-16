@@ -99,6 +99,7 @@ export class GameComponent implements OnInit, OnDestroy {
           this.currentQuestion = r.question;
           window.localStorage.setItem('startedQuestion',JSON.stringify(this.currentQuestion))
           window.localStorage.setItem('helps',JSON.stringify(this.helps))
+          window.localStorage.setItem('diff',JSON.stringify(this.diff))
           this.decodeCurrentQuestion()
         } else {
           // TODO: More error
@@ -134,7 +135,6 @@ export class GameComponent implements OnInit, OnDestroy {
     this.wrongAnswerSound.volume=this.hangero/100;
     this.backgroundMusic.volume=this.hangero/100;
     this.introMusic.volume=this.hangero/100;
-    this.introMusic.play();
 
     let storagehelps = window.localStorage.getItem('helps')
     if(storagehelps){
@@ -158,6 +158,14 @@ export class GameComponent implements OnInit, OnDestroy {
         if(line){line.hidden = false}
       }
     }
+
+    let introSkipped = window.localStorage.getItem('introSkipped')
+    if(introSkipped == 'true'){
+      this.skipIntro()
+    }else{
+      this.introMusic.play();
+    }
+
   }
 
   onVolumeChange(volume: any){
@@ -355,6 +363,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   alreadyspeeched: boolean = false
   async skipIntro() {
+    window.localStorage.setItem("introSkipped", "true")
     let introBox = document.getElementById('introBox');
     if (introBox) {
       introBox.style.display = "none";

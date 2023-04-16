@@ -14,7 +14,7 @@ import {ScoreService} from "../services/score.service";
 export class ProfileComponent implements OnInit {
 
   loading: Boolean = false
-
+  introSkip: Boolean = false
   userdata: UserModell | undefined
 
   updateForm = new FormGroup({
@@ -50,6 +50,21 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let introSkipped = window.localStorage.getItem('introSkipped')
+    if(introSkipped){
+      if(introSkipped = 'true'){
+        this.introSkip = true
+      }else{
+        this.introSkip = false
+      }
+    }else{
+      this.introSkip = false
+    }
+  }
+
+  introToggle() {
+    this.introSkip = !this.introSkip
+    window.localStorage.setItem('introSkipped',JSON.stringify(this.introSkip))
   }
 
   redirectToLobby(){
