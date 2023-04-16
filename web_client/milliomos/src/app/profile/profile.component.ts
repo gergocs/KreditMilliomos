@@ -76,5 +76,16 @@ export class ProfileComponent implements OnInit {
     await this.auth.logout();
   }
 
+  timeToString(time: bigint) {
+    let nTime = Number(time)/1000
+    if (nTime > 60){
+      let perc = Math.floor(nTime/60)
+      let mp = Math.round(nTime - perc*60)
+      return (perc.toString() + " perc " + mp.toString() + " mp")
+    }else{
+      return Math.round(nTime).toString() + " mp"
+    }
+  }
+
   protected readonly decodeURI = decodeURI;
 }

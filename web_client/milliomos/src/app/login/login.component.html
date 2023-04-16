@@ -27,6 +27,11 @@
     </div>
     <div class="registration">
       Nincs még fiókod? <a routerLink="/register">Regisztrálj!</a>
+      Elfelejtetted a jelszavad? <a (click)="isNewPassClicked = true">Kattints ide új jelszóért!</a>
     </div>
+  </div>
+  <div *ngIf="isNewPassClicked">
+    <input [(ngModel)]="newpassemail" matInput placeholder="Írd be az e-mail címed">
+    <button mat-raised-button color="primary" (click)="onNewPass()">Submit</button> 
   </div>
 </div>

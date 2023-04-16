@@ -32,7 +32,7 @@
   <div class="scoreBoard"> <!-- TODO: CSS -->
     categoria | szint | idő
     <div *ngFor="let score of scores">
-      {{score.category}} | {{score.level}} | {{score.time}}
+      {{score.category}} | {{score.level}} | {{timeToString(score.time)}}
     </div>
   </div>
 </div>
