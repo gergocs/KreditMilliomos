@@ -111,6 +111,7 @@ nav ul li a i {
 .new-category .content {
   padding: 24px;
   margin: auto;
+  position: relative;
   width: 630px;
   background-color: #ffffff;
   border: none;
@@ -183,4 +184,21 @@ nav ul li a i {
 
 .new-category .content .cancel-button:hover {
   background-color: #ee8c1d;
+}
+
+.new-category .content .close {
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  bottom: auto;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: 0.5s;
+  cursor: pointer;
 }

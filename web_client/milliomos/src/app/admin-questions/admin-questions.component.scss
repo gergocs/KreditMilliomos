@@ -175,6 +175,7 @@ nav ul li a i {
 }
 
 .content .box table th {
+  padding: 12px 20px;
   color: #333333;
   font-size: 14px;
   font-weight: 600;
@@ -182,7 +183,7 @@ nav ul li a i {
 }
 
 .content .box table td {
-  padding: 12px;
+  padding: 12px 20px;
   border: 2px solid #e1def9;
 }
 
@@ -205,7 +206,6 @@ nav ul li a i {
 }
 
 .new-question {
-  padding-top: 50px;
   position: fixed;
   top: 0;
   left: 0;
@@ -219,8 +219,9 @@ nav ul li a i {
 
 .new-question .content {
   padding: 24px;
-  margin: auto;
+  margin: 25px auto;
   width: 630px;
+  position: relative;
   background-color: #ffffff;
   border: none;
   border-radius: 16px;
@@ -301,6 +302,23 @@ nav ul li a i {
 
 .new-question .content .cancel-button:hover {
   background-color: #ee8c1d;
+}
+
+.new-question .content .close {
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  bottom: auto;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: 0.5s;
+  cursor: pointer;
 }
 
 .category {
