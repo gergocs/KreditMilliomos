@@ -5,15 +5,24 @@
   <div class="buttons">
     <button *ngIf="!this.loggedin" routerLink="/register">Regisztráció</button>
     <button *ngIf="!this.loggedin" routerLink="/login">Bejelentkezés</button>
-    <button *ngIf="this.loggedin" routerLink="/profile">Profil</button>
+    <button *ngIf="this.loggedin" routerLink="/profile">Profilom</button>
     <button *ngIf="this.loggedin" (click)="this.auth.logout()">Kijelentkezés</button>
   </div>
 
-  <div class="scoreBoard"> <!-- TODO: CSS -->
-    név | kredit
-    <div *ngFor="let item of scores | keyvalue: originalOrder">
-      {{item.key}} : {{item.value}}
+  <div class="scoreboard">
+    <h2>Toplista</h2>
+    <div class="list">
+      <div class="placed" *ngFor="let item of scores | keyvalue: originalOrder; let i = index">
+        <div class="username">
+          <div class="place">
+            #{{i + 1}}
+          </div>
+          {{item.key}}
+        </div>
+        <div class="score">
+          {{item.value}} pont
+        </div>
+      </div>
     </div>
   </div>
-
 </div>

@@ -16,6 +16,9 @@
       <label for="logpassword">jelszó</label>
       <input id="logpassword" formControlName="password" type="password" #password placeholder="Add meg a jelszavadat">
     </div>
+    <div class="forgot-password">
+      <a (click)="isNewPassClicked = true">Elfelejtetted a jelszavad?</a>
+    </div>
     <button class="login-button" type="submit" (click)="this.onLoginClicked(email.value, password.value)">Bejelentkezés</button>
     <div class="separator">
       <div class="line"></div>
@@ -27,11 +30,21 @@
     </div>
     <div class="registration">
       Nincs még fiókod? <a routerLink="/register">Regisztrálj!</a>
-      Elfelejtetted a jelszavad? <a (click)="isNewPassClicked = true">Kattints ide új jelszóért!</a>
     </div>
   </div>
-  <div *ngIf="isNewPassClicked">
-    <input [(ngModel)]="newpassemail" matInput placeholder="Írd be az e-mail címed">
-    <button mat-raised-button color="primary" (click)="onNewPass()">Submit</button> 
+</div>
+
+<div class="new-password" *ngIf="isNewPassClicked">
+  <div class="new-password-content">
+    <h2>Jelszó visszaállítása</h2>
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      {{errorMsg}}
+    </div>
+    <div class="input-box">
+      <label for="resemail">e-mail cím</label>
+      <input type="text" id="resemail" [(ngModel)]="newpassemail" placeholder="Add meg az e-mail címedet" required>
+    </div>
+    <button (click)="onNewPass()">Jelszó visszaállítása</button>
+    <button (click)="isNewPassClicked=false" class="close"><i class="material-icons">close</i></button>
   </div>
 </div>
