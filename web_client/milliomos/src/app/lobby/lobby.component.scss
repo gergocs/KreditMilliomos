@@ -1,6 +1,6 @@
 .content {
+  padding: 60px 0 0 0;
   width: 100%;
-  height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
@@ -64,7 +64,6 @@
 
 .content .lobby .menu .category {
   margin-top: 30px;
-  margin-bottom: 40px;
   display: flex;
   flex-direction: column;
 }
@@ -89,6 +88,10 @@
   outline: none;
   appearance: none;
   box-sizing: border-box;
+}
+
+.content .lobby .menu .difficulty {
+  margin: 25px;
 }
 
 .content .lobby .menu .difficulty label {
@@ -126,6 +129,26 @@
   background-color: #efa044;
 }
 
+.content .lobby .menu .time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content .lobby .menu .time label {
+  margin-bottom: 8px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.content .lobby .menu .time span {
+  margin-top: 5px;
+  font-size: 18px;
+}
+
 .content .lobby .menu button {
   padding: 16px 32px;
   margin: 40px 0 30px 0;
@@ -140,9 +163,4 @@
 
 .content .lobby .menu button:hover {
   background-color: #ee8c1d;
-}
-
-.slider {
-  background-color: #ee8c1d;
-  border-radius: 16px;
 }

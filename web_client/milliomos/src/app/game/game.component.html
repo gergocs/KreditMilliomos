@@ -30,8 +30,8 @@
         <input type="range" min="0" max="100" [value]="hangero" #volume (input)="onVolumeChange(volume.value)">
       </div>
 
-      <h3>{{ this.currentQuestion?.question }}</h3>
       <div id="countdown"></div>
+      <h3>{{ this.currentQuestion?.question }}</h3>
 
       <div class="chart-modal" id="chart-modal" [ngStyle]="{ 'display': audienceused ? 'flex' : 'none' }" >
         <div class="modal-content">

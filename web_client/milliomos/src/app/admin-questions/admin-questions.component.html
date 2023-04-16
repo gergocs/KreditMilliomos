@@ -55,6 +55,7 @@
   <button (click)="this.save()" class="save-button" >Betöltött kérdések mentése</button>
   <button (click)="this.delete()" class="delete-button" >Betöltött kérdések törlése</button>
   </div>
+
   <div class="box">
     <button (click)="showForm = true" class="new-question-button">Új kérdés</button>
     <div class="category">
@@ -63,35 +64,38 @@
         <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">{{category.category}}</option>
       </select>
     </div>
+
     <h2>Összes jelenlegi kérdés</h2>
-    <table>
-      <thead>
-        <tr>
-          <th style="width: 11%">kategória</th>
-          <th>kérdés</th>
-          <th style="width: 8%;">nehézség</th>
-          <th style="width: 13%;">válasz (A)</th>
-          <th style="width: 13%;">válasz (B)</th>
-          <th style="width: 13%;">válasz (C)</th>
-          <th style="width: 13%;">válasz (D)</th>
-          <th style="width: 8%;">helyes válasz</th>
-          <th style="width: 3%;" align="center"></th>
-        </tr>
-      </thead>
-      <tbody *ngFor="let question of allquestion | questionFilter:filter; let i = index" [attr.data-index]="i">
-        <tr>
-            <td>{{question.category}}</td>
-            <td>{{question.question}}</td>
-            <td>{{question.level}}</td>
-            <td [ngClass]="{'correct' : question.answerCorrect=='A'}">{{question.answerA}}</td>
-            <td [ngClass]="{'correct' : question.answerCorrect=='B'}">{{question.answerB}}</td>
-            <td [ngClass]="{'correct' : question.answerCorrect=='C'}">{{question.answerC}}</td>
-            <td [ngClass]="{'correct' : question.answerCorrect=='D'}">{{question.answerD}}</td>
-            <td>{{question.answerCorrect}}</td>
-            <td><button class="material-icons" (click)="this.deleteexistingquestion(question.question,i)">delete</button></td>
-        </tr>
-    </tbody>
-  </table>
+    <div style="width: 100%; overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 11%">kategória</th>
+            <th>kérdés</th>
+            <th style="width: 8%;">nehézség</th>
+            <th style="width: 13%;">válasz (A)</th>
+            <th style="width: 13%;">válasz (B)</th>
+            <th style="width: 13%;">válasz (C)</th>
+            <th style="width: 13%;">válasz (D)</th>
+            <th style="width: 13%;">helyes válasz</th>
+            <th style="width: 3%;" align="center"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let question of allquestion | questionFilter:filter; let i = index" [attr.data-index]="i">
+              <td>{{question.category}}</td>
+              <td>{{question.question}}</td>
+              <td>{{question.level}}</td>
+              <td [ngClass]="{'correct' : question.answerCorrect=='A'}">{{question.answerA}}</td>
+              <td [ngClass]="{'correct' : question.answerCorrect=='B'}">{{question.answerB}}</td>
+              <td [ngClass]="{'correct' : question.answerCorrect=='C'}">{{question.answerC}}</td>
+              <td [ngClass]="{'correct' : question.answerCorrect=='D'}">{{question.answerD}}</td>
+              <td>{{question.answerCorrect}}</td>
+              <td><button class="material-icons" (click)="this.deleteexistingquestion(question.question,i)">delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -137,7 +141,7 @@
             <input type="text" id="answerD" placeholder="D válasz" formControlName="answerD" required>
         </div>
         <button type="submit" class="save-button" id="submit_question_button">Mentés</button>
-        <button (click)="showForm = false" class="cancel-button">Mégse</button>
     </form>
+    <button (click)="showForm = false" class="close"><i class="material-icons">close</i></button>
   </div>
 </div>

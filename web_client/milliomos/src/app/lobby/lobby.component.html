@@ -27,9 +27,13 @@
           </div>
         </div>
       </div>
-      <div class="slider">
-        <mat-slider min="0" max="300" step="10" [(ngModel)]="time"></mat-slider>
-        {{this.time}}
+      <div class="time">
+        <label>időkorlát</label>
+        <div class="timer material-icons">
+          timer
+          <input type="range" min="0" max="300" steps="10" [(ngModel)]="time">
+        </div>
+        <span>{{this.time}} másodperc</span>
       </div>
       <button (click)="startNewGame(category.value)">Játék indítása</button>
     </div>

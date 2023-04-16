@@ -66,6 +66,42 @@ body {
   border-radius: 50px;
 }
 
+.timer {
+  margin-top: 8px 0;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333333;
+  border: 2px solid #e1def9;
+  border-radius: 8px;
+}
+
+.timer input[type="range"] {
+  appearance: none;
+  margin-left: 8px;
+  position: relative;
+  width: 125px;
+  height: 8px;
+  border-radius: 50px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.timer input[type="range"]::-webkit-slider-runnable-track {
+  background: #eaeaea;
+}
+
+.timer input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  background-color: #379b4e;
+  box-shadow: -200px 0 0 200px #379b4e;
+  border: none;
+  border-radius: 50px;
+}
+
 .cc-btn {
   text-decoration: none;
   transition: 0.5s;
