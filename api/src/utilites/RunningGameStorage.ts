@@ -10,8 +10,17 @@ class RunningGameStorage {
     private static runningGameStorage: RunningGameStorage
 
     public runningGames = new Map<string, Game>()
+    private readonly minute = 60 * 1000
 
     private constructor() {
+        //Bob the cleaner
+        setInterval(() => {
+            for (let [key, value] of this.runningGames.entries()) {
+                if (value.lastUpdate + (this.minute * 15) < (new Date()).getTime()) { // 900000 ms = 15 minutes
+                    this.runningGames.delete(key)
+                }
+            }
+        }, this.minute) // every 1 minutes
     }
 
     public static instance() {
@@ -206,7 +215,6 @@ class RunningGameStorage {
 
     useSwitch(token: string): Promise<Question | undefined> | undefined {
         try {
-
             if (!this.isGameRunning(token)) {
                 return undefined
             }
@@ -218,16 +226,13 @@ class RunningGameStorage {
             }
 
             return game.useSwitch()
-
         } catch (error) {
-
             throw new GameException('Error in RunninGameStorage:useSwitch method\n' + error)
         }
     }
 
     useAudience(token: string): Array<number> | undefined {
         try {
-
             if (!this.isGameRunning(token)) {
                 return undefined
             }
@@ -239,64 +244,51 @@ class RunningGameStorage {
             }
 
             return game.useAudience()
-
         } catch (error) {
-
             throw new GameException('Error in RunninGameStorage:useAudience method\n' + error)
         }
     }
 
     getLevel(token: string): number | undefined {
         try {
-
             if (!this.isGameRunning(token)) {
                 return undefined
             }
-    
+
             let game = this.runningGames.get(<string>token)
-    
+
             if (!game) {
                 return undefined
             }
-    
+
             return game.level
-
         } catch (error) {
-
             throw new GameException('Error in RunninGameStorage:getLevel method\n' + error)
         }
     }
 
     getDifficulty(token: string): GameModes | undefined {
-
         try {
-
             if (!this.isGameRunning(token)) {
                 return undefined
             }
-    
+
             let game = this.runningGames.get(<string>token)
-    
+
             if (!game) {
                 return undefined
             }
-    
+
             return game.difficulty
-
         } catch (error) {
-
             throw new GameException('Error in RunninGameStorage:getDifficulty method\n' + error)
         }
     }
 
     private isGameRunning(token: string): boolean {
-
         try {
-            
             return this.runningGames.has(<string>token) || !this.runningGames.get(token) == undefined
-
         } catch (error) {
-
             throw new GameException('Error in RunninGameStorage:isGameRunning method\n' + error)
         }
     }

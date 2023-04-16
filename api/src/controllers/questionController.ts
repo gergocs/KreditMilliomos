@@ -3,7 +3,6 @@ import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
 import QuestionCategory from '../models/questionCategory'
-import {Op} from "sequelize";
 
 class QuestionController {
 

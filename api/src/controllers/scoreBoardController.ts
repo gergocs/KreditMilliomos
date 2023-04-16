@@ -49,9 +49,7 @@ export class ScoreBoardController {
     getTopX(request: Request, response: Response, next: NextFunction): void {
         let x = Number(request.headers.topx)
 
-        console.log(x)
-
-        if (!x || typeof x !== "number" || Array.isArray(x) || Number.isNaN(x)) {
+        if (!x || Array.isArray(x) || Number.isNaN(x)) {
             response.sendStatus(StatusCodes.NotFound)
             response.end()
         }

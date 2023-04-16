@@ -4,7 +4,6 @@ import {GameModes} from "./gameModes";
 import {GameException} from "../exceptions/GameException";
 import {Op} from "sequelize";
 import User from "../models/user";
-import {StatusCodes} from "./StatusCodes";
 
 class Game {
 
@@ -19,6 +18,7 @@ class Game {
     difficulty: GameModes /* difficulty of the game*/
     private _level: number /* current level */
     private previousQuestion: Array<string> /* previous questions */
+    private _lastUpdate: number /* time when the current game has been interacted with */
 
     constructor(time: bigint, subject: string, difficulty: GameModes, maxTimePerQuestion: number, tokenKey: string) {
         this._time = time
@@ -28,7 +28,7 @@ class Game {
         this.switch = true
         this.audience = true
         this.difficulty = difficulty
-
+        this._lastUpdate = new Date().getTime()
         this.previousQuestion = new Array<string>()
         this.maxTimePerQuestion = (maxTimePerQuestion + 7) * 1000 // s to ms extra 7 seconds for music and similar things
 
@@ -63,6 +63,10 @@ class Game {
         return this._level
     }
 
+    get lastUpdate(): number {
+        return this._lastUpdate;
+    }
+
     hasQuestion(): boolean {
         return !!this.question
     }
@@ -86,6 +90,8 @@ class Game {
     }
 
     useHalf(): Question {
+        this._lastUpdate = new Date().getTime()
+
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
@@ -165,6 +171,8 @@ class Game {
     }
 
     async useSwitch(): Promise<Question> {
+        this._lastUpdate = new Date().getTime()
+
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
@@ -180,6 +188,8 @@ class Game {
     }
 
     useAudience(): Array<number> {
+        this._lastUpdate = new Date().getTime()
+
         if (!this.question) {
             throw new GameException("The game dont generated question")
         }
@@ -228,6 +238,8 @@ class Game {
     }
 
     private generateQuestion(offset = 1): Promise<Question> {
+        this._lastUpdate = new Date().getTime()
+
         // TODO: _level = 16
         if (this._level == 16) {
             throw new GameException("", true)

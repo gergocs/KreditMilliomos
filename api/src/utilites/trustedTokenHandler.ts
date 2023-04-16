@@ -1,5 +1,3 @@
-import Game from "./game";
-
 class TrustedTokenHandler {
     private static trustedTokenHandler: TrustedTokenHandler
     private tokens = new Map<string, number>()
