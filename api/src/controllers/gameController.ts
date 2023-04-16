@@ -3,7 +3,6 @@ import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
 import RunningGameStorage from "../utilites/RunningGameStorage"
-import {GameException} from "../exceptions/GameException";
 
 class GameController {
 
@@ -79,27 +78,50 @@ class GameController {
             question = RunningGameStorage.instance().evaluateGame(token, "")
         }
 
-        question.then(r => {
-            if (typeof r == "boolean") {
-                response.send({
-                    question: undefined,
-                    win: {
-                        time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
-                        level: RunningGameStorage.instance().getLevel(token),
-                        difficulty: RunningGameStorage.instance().getDifficulty(token),
-                        win: r
-                    }
-                })
-            } else if (r instanceof Question) {
-                let q = JSON.parse(JSON.stringify(r))
-                q.answerCorrect = '';
-                response.send({
-                    question: q,
-                    win: undefined
-                })
-            }
+        if (!question) {
+            response.send({
+                question: undefined,
+                win: {
+                    time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
+                    level: RunningGameStorage.instance().getLevel(token),
+                    difficulty: RunningGameStorage.instance().getDifficulty(token),
+                    win: false
+                }
+            })
             response.end()
-        })
+        } else {
+            question.then(r => {
+                if (typeof r == "boolean") {
+                    response.send({
+                        question: undefined,
+                        win: {
+                            time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
+                            level: RunningGameStorage.instance().getLevel(token),
+                            difficulty: RunningGameStorage.instance().getDifficulty(token),
+                            win: r
+                        }
+                    })
+                } else if (r instanceof Question) {
+                    let q = JSON.parse(JSON.stringify(r))
+                    q.answerCorrect = '';
+                    response.send({
+                        question: q,
+                        win: undefined
+                    })
+                } else {
+                    response.send({
+                        question: undefined,
+                        win: {
+                            time: 0,
+                            level: 0,
+                            difficulty: 0,
+                            win: false
+                        }
+                    })
+                }
+                response.end()
+            })
+        }
 
     }
 

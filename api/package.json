@@ -5,6 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "start": "node dist/server.js",
+    "memoryleak": "node --inspect dist/server.js",
     "build": "npx tsc",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\""
   },
