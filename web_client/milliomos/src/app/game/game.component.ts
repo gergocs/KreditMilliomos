@@ -65,6 +65,12 @@ export class GameComponent implements OnInit, OnDestroy {
   private introMusic = new Audio('../assets/sounds/intro_music.mp3');
   public hangero: any
 
+  // Variables for timer
+  submitted: boolean = false
+  startNum: number = 0
+  currentNum: number = 0 
+  refreshIntervalId: any
+
   animationState: string = 'rotationEnd';
   diff: number = 1;
   constructor(
@@ -101,6 +107,13 @@ export class GameComponent implements OnInit, OnDestroy {
           window.localStorage.setItem('helps',JSON.stringify(this.helps))
           window.localStorage.setItem('diff',JSON.stringify(this.diff))
           this.decodeCurrentQuestion()
+          let timer = window.localStorage.getItem('timer')
+          if(timer){
+          this.startNum = JSON.parse(timer)
+          } else {
+            this.startNum = 0
+          }
+          this.startCountdown()
         } else {
           // TODO: More error
         }
@@ -123,6 +136,14 @@ export class GameComponent implements OnInit, OnDestroy {
 
   // Needs proper implementation -> gets the first question on init
   ngOnInit() {
+    let timer = window.localStorage.getItem('timer')
+      
+    if(timer){
+      this.startNum = JSON.parse(timer)
+    } else {
+      this.startNum = 0
+    }
+    this.startCountdown()
     let hangero2 = window.localStorage.getItem('hangero')
     if(hangero2){
       this.hangero = JSON.parse(hangero2)
@@ -165,7 +186,6 @@ export class GameComponent implements OnInit, OnDestroy {
     }else{
       this.introMusic.play();
     }
-
   }
 
   onVolumeChange(volume: any){
@@ -260,6 +280,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (!this.userCanSubmit) {
       return;
     }
+    this.submitted = true
     this.userCanSelect = false;
     this.userCanSubmit = false;
     this.backgroundMusic.pause()
@@ -334,6 +355,8 @@ export class GameComponent implements OnInit, OnDestroy {
           this.userCanSelect = true;
           this.userCanSubmit = false;
           document.body.style.backgroundColor = "#f5ebea";
+          this.submitted = false
+          this.startCountdown()
         } else {
           // TODO: More error
         }
@@ -553,4 +576,28 @@ export class GameComponent implements OnInit, OnDestroy {
       });
     }
   }
+   
+startCountdown(){
+  if(this.startNum == 0){return}
+  this.currentNum = this.startNum;
+  clearInterval(this.refreshIntervalId)
+  let eCountdown = document.getElementById('countdown')
+  if(eCountdown){
+    eCountdown.textContent = this.currentNum.toString()
+    this.refreshIntervalId = setInterval(() =>{
+      setTimeout(function() { eCountdown?.classList.add('puffer')}, 800);
+      if (this.currentNum == 0){
+        clearInterval(this.refreshIntervalId)
+        setTimeout(()=> {
+        if(!this.submitted) 
+            this.exitGame()
+        },1000)
+      }
+      this.currentNum--
+      if(eCountdown){
+      eCountdown.textContent = (this.currentNum+1).toString()
+      eCountdown.classList.remove('puffer')}
+    },1000);
+  }
+}
 }

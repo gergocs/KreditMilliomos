@@ -75,6 +75,7 @@ export class LobbyComponent implements OnInit {
       alert('Egy játék már folyamatban van!');
       this.router.navigate(['/game']);
     }else{
+      window.localStorage.setItem('timer',JSON.stringify(this.time))
     // Start new game
     this.gameService.startNewGame(category, this.difficulty, this.time === 0 ? NaN : this.time, <string>this.userid).then(r => {
       this.router.navigate(['/game']);

@@ -270,3 +270,41 @@
 .content .game .sidebar ul li:first-child {
   border: none;
 }
+
+#countdown {
+	font-family: 'Roboto Condensed', sans-serif;
+	width: 200px;
+	height: 100px;
+	position: absolute;
+	left: 50%;
+	top: 10%;
+	margin-left: -100px;
+	margin-top: -50px;
+	color: black;
+	font-size: 5em;
+	text-align: center;
+	font-weight: bold;
+	font-style: italic;
+	-webkit-opacity: 1.0;
+	-moz-opacity: 1.0;
+	opacity: 1.0;
+	transition: opacity 0.2s ease;
+	-moz-transition: opacity 0.2s ease;
+	-ms-transition: opacity 0.2s ease;
+	-o-transition: opacity 0.2s ease;
+	perspective: 1000;
+	backface-visibility: hidden;
+	&.puffer {
+		-webkit-opacity: 0;
+		-moz-opacity: 0;
+		opacity: 0;
+		transform: scale(1.6,1.6);
+		-moz-transform: scale(1.6,1.6);
+		-ms-transform: scale(1.6,1.6);
+		-o-transform: scale(1.6,1.6);
+		transition: all 0.2s ease-out;
+		-moz-transition: all 0.2s ease-out;
+		-ms-transition: all 0.2s ease-out;
+		-o-transition: all 0.2s ease-out;
+	}
+}
