@@ -28,9 +28,6 @@ export class ProfileComponent implements OnInit {
   skipIntro: Boolean | null = false;
 
   scores: Score[] = [];
-  originalOrder = (a: KeyValue<string, number>, b: KeyValue<string, number>): number => {
-    return 0;
-  }
 
   constructor(public router: Router, private auth: AuthService, private scoreService: ScoreService) {
     let userdatas = window.localStorage.getItem("userdatas")

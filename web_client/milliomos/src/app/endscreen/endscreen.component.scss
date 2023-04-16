@@ -172,19 +172,24 @@ body{
   transform-origin: 0%;
   background-color: black;
 }
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
 
-.faszsetudja {
+.resultdiv {
+  animation: fadeIn 1s;
   border-radius: 15%;
-  position: absolute; /* változás: a position értéke relative-ra van módosítva */
+  position: absolute;
   font-size: 1vw;
   text-align: center;
   border:none;
   color: white;
   width: 30%;
   height: 10%;
-  margin: 0 auto; /* változás: középre igazítjuk a div-et vízszintesen */
-  top: 50%; /* új tulajdonság: felvisszük a div-et a felezővonalra */
-  transform: translateY(-50%); /* módosítás: a translateY tulajdonság eltávolítva */
+  margin: 0 auto;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -192,23 +197,24 @@ body{
 }
 #first{
   left: 35%;
-  top:0%;
+  top:3%;
 }
 #second{
   left: 35%;
-  top:20%;
+  top:23%;
 }
 #third{
   left: 35%;
-  top:40%;
+  top:43%;
 }
 #result{
   width: 20%;
   height:10%;
   left: 35%;
-  top:60%;
+  top:63%;
 }
 #okbutton {
+  animation: fadeIn 0.5s;
   position: absolute;
   background-color: #efa044;
   color: #ffffff;
@@ -216,7 +222,7 @@ body{
   border:none;
   border-radius: 15%;
   left: 57%;
-  top:55%;
+  top:58%;
   width: 8%;
   height:10%;
 }
