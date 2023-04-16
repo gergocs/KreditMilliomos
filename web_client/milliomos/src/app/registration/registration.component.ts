@@ -103,7 +103,6 @@ export class RegistrationComponent implements OnInit {
       return;
     }
 
-
     if (password != passwordagain) {
       this.errorMsg = "A megadott jelszavak nem egyeznek!"
       this.error = true

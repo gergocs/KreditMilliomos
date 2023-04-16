@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserModell } from '../models/usermodell';
 import { AuthService } from '../services/auth.service';
@@ -23,6 +23,9 @@ export class ProfileComponent implements OnInit {
     lastName: new FormControl('')
   });
 
+  skipIntroChecked: Boolean = false;
+  skipIntro: Boolean | null = false;
+
   scores: Score[] = [];
 
   constructor(public router: Router, private auth: AuthService, private scoreService: ScoreService) {
@@ -39,32 +42,27 @@ export class ProfileComponent implements OnInit {
 
     this.scoreService.getUserScores(<string>this.userdata?.tokenKey).subscribe(score => {
       score.forEach(element => {
-        this.scores.push({
-          category: decodeURI(element.category),
-          level: element.level,
-          time: element.time,
-          tokenKey: ""
-        });
+        if (this.scores.length < 10) {
+          this.scores.push({
+            category: decodeURI(element.category),
+            level: element.level,
+            time: element.time,
+            tokenKey: ""
+          });
+        }
       })
     })
   }
 
   ngOnInit(): void {
-    let introSkipped = window.localStorage.getItem('introSkipped')
-    if(introSkipped){
-      if(introSkipped = 'true'){
-        this.introSkip = true
-      }else{
-        this.introSkip = false
-      }
-    }else{
-      this.introSkip = false
-    }
+    if (window.localStorage.getItem('introSkipped') == "true")
+      this.skipIntro = true;
+    else
+      this.skipIntro = false;
   }
 
-  introToggle() {
-    this.introSkip = !this.introSkip
-    window.localStorage.setItem('introSkipped',JSON.stringify(this.introSkip))
+  skipIntroChange(event: any) {
+    this.skipIntroChecked = event.target.checked;
   }
 
   redirectToLobby(){
@@ -81,6 +79,14 @@ export class ProfileComponent implements OnInit {
     this.loading = true
     await this.auth.updateuser(this.userdata).then(body => {
       window.localStorage.setItem("userdatas", JSON.stringify(this.userdata))
+
+      if (this.skipIntroChecked) {
+        this.introSkip = true;
+      } else {
+        this.introSkip = false;
+      }
+      window.localStorage.setItem('introSkipped',JSON.stringify(this.introSkip))
+
       this.loading = false
     }).catch(err =>{
       this.loading = false
@@ -96,9 +102,9 @@ export class ProfileComponent implements OnInit {
     if (nTime > 60){
       let perc = Math.floor(nTime/60)
       let mp = Math.round(nTime - perc*60)
-      return (perc.toString() + " perc " + mp.toString() + " mp")
+      return (perc.toString() + " perc " + mp.toString() + " másodperc")
     }else{
-      return Math.round(nTime).toString() + " mp"
+      return Math.round(nTime).toString() + " másodperc"
     }
   }
 

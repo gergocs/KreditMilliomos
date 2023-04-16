@@ -1,8 +1,8 @@
 @import '../app.component.scss';
 
 .content {
+  padding: 60px 0;
   width: 100%;
-  height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
@@ -50,6 +50,16 @@
 .content .login .input-box input::placeholder {
   color: #333333;
   opacity: 0.3;
+}
+
+.content .login .forgot-password a {
+  color: #efa044;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.content .login .forgot-password a:hover {
+  text-decoration: underline;
 }
 
 .content .login .login-button {
@@ -122,4 +132,95 @@
 
 .content .login .registration a:hover {
   text-decoration: underline;
+}
+
+.new-password {
+  padding-top: 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.4);
+  overflow: auto;
+  z-index: 1;
+}
+
+.new-password-content {
+  padding: 24px;
+  margin: auto;
+  position: relative;
+  width: 630px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 16px;
+}
+
+.new-password-content h2 {
+  margin-bottom: 24px;
+  color: #333333;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.new-password-content .input-box {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.new-password-content .input-box label {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.new-password-content .input-box input {
+  padding: 16px 24px;
+  margin: 8px 0;
+  display: inline-block;
+  color: #333333;
+  border: 2px solid #e1def9;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.new-password-content .input-box input::placeholder {
+  color: #333333;
+  opacity: 0.3;
+}
+
+.new-password-content button {
+  padding: 16px 26px;
+  margin: 0;
+  background-color: #efa044;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: 0.5s;
+}
+
+.new-password-content button:not(.close):hover {
+  background-color: #ee8c1d;
+}
+
+.new-password-content .close {
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  bottom: auto;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: 0.5s;
+  cursor: pointer;
 }

@@ -75,17 +75,23 @@ export class LoginComponent implements OnInit {
   }
 
   async onNewPass() {
-    const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if(emailRegex.test(this.newpassemail)){
-      try {
-        await this.firebase.sendPasswordResetEmail(this.newpassemail)
-      }catch(e){
-      }finally{
-        alert("Sikeresen kiküldtük az e-mailt, amennyiben van felhasználónk ilyen e-mail címmel!") 
-      }
-    }else{
-      alert("Nem megfelelő e-mail cím!")
+    if (this.newpassemail == "") {
+      this.errorMsg = "Az e-mail cím mező kitöltése kötelező!"
+      this.error = true
+      return;
+    }
+
+    const emailRegex: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    if (!emailRegex.test(this.newpassemail)) {
+      this.errorMsg = "Az e-mail cím formátuma nem megfelelő!"
+      this.error = true
+      return;
+    }
+
+    try {
+      await this.firebase.sendPasswordResetEmail(this.newpassemail)
+    } catch(e) {} finally {
+      alert("A jelszó visszaállításához szükséges link elküldésre került a megadott e-mail címre!")
     }
   }
-
 }
