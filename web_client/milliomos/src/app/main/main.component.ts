@@ -4,6 +4,7 @@ import { UserModell } from '../models/usermodell';
 import { AuthService } from '../services/auth.service';
 import {ScoreService} from "../services/score.service";
 import {Score} from "../models/score";
+import { KeyValue } from '@angular/common';
 
 @Component({
   selector: 'app-main',
@@ -14,6 +15,10 @@ export class MainComponent implements OnInit {
   loggedin: boolean =false
   userdata: UserModell | undefined
   scores = new Map<string, number>();
+  // Preserve original property order
+  originalOrder = (a: KeyValue<string, number>, b: KeyValue<string, number>): number => {
+    return 0;
+  }
 
   constructor(public auth: AuthService, protected router: Router, private scoreService: ScoreService) {
     if (!auth.user?.emailVerified && auth.authState == 2) {
@@ -28,12 +33,14 @@ export class MainComponent implements OnInit {
 
     this.scoreService.getTopX().subscribe(score => {
       this.scores = new Map<string, number>();
-
+      let tmp = new Map<string, number>();
+    
       // @ts-ignore
-      Object.entries(score.result).forEach((key, value) => {
-        this.scores.set(key[0], <number>key[1])
-      })
-    })
+      Object.entries(score.result).forEach((entry) => {
+        tmp.set(entry[0], <number>entry[1])
+      });
+      this.scores = tmp;
+    });
 
   }
 

@@ -11,8 +11,8 @@
 
   <div class="scoreBoard"> <!-- TODO: CSS -->
     név | kredit
-    <div *ngFor="let score of scores | keyvalue">
-      {{score.key}} | {{score.value}}
+    <div *ngFor="let item of scores | keyvalue: originalOrder">
+      {{item.key}} : {{item.value}}
     </div>
   </div>
 
