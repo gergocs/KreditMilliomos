@@ -24,6 +24,7 @@ import { DataprivacyComponent } from './dataprivacy/dataprivacy.component';
 import { AdminCategoryComponent } from './admin-category/admin-category.component';
 import {MatSliderModule} from "@angular/material/slider";
 import { QuestionFilterPipe } from './pipes/question-filter.pipe';
+import { EndscreenComponent } from './endscreen/endscreen.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { QuestionFilterPipe } from './pipes/question-filter.pipe';
     DataprivacyComponent,
     AdminCategoryComponent,
     QuestionFilterPipe,
+    EndscreenComponent,
   ],
   imports: [
     BrowserAnimationsModule,

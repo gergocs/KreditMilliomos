@@ -68,7 +68,7 @@ export class GameComponent implements OnInit, OnDestroy {
   // Variables for timer
   submitted: boolean = false
   startNum: number = 0
-  currentNum: number = 0 
+  currentNum: number = 0
   refreshIntervalId: any
 
   animationState: string = 'rotationEnd';
@@ -137,7 +137,7 @@ export class GameComponent implements OnInit, OnDestroy {
   // Needs proper implementation -> gets the first question on init
   ngOnInit() {
     let timer = window.localStorage.getItem('timer')
-      
+
     if(timer){
       this.startNum = JSON.parse(timer)
     } else {
@@ -323,9 +323,13 @@ export class GameComponent implements OnInit, OnDestroy {
             selected[0].style.borderColor = "#51dc35"
           }
             await new Promise(f => setTimeout(f,1500))
-            this.gameService.endGame(this.userid, true).then(()=>{
+            this.gameService.endGame(this.userid, true).then((gamestate)=>{
               selected[0].style.backgroundColor = ""
-            this.router.navigateByUrl("/lobby")
+              if(gamestate){
+                if(gamestate.win){
+                  window.localStorage.setItem("win",JSON.stringify(gamestate.win))
+                  this.router.navigateByUrl("/endscreen")
+                }}
           })
         } else if (r.question !== undefined) {
           this.diff ++;
@@ -427,8 +431,12 @@ export class GameComponent implements OnInit, OnDestroy {
     window.localStorage.removeItem('startedQuestion')
     window.localStorage.removeItem('helps')
     window.localStorage.removeItem('diff')
-    this.gameService.endGame(this.userid, true).then(()=>{
-      this.router.navigateByUrl("/lobby")
+    this.gameService.endGame(this.userid, true).then((gamestate)=>{
+      if(gamestate){
+        if(gamestate.win){
+          window.localStorage.setItem("win",JSON.stringify(gamestate.win))
+          this.router.navigateByUrl("/endscreen")
+        }}
     })
   }
 
@@ -576,7 +584,7 @@ export class GameComponent implements OnInit, OnDestroy {
       });
     }
   }
-   
+
 startCountdown(){
   if(this.startNum == 0){return}
   this.currentNum = this.startNum;
@@ -589,7 +597,7 @@ startCountdown(){
       if (this.currentNum == 0){
         clearInterval(this.refreshIntervalId)
         setTimeout(()=> {
-        if(!this.submitted) 
+        if(!this.submitted)
             this.exitGame()
         },1000)
       }
