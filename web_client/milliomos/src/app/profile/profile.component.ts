@@ -5,6 +5,7 @@ import { UserModell } from '../models/usermodell';
 import { AuthService } from '../services/auth.service';
 import {Score} from "../models/score";
 import {ScoreService} from "../services/score.service";
+import {KeyValue} from "@angular/common";
 
 @Component({
   selector: 'app-profile',
@@ -27,6 +28,9 @@ export class ProfileComponent implements OnInit {
   skipIntro: Boolean | null = false;
 
   scores: Score[] = [];
+  originalOrder = (a: KeyValue<string, number>, b: KeyValue<string, number>): number => {
+    return 0;
+  }
 
   constructor(public router: Router, private auth: AuthService, private scoreService: ScoreService) {
     let userdatas = window.localStorage.getItem("userdatas")
@@ -51,6 +55,14 @@ export class ProfileComponent implements OnInit {
           });
         }
       })
+      this.scores.sort((a, b) => {
+        // először rendezzük a level szerint csökkenő sorrendben
+        if (b.level !== a.level) {
+          return b.level - a.level;
+        }
+        // ha a két elem azonos szinten van, akkor rendezzük a time szerint növekvő sorrendben
+        return Number(a.time.valueOf()) - Number(b.time.valueOf());
+      });
     })
   }
 

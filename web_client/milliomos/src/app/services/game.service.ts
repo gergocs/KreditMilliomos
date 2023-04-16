@@ -87,14 +87,8 @@ export class GameService {
   }
 
   async endGame(uid: any, save: boolean) {
-    await this.http.post(this.hostname + 'game/endGame', {}, {
-      headers: new HttpHeaders().set('tokenkey', uid).set('save', save.toString()), responseType: 'text'
-    }).toPromise().then(r => {
-
-      //200 if give up
-    }).catch(e => {
-
-      //TODO: process error
-    });
+    return this.http.post<GameState>(this.hostname + 'game/endGame', {}, {
+      headers: new HttpHeaders().set('tokenkey', uid).set('save', save.toString())
+    }).toPromise()
   }
 }
