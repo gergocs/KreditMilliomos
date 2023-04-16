@@ -10,9 +10,9 @@
   </div>
 
   <div class="scoreBoard"> <!-- TODO: CSS -->
-    categoria | szint | idő
-    <div *ngFor="let score of scores">
-      {{score.category}} | {{score.level}} | {{score.time}}
+    név | kredit
+    <div *ngFor="let score of scores | keyvalue">
+      {{score.key}} | {{score.value}}
     </div>
   </div>
 

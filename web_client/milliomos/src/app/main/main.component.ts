@@ -13,7 +13,7 @@ import {Score} from "../models/score";
 export class MainComponent implements OnInit {
   loggedin: boolean =false
   userdata: UserModell | undefined
-  scores: Score[] = [];
+  scores = new Map<string, number>();
 
   constructor(public auth: AuthService, protected router: Router, private scoreService: ScoreService) {
     if (!auth.user?.emailVerified && auth.authState == 2) {
@@ -27,13 +27,11 @@ export class MainComponent implements OnInit {
     }
 
     this.scoreService.getTopX().subscribe(score => {
-      score.forEach(element => {
-        this.scores.push({
-          category: decodeURI(element.category),
-          level: element.level,
-          time: element.time,
-          tokenKey: ""
-        });
+      this.scores = new Map<string, number>();
+
+      // @ts-ignore
+      Object.entries(score.result).forEach((key, value) => {
+        this.scores.set(key[0], <number>key[1])
       })
     })
 
