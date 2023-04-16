@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-login',
@@ -14,13 +15,15 @@ export class LoginComponent implements OnInit {
   public error: boolean = false
   public errorMsg: string = ""
   public loading: boolean = false
+  public isNewPassClicked: boolean = false
+  newpassemail: string = "";
 
   loginForm = new FormGroup({
     email: new FormControl(''),
     password: new FormControl('')
   });
 
-  constructor(public auth: AuthService, protected router: Router) {
+  constructor(public auth: AuthService, protected router: Router, public firebase: AngularFireAuth) {
   }
 
   ngOnInit(): void {
@@ -70,4 +73,19 @@ export class LoginComponent implements OnInit {
       //this.router.navigate(["/main"]);
     } catch {}
   }
+
+  async onNewPass() {
+    const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if(emailRegex.test(this.newpassemail)){
+      try {
+        await this.firebase.sendPasswordResetEmail(this.newpassemail)
+      }catch(e){
+      }finally{
+        alert("Sikeresen kiküldtük az e-mailt, amennyiben van felhasználónk ilyen e-mail címmel!") 
+      }
+    }else{
+      alert("Nem megfelelő e-mail cím!")
+    }
+  }
+
 }
