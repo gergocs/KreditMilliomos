@@ -57,6 +57,12 @@
   </div>
   <div class="box">
     <button (click)="showForm = true" class="new-question-button">Új kérdés</button>
+    <div class="category">
+      <select #category (change)="onCategoryChange(category.value)">
+        <option [defaultSelected]=true [ngValue]="" value="all">Mind</option>
+        <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">{{category.category}}</option>
+      </select>
+    </div>
     <h2>Összes jelenlegi kérdés</h2>
     <table>
       <thead>
@@ -72,7 +78,7 @@
           <th style="width: 3%;" align="center"></th>
         </tr>
       </thead>
-      <tbody *ngFor="let question of allquestion; let i = index" [attr.data-index]="i">
+      <tbody *ngFor="let question of allquestion | questionFilter:filter; let i = index" [attr.data-index]="i">
         <tr>
             <td>{{question.category}}</td>
             <td>{{question.question}}</td>

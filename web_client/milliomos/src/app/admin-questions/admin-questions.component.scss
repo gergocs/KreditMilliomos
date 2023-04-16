@@ -302,3 +302,30 @@ nav ul li a i {
 .new-question .content .cancel-button:hover {
   background-color: #ee8c1d;
 }
+
+.category {
+  margin-top: 30px;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: center;
+  float: right;
+}
+
+.category select {
+  padding: 16px 24px;
+  margin: 8px 0;
+  width: 250px;
+  display: inline-block;
+  color: #333333;
+  background-color: #ffffff;
+  border: 2px solid #e1def9;
+  border-radius: 8px;
+  outline: none;
+  appearance: none;
+  box-sizing: border-box;
+}

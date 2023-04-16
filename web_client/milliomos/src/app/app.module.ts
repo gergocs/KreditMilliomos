@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
 import { MainComponent } from './main/main.component';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire/compat';
@@ -24,8 +23,7 @@ import { AdminQuestionsComponent } from './admin-questions/admin-questions.compo
 import { DataprivacyComponent } from './dataprivacy/dataprivacy.component';
 import { AdminCategoryComponent } from './admin-category/admin-category.component';
 import {MatSliderModule} from "@angular/material/slider";
-
-
+import { QuestionFilterPipe } from './pipes/question-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -40,7 +38,8 @@ import {MatSliderModule} from "@angular/material/slider";
     LobbyComponent,
     GameComponent,
     DataprivacyComponent,
-    AdminCategoryComponent
+    AdminCategoryComponent,
+    QuestionFilterPipe,
   ],
   imports: [
     BrowserAnimationsModule,
