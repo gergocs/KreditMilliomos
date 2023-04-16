@@ -23,6 +23,6 @@ export class ScoreService {
   }
 
   getTopX(x = 10){
-    return this.http.get<Score[]>(this.hostname + "scoreBoard/top", {headers: new HttpHeaders().set("topx", x.toString())});
+    return this.http.get(this.hostname + "scoreBoard/top", {headers: new HttpHeaders().set("topx", x.toString())});
   }
 }
