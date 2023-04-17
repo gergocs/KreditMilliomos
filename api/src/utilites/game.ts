@@ -10,7 +10,7 @@ class Game {
     private readonly _time: bigint /* start of (game) time represented in unix epoch */
     private readonly maxTimePerQuestion: number /* may time per Question */
     private endOfQuestionTime: number /* time when the answer will be invalid */
-    private question: Question | undefined /* current question */
+    private _question: Question | undefined /* current question */
     private _category: string /* current question */
     private half: boolean /* half the questions */
     private switch: boolean /* switch help */
@@ -22,7 +22,7 @@ class Game {
 
     constructor(time: bigint, subject: string, difficulty: GameModes, maxTimePerQuestion: number, tokenKey: string) {
         this._time = time
-        this.question = undefined
+        this._question = undefined
         this._category = subject
         this.half = true
         this.switch = true
@@ -68,7 +68,11 @@ class Game {
     }
 
     hasQuestion(): boolean {
-        return !!this.question
+        return !!this._question
+    }
+
+    get question(): Question | undefined {
+        return this._question;
     }
 
     async evaluateGame(answer: string): Promise<Question | boolean> {
@@ -92,7 +96,7 @@ class Game {
     useHalf(): Question {
         this._lastUpdate = new Date().getTime()
 
-        if (!this.question) {
+        if (!this._question) {
             throw new GameException("The game dont generated question")
         }
 
@@ -101,9 +105,9 @@ class Game {
         }
 
         // Please god send us help
-        let correctQuestion = 'A' == this.question.answerCorrect
-            ? 0 : 'B' == this.question.answerCorrect
-                ? 1 : 'C' == this.question.answerCorrect
+        let correctQuestion = 'A' == this._question.answerCorrect
+            ? 0 : 'B' == this._question.answerCorrect
+                ? 1 : 'C' == this._question.answerCorrect
                     ? 2 : 3
 
         let randomNumber1 = this.getRandomInt(0, 2) // Random number between 0-2
@@ -124,19 +128,19 @@ class Game {
 
         switch (randomNumber1) {
             case 0: {
-                this.question.answerA = ""
+                this._question.answerA = ""
                 break
             }
             case 1: {
-                this.question.answerB = ""
+                this._question.answerB = ""
                 break
             }
             case 2: {
-                this.question.answerC = ""
+                this._question.answerC = ""
                 break
             }
             case 3: {
-                this.question.answerD = ""
+                this._question.answerD = ""
                 break
             }
             default: {
@@ -146,19 +150,19 @@ class Game {
 
         switch (randomNumber2) {
             case 0: {
-                this.question.answerA = ""
+                this._question.answerA = ""
                 break
             }
             case 1: {
-                this.question.answerB = ""
+                this._question.answerB = ""
                 break
             }
             case 2: {
-                this.question.answerC = ""
+                this._question.answerC = ""
                 break
             }
             case 3: {
-                this.question.answerD = ""
+                this._question.answerD = ""
                 break
             }
             default: {
@@ -167,13 +171,13 @@ class Game {
         }
 
         this.half = false
-        return JSON.parse(JSON.stringify(this.question))
+        return JSON.parse(JSON.stringify(this._question))
     }
 
     async useSwitch(): Promise<Question> {
         this._lastUpdate = new Date().getTime()
 
-        if (!this.question) {
+        if (!this._question) {
             throw new GameException("The game dont generated question")
         }
 
@@ -190,7 +194,7 @@ class Game {
     useAudience(): Array<number> {
         this._lastUpdate = new Date().getTime()
 
-        if (!this.question) {
+        if (!this._question) {
             throw new GameException("The game dont generated question")
         }
 
@@ -199,23 +203,23 @@ class Game {
         }
 
         // Please god send us help again
-        let correctQuestion = ('A' == this.question.answerCorrect
-            ? 0 : 'B' == this.question.answerCorrect
-                ? 1 : 'C' == this.question.answerCorrect
-                    ? 2 : 3) + (((this.question.answerA === ''
-            || this.question.answerB === ''
-            || this.question.answerC === ''
-            || this.question.answerD === '') ? 0 : 1) * this.randomOffset(this.question.level))
+        let correctQuestion = ('A' == this._question.answerCorrect
+            ? 0 : 'B' == this._question.answerCorrect
+                ? 1 : 'C' == this._question.answerCorrect
+                    ? 2 : 3) + (((this._question.answerA === ''
+            || this._question.answerB === ''
+            || this._question.answerC === ''
+            || this._question.answerD === '') ? 0 : 1) * this.randomOffset(this._question.level))
 
-        let skip1 = (this.question.answerA === ''
-            ? 0 : this.question.answerB === ''
-                ? 1 : this.question.answerC === ''
-                    ? 2 : this.question.answerD === '' ? 3 : NaN)
+        let skip1 = (this._question.answerA === ''
+            ? 0 : this._question.answerB === ''
+                ? 1 : this._question.answerC === ''
+                    ? 2 : this._question.answerD === '' ? 3 : NaN)
 
-        let skip2 = (this.question.answerD === ''
-            ? 3 : this.question.answerC === ''
-                ? 2 : this.question.answerB === ''
-                    ? 1 : this.question.answerA === '' ? 0 : NaN)
+        let skip2 = (this._question.answerD === ''
+            ? 3 : this._question.answerC === ''
+                ? 2 : this._question.answerB === ''
+                    ? 1 : this._question.answerA === '' ? 0 : NaN)
 
         if (correctQuestion >= 4) {
             correctQuestion -= 4
@@ -251,7 +255,7 @@ class Game {
                 .then(() => {
                     Question.findAndCountAll({
                         where: {
-                            level: (!this.question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this.question.level + offset), 15))), // TODO: Check if this is good
+                            level: (!this._question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this._question.level + offset), 15))), // TODO: Check if this is good
                             category: this.category,
                             question: {
                                 [Op.notIn]: this.previousQuestion
@@ -259,11 +263,11 @@ class Game {
                         }
                     })
                         .then(({count, rows}) => {
-                            this.question = rows[this.getRandomInt(0, count - 1)]
-                            this.previousQuestion.push(this.question.question)
+                            this._question = rows[this.getRandomInt(0, count - 1)]
+                            this.previousQuestion.push(this._question.question)
                             this._level += offset
                             this.endOfQuestionTime = new Date().getTime() + this.maxTimePerQuestion // number + Infinity = Infinity
-                            resolve(this.question)
+                            resolve(this._question)
                         })
                         .catch(error => {
                             throw new GameException("Error in Question.findAndCountAll!\n" + error)
@@ -276,11 +280,11 @@ class Game {
     }
 
     private checkAnswer(answer: string): boolean {
-        if (!this.question) {
+        if (!this._question) {
             throw new GameException("The game doesn't generated any questions!")
         }
 
-        return ((new Date()).getTime() < this.endOfQuestionTime) && answer.toLowerCase() === this.question.answerCorrect.toLowerCase()
+        return ((new Date()).getTime() < this.endOfQuestionTime) && answer.toLowerCase() === this._question.answerCorrect.toLowerCase()
     }
 
     private getRandomInt(min: number, max: number): number {

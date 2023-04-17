@@ -292,6 +292,20 @@ class RunningGameStorage {
             throw new GameException('Error in RunninGameStorage:isGameRunning method\n' + error)
         }
     }
+
+    getQuestion(token: string): string | undefined {
+        if (!this.isGameRunning(token)) {
+            return undefined
+        }
+
+        let game = this.runningGames.get(<string>token)
+
+        if (!game) {
+            return undefined
+        }
+
+        return game.question?.answerCorrect
+    }
 }
 
 export default RunningGameStorage

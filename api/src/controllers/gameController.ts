@@ -71,8 +71,10 @@ class GameController {
         let token = <string>request.headers.tokenkey
         let answer = <string>request.headers.answer
         let question
+        let prevQuestion: string | undefined
 
         if (RunningGameStorage.instance().hasQuestion(token)) {
+            prevQuestion = RunningGameStorage.instance().getQuestion(token)
             question = RunningGameStorage.instance().evaluateGame(token, answer)
         } else {
             question = RunningGameStorage.instance().evaluateGame(token, "")
@@ -85,7 +87,8 @@ class GameController {
                     time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
                     level: RunningGameStorage.instance().getLevel(token),
                     difficulty: RunningGameStorage.instance().getDifficulty(token),
-                    win: false
+                    win: false,
+                    correct: prevQuestion
                 }
             })
             response.end()
@@ -98,7 +101,8 @@ class GameController {
                             time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
                             level: RunningGameStorage.instance().getLevel(token),
                             difficulty: RunningGameStorage.instance().getDifficulty(token),
-                            win: r
+                            win: r,
+                            correct: prevQuestion
                         }
                     })
                 } else if (r instanceof Question) {
@@ -115,7 +119,8 @@ class GameController {
                             time: 0,
                             level: 0,
                             difficulty: 0,
-                            win: false
+                            win: false,
+                            correct: undefined
                         }
                     })
                 }
