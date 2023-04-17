@@ -37,27 +37,27 @@ class App {
 
         this.app.use(bodyParser.json())
         this.app.use((req, res, next): void => {
-            if (req.method === 'GET' && req.path === '/scoreBoard/top'){
+            if (req.method === 'GET' && req.path.includes('/scoreBoard/top')){
                 next()
                 return
-            }
-
-            if (req.headers.tokenkey === undefined) {
-                res.status(StatusCodes.Unauthorized).send('No token')
-                res.end()
-                return
-            }
-
-            if (TrustedTokenHandler.instance().isValidToken(req.headers.tokenkey as string)){
-                next()
             } else {
-                this.fireAuth.getUser(req.headers.tokenkey as string).then(r => {
-                    TrustedTokenHandler.instance().addToken(req.headers.tokenkey as string)
-                    next()
-                }).catch(er => {
-                    res.status(StatusCodes.Unauthorized).send('Invalid token')
+                if (req.headers.tokenkey === undefined) {
+                    res.status(StatusCodes.Unauthorized).send('No token')
                     res.end()
-                })
+                    return
+                }
+
+                if (TrustedTokenHandler.instance().isValidToken(req.headers.tokenkey as string)){
+                    next()
+                } else {
+                    this.fireAuth.getUser(req.headers.tokenkey as string).then(r => {
+                        TrustedTokenHandler.instance().addToken(req.headers.tokenkey as string)
+                        next()
+                    }).catch(er => {
+                        res.status(StatusCodes.Unauthorized).send('Invalid token')
+                        res.end()
+                    })
+                }
             }
         })
         this.app.use((req, res, next): void => {
