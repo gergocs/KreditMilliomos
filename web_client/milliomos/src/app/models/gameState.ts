@@ -6,6 +6,7 @@ export interface GameState {
     time: number,
     level: number,
     difficulty: number,
-    win: boolean
+    win: boolean,
+    correct: string | undefined
   }
 }
