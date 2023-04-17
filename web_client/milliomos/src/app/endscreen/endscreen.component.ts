@@ -21,7 +21,7 @@ export class EndscreenComponent implements OnInit, OnDestroy{
       this.winDifficulty = this.win.difficulty == 0 ? 'Könnyű' : this.win.difficulty == 1 ? 'Közepes' : 'Nehéz';
       this.win.time = this.win.time/1000
       let perc = Math.floor(this.win.time/60)
-      this.time = perc.toString() + " perc " + Math.round(this.win.time- 60*perc).toString() + "mp alatt"
+      this.time = perc.toString() + " perc " + Math.round(this.win.time- 60*perc).toString() + " másodperc alatt"
 
       if (!this.win.win){
         let level = 0;
@@ -56,7 +56,7 @@ export class EndscreenComponent implements OnInit, OnDestroy{
         this.level = this.win.level -1;
       }
 
-      this.eredmeny = this.win.win ? 'Gratulálok győztél' : 'Sajnos vesztettél'
+      this.eredmeny = this.win.win ? 'Gratulálok, győztél!' : 'Sajnos vesztettél!'
     }
     setTimeout(()=>{
       let first = document.getElementById("first")
