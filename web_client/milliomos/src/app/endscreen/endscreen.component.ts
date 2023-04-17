@@ -53,7 +53,7 @@ export class EndscreenComponent implements OnInit, OnDestroy{
 
         this.level = level;
       } else {
-        this.level = this.win.level;
+        this.level = this.win.level -1;
       }
 
       this.eredmeny = this.win.win ? 'Gratulálok győztél' : 'Sajnos vesztettél'
