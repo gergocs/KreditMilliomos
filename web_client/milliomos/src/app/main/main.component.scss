@@ -33,7 +33,7 @@
   margin: 14px 24px 24px 0;
   background-color: #efa044;
   color: #ffffff;
-  font-size: 18px;
+  width: 100%;
   font-weight: 600;
   border: none;
   border-radius: 8px;
@@ -45,11 +45,11 @@
 }
 
 .content button:last-of-type {
-  padding: 14px 30px;
+  padding: 16px 32px;
   margin: 14px 0 24px 0;
   background-color: transparent;
   color: #333;
-  font-size: 18px;
+  width: 100%;
   font-weight: 600;
   border: 2px solid #efa044;
   border-radius: 8px;
@@ -196,4 +196,53 @@
   border-radius: 8px;
   transition: 0.5s;
   cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+  .content {
+    width: 100%;
+    text-align: center;
+    padding: 12px 0 6px 0;
+  }
+
+  .buttons button {
+    display: block;
+    margin-bottom: 1em;
+  }
+
+  .content button:first-of-type {
+    margin-right: 0;
+  }
+
+  .how-to-play .content {
+    padding: 24px;
+    margin: 1em auto;
+    width: 90%;
+    height: auto;
+    position: relative;
+    display: block;
+    text-align: justify;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 1em;
+  }
+
+  .content .scoreboard {
+    padding: 24px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    background-color: #ffffff;
+    border-radius: 16px;
+  }
+
+  .content .scoreboard h2 {
+    margin: 0;
+    color: #333333;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+  }
+  
 }
