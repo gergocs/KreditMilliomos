@@ -25,4 +25,14 @@
       </div>
     </div>
   </div>
+
+  <a (click)="showForm = true"><i class="material-icons">question_mark</i></a>
+</div>
+
+<div class="how-to-play" *ngIf="showForm">
+  <div class="content">
+    <h2>Hogyan kell a játékot játszani?</h2>
+    Hamarosan...
+    <button (click)="showForm = false" class="close"><i class="material-icons">close</i></button>
+  </div>
 </div>

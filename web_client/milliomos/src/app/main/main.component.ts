@@ -20,6 +20,8 @@ export class MainComponent implements OnInit {
     return 0;
   }
 
+  public showForm: boolean = false;
+
   constructor(public auth: AuthService, protected router: Router, private scoreService: ScoreService) {
     if (!auth.user?.emailVerified && auth.authState == 2) {
       auth.user?.sendEmailVerification()
@@ -34,7 +36,7 @@ export class MainComponent implements OnInit {
     this.scoreService.getTopX().subscribe(score => {
       this.scores = new Map<string, number>();
       let tmp = new Map<string, number>();
-    
+
       // @ts-ignore
       Object.entries(score.result).forEach((entry) => {
         tmp.set(entry[0], <number>entry[1])

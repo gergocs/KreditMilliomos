@@ -126,6 +126,21 @@ nav ul li a i {
   background-color: #ee8c1d;
 }
 
+.content .box select {
+  padding: 8px 15px;
+  margin: 0 25px 25px 0;
+  width: 200px;
+  display: block;
+  color: #333333;
+  float: right;
+  background-color: #ffffff;
+  border: 2px solid #e1def9;
+  border-radius: 8px;
+  outline: none;
+  appearance: none;
+  box-sizing: border-box;
+}
+
 .content .box .save-button {
   padding: 8px 32px;
   margin: 25px 0;
@@ -268,6 +283,10 @@ nav ul li a i {
   box-sizing: border-box;
 }
 
+.new-question .content .input-box select {
+  padding: 16px 15px;
+}
+
 .new-question .content .input-box input::placeholder {
   color: #333333;
   opacity: 0.3;
@@ -319,31 +338,4 @@ nav ul li a i {
   border-radius: 8px;
   transition: 0.5s;
   cursor: pointer;
-}
-
-.category {
-  margin-top: 30px;
-  margin-bottom: 40px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  text-align: center;
-  float: right;
-}
-
-.category select {
-  padding: 16px 24px;
-  margin: 8px 0;
-  width: 250px;
-  display: inline-block;
-  color: #333333;
-  background-color: #ffffff;
-  border: 2px solid #e1def9;
-  border-radius: 8px;
-  outline: none;
-  appearance: none;
-  box-sizing: border-box;
 }
