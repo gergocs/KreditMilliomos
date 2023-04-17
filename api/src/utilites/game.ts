@@ -241,7 +241,7 @@ class Game {
         this._lastUpdate = new Date().getTime()
 
         // TODO: _level = 16
-        if (this._level == 16) {
+        if (this._level === 16) {
             throw new GameException("", true)
         }
 

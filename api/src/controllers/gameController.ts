@@ -215,7 +215,7 @@ class GameController {
                 time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
                 level: RunningGameStorage.instance().getLevel(token),
                 difficulty: RunningGameStorage.instance().getDifficulty(token),
-                win: false
+                win: RunningGameStorage.instance().getLevel(token) == 16
             }
         })
 

@@ -33,7 +33,12 @@
           timer
           <input type="range" min="0" max="300" steps="10" [(ngModel)]="time">
         </div>
-        <span>{{this.time}} másodperc</span>
+        <div *ngIf="this.time != 0">
+          <span>{{this.time}} másodperc</span>
+        </div>
+        <div *ngIf="this.time == 0">
+          <span>Végtelen idő</span>
+        </div>
       </div>
       <button (click)="startNewGame(category.value)">Játék indítása</button>
     </div>

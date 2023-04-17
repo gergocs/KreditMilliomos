@@ -22,7 +22,40 @@ export class EndscreenComponent implements OnInit, OnDestroy{
       this.win.time = this.win.time/1000
       let perc = Math.floor(this.win.time/60)
       this.time = perc.toString() + " perc " + Math.round(this.win.time- 60*perc).toString() + "mp alatt"
-      this.level = this.win.level
+
+      if (!this.win.win){
+        let level = 0;
+        switch (this.win.level - 1) {
+          case 5:
+          case 6:
+          case 7:
+          case 8:
+          case 9: {
+            level = 5;
+            break;
+          }
+          case 10:
+          case 11:
+          case 12:
+          case 13:
+          case 14: {
+            level = 10;
+            break;
+          }
+          case 15: {
+            level = 15;
+            break;
+          }
+          default: {
+            level = 0;
+          }
+        }
+
+        this.level = level;
+      } else {
+        this.level = this.win.level;
+      }
+
       this.eredmeny = this.win.win ? 'Gratulálok győztél' : 'Sajnos vesztettél'
     }
     setTimeout(()=>{
