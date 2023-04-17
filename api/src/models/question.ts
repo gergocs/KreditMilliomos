@@ -1,6 +1,5 @@
 import { DataTypes, Model, InferAttributes, InferCreationAttributes  } from 'sequelize'
 import { sequelize } from '../db/sequelizeConnector'
-import QuestionCategory from './questionCategory'
 
 class Question extends Model<InferAttributes<Question>,InferCreationAttributes<Question>> {
 

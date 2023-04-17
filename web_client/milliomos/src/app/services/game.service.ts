@@ -21,12 +21,13 @@ export class GameService {
   }
 
   // Needs proper implementation
-  async startNewGame(c: any, d: any, uid: string) {
+  async startNewGame(c: any, d: any, time: any, uid: string) {
     let header = new HttpHeaders()
       .set('category', encodeURIComponent(c))
       .set('difficulty', d)
+      .set('maxtimeperquestion', time.toString())
       .set('tokenkey', uid);
-      
+
     await this.http.post(this.hostname + 'game/start', {}, {
       headers: header, responseType: 'text'
     }).toPromise().then(r => {
@@ -86,14 +87,8 @@ export class GameService {
   }
 
   async endGame(uid: any, save: boolean) {
-    await this.http.post(this.hostname + 'game/endGame', {}, {
-      headers: new HttpHeaders().set('tokenkey', uid).set('save', save.toString()), responseType: 'text'
-    }).toPromise().then(r => {
-
-      //200 if give up
-    }).catch(e => {
-
-      //TODO: process error
-    });
+    return this.http.post<GameState>(this.hostname + 'game/endGame', {}, {
+      headers: new HttpHeaders().set('tokenkey', uid).set('save', save.toString())
+    }).toPromise()
   }
 }

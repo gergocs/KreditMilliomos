@@ -9,30 +9,30 @@
       {{errorMsg}}
     </div>
     <div class="input-box">
-      <label for="username">felhasználónév</label>
+      <label for="username">felhasználónév<span>*</span></label>
       <input id="username" type="text" formControlName="username" #nickname/>
     </div>
     <div class="input-box">
-      <label for="email">e-mail cím</label>
+      <label for="email">e-mail cím<span>*</span></label>
       <input id="email" type="text" formControlName="email" class="form-control" #email/>
     </div>
     <div class="row">
       <div class="input-box">
-        <label for="lastName">vezetéknév</label>
+        <label for="lastName">vezetéknév<span>*</span></label>
         <input id="lastName" type="text" formControlName="lastName" #firstname/>
       </div>
       <div class="input-box">
-        <label for="firstName">keresztnév</label>
+        <label for="firstName">keresztnév<span>*</span></label>
         <input id="firstName" type="text" formControlName="firstName" #lastname/>
       </div>
     </div>
     <div class="row">
       <div class="input-box">
-        <label for="password">jelszó</label>
+        <label for="password">jelszó<span>*</span></label>
         <input id="password" type="password" formControlName="password" #password/>
       </div>
       <div class="input-box">
-        <label for="passwordAgain">jelszó megerősítése</label>
+        <label for="passwordAgain">jelszó megerősítése<span>*</span></label>
         <input id="passwordAgain" type="password" formControlName="passwordAgain" #passwordagain/>
       </div>
     </div>

@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserModell } from '../models/usermodell';
 import { AuthService } from '../services/auth.service';
+import {Score} from "../models/score";
+import {ScoreService} from "../services/score.service";
+import {KeyValue} from "@angular/common";
 
 @Component({
   selector: 'app-profile',
@@ -12,7 +15,7 @@ import { AuthService } from '../services/auth.service';
 export class ProfileComponent implements OnInit {
 
   loading: Boolean = false
-
+  introSkip: Boolean = false
   userdata: UserModell | undefined
 
   updateForm = new FormGroup({
@@ -21,9 +24,12 @@ export class ProfileComponent implements OnInit {
     lastName: new FormControl('')
   });
 
-  constructor(public router: Router, private auth: AuthService) { }
+  skipIntroChecked: Boolean = false;
+  skipIntro: Boolean | null = false;
 
-  ngOnInit(): void {
+  scores: Score[] = [];
+
+  constructor(public router: Router, private auth: AuthService, private scoreService: ScoreService) {
     let userdatas = window.localStorage.getItem("userdatas")
     if (userdatas){
       this.userdata = JSON.parse(userdatas)
@@ -33,7 +39,39 @@ export class ProfileComponent implements OnInit {
       this.updateForm.get('lastName')?.setValue(decodeURIComponent(userdata.lastName))
     } else {
       this.router.navigate(['/login']);
+    }
+
+    this.scoreService.getUserScores(<string>this.userdata?.tokenKey).subscribe(score => {
+      score.forEach(element => {
+        if (this.scores.length < 10) {
+          this.scores.push({
+            category: decodeURI(element.category),
+            level: element.level,
+            time: element.time,
+            tokenKey: ""
+          });
+        }
+      })
+      this.scores.sort((a, b) => {
+        // először rendezzük a level szerint csökkenő sorrendben
+        if (b.level !== a.level) {
+          return b.level - a.level;
+        }
+        // ha a két elem azonos szinten van, akkor rendezzük a time szerint növekvő sorrendben
+        return Number(a.time.valueOf()) - Number(b.time.valueOf());
+      });
+    })
   }
+
+  ngOnInit(): void {
+    if (window.localStorage.getItem('introSkipped') == "true")
+      this.skipIntro = true;
+    else
+      this.skipIntro = false;
+  }
+
+  skipIntroChange(event: any) {
+    this.skipIntroChecked = event.target.checked;
   }
 
   redirectToLobby(){
@@ -50,6 +88,14 @@ export class ProfileComponent implements OnInit {
     this.loading = true
     await this.auth.updateuser(this.userdata).then(body => {
       window.localStorage.setItem("userdatas", JSON.stringify(this.userdata))
+
+      if (this.skipIntroChecked) {
+        this.introSkip = true;
+      } else {
+        this.introSkip = false;
+      }
+      window.localStorage.setItem('introSkipped',JSON.stringify(this.introSkip))
+
       this.loading = false
     }).catch(err =>{
       this.loading = false
@@ -60,4 +106,16 @@ export class ProfileComponent implements OnInit {
     await this.auth.logout();
   }
 
+  timeToString(time: bigint) {
+    let nTime = Number(time)/1000
+    if (nTime > 60){
+      let perc = Math.floor(nTime/60)
+      let mp = Math.round(nTime - perc*60)
+      return (perc.toString() + " perc " + mp.toString() + " másodperc")
+    }else{
+      return Math.round(nTime).toString() + " másodperc"
+    }
+  }
+
+  protected readonly decodeURI = decodeURI;
 }

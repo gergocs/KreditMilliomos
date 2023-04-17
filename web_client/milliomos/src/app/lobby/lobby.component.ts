@@ -14,6 +14,7 @@ import { QuestionService } from '../services/question.service';
 export class LobbyComponent implements OnInit {
   public userid: string | undefined;
   public allQuestionCategories: QuestionCategory[] = []
+  time: number = 60;
 
   constructor(
     protected router: Router,
@@ -31,7 +32,7 @@ export class LobbyComponent implements OnInit {
     }
     this.userid = JSON.parse(userdatas).tokenKey;
 
-    this.questionService.getQuestionCategories(this.userid).subscribe(body =>{
+    this.questionService.getPlayableQuestionCategories(this.userid).subscribe(body =>{
       this.allQuestionCategories = body;
       this.allQuestionCategories.forEach(qc => {
         qc.category = decodeURIComponent(qc.category)
@@ -74,8 +75,9 @@ export class LobbyComponent implements OnInit {
       alert('Egy játék már folyamatban van!');
       this.router.navigate(['/game']);
     }else{
+      window.localStorage.setItem('timer',JSON.stringify(this.time))
     // Start new game
-    this.gameService.startNewGame(category, this.difficulty, <string>this.userid).then(r => {
+    this.gameService.startNewGame(category, this.difficulty, this.time === 0 ? NaN : this.time, <string>this.userid).then(r => {
       this.router.navigate(['/game']);
     });
   }}

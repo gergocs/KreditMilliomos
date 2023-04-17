@@ -2,8 +2,8 @@
 @import './chart.scss';
 
 .content {
+  padding-top: 60px;
   width: 100%;
-  height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
@@ -42,6 +42,45 @@
   align-items: center;
   background-color: #ffffff;
   border-radius: 16px;
+}
+
+.content .game .question #countdown {
+	font-family: 'Roboto Condensed', sans-serif;
+	width: 200px;
+	height: 100px;
+	position: absolute;
+	left: 50%;
+	top: 10%;
+	margin-left: -100px;
+	margin-top: -50px;
+	color: #333333;
+	font-size: 5em;
+	text-align: center;
+	font-weight: bold;
+	font-style: italic;
+	-webkit-opacity: 1.0;
+	-moz-opacity: 1.0;
+	opacity: 1.0;
+	transition: opacity 0.2s ease;
+	-moz-transition: opacity 0.2s ease;
+	-ms-transition: opacity 0.2s ease;
+	-o-transition: opacity 0.2s ease;
+	perspective: 1000;
+	backface-visibility: hidden;
+
+	&.puffer {
+		-webkit-opacity: 0;
+		-moz-opacity: 0;
+		opacity: 0;
+		transform: scale(1.6,1.6);
+		-moz-transform: scale(1.6,1.6);
+		-ms-transform: scale(1.6,1.6);
+		-o-transform: scale(1.6,1.6);
+		transition: all 0.2s ease-out;
+		-moz-transition: all 0.2s ease-out;
+		-ms-transition: all 0.2s ease-out;
+		-o-transition: all 0.2s ease-out;
+	}
 }
 
 .content .game .question h3 {
@@ -106,6 +145,7 @@
   padding: 24px;
   width: 400px;
   height: 75px;
+  position: relative;
   color: #333333;
   font-size: 18px;
   font-weight: 500;
@@ -114,6 +154,31 @@
   border-radius: 16px;
   cursor: pointer;
   transition: background-color 0.4s;
+}
+
+.content .game .question .answers .answer::before {
+  opacity: 0.5;
+  position: absolute;
+  top: 17px;
+  left: 13px;
+  color: #333333;
+  font-size: 25px;
+}
+
+.content .game .question .answers #answerA .answer::before {
+  content: 'A';
+}
+
+.content .game .question .answers #answerB .answer::before {
+  content: 'B';
+}
+
+.content .game .question .answers #answerC .answer::before {
+  content: 'C';
+}
+
+.content .game .question .answers #answerD .answer::before {
+  content: 'D';
 }
 
 .content .game .question .answers .answer:not(.disabled):hover {

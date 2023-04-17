@@ -11,6 +11,7 @@ import { AdminQuestionsComponent } from './admin-questions/admin-questions.compo
 import {DataprivacyComponent} from "./dataprivacy/dataprivacy.component";
 import {AngularFireAuthGuard, redirectUnauthorizedTo} from "@angular/fire/compat/auth-guard";
 import { AdminCategoryComponent } from './admin-category/admin-category.component';
+import {EndscreenComponent} from "./endscreen/endscreen.component";
 
 const redirectUnauthorizedToLanding = () => redirectUnauthorizedTo(['login']);
 
@@ -18,19 +19,19 @@ const routes: Routes = [
   {
     path: 'lobby',
     component: LobbyComponent,
-    canActivate: [AngularFireAuthGuard], 
+    canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
     path: 'game',
     component: GameComponent,
-    canActivate: [AngularFireAuthGuard], 
+    canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [AngularFireAuthGuard], 
+    canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
@@ -48,19 +49,25 @@ const routes: Routes = [
   {
     path: 'admin-users',
     component: AdminUsersComponent,
-    canActivate: [AngularFireAuthGuard], 
+    canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
     path: 'admin-questions',
     component: AdminQuestionsComponent,
-    canActivate: [AngularFireAuthGuard], 
+    canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {
     path: 'admin-category',
     component: AdminCategoryComponent,
-    canActivate: [AngularFireAuthGuard], 
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLanding}
+  },
+  {
+    path: 'endscreen',
+    component: EndscreenComponent,
+    canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLanding}
   },
   {

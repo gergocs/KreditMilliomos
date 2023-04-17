@@ -2,6 +2,7 @@ import {NextFunction, Request, Response, Router} from "express";
 import {sequelize} from "../db/sequelizeConnector";
 import ScoreBoard from "../models/scoreBoard";
 import {StatusCodes} from "../utilites/StatusCodes";
+import User from "../models/user";
 
 export class ScoreBoardController {
     public readonly path = '/scoreBoard'
@@ -13,8 +14,27 @@ export class ScoreBoardController {
     }
 
     getAll(request: Request, response: Response, next: NextFunction): void {
+        let token = request.headers.tokenkey
+        let isTokenNeeded = true
+
+        if (!token || typeof token !== "string" || token.length > 28 || Array.isArray(token)) {
+            response.sendStatus(StatusCodes.NotFound)
+            response.end()
+        }
+
+        if (request.headers.istoken !== "true") {
+            isTokenNeeded = false
+        }
+
+        token = <string>token
+
         sequelize.sync().then(() => {
-            ScoreBoard.findAll().then(r => {
+            ScoreBoard.findAll(isTokenNeeded ? {
+                    where: {
+                        tokenKey: token
+                    }
+                } : undefined
+            ).then(r => {
                 response.send(r)
                 response.end()
             }).catch(e => {
@@ -29,32 +49,45 @@ export class ScoreBoardController {
 
     getTopX(request: Request, response: Response, next: NextFunction): void {
         let x = Number(request.headers.topx)
+
+        if (!x || Array.isArray(x) || Number.isNaN(x)) {
+            response.sendStatus(StatusCodes.NotFound)
+            response.end()
+        }
+
         sequelize.sync().then(() => {
-            ScoreBoard.findAll().then(r => {
-                let results = new Array<ScoreBoard>()
-                let scores = new Map<number, number>()
+            ScoreBoard.findAll().then(async r => {
+                let results = new Map<string, number>()
+                let retVal = new Map<string, number>()
 
                 for (let i = 0; i < r.length; i++) {
-                    let item = r.at(i)
-                    if (item) {
-                        scores.set(i, item.level * (1 / Number(item.time)))
+                    if (results.has(r[i].tokenKey)) {
+                        // @ts-ignore
+                        results.set(r[i].tokenKey, results.get(r[i].tokenKey) + r[i].level)
+                    } else {
+                        results.set(r[i].tokenKey, r[i].level)
                     }
                 }
 
-                const sortedScores = new Map([...scores.entries()].sort((a, b) => b[1] - a[1]));
-                let index = 0
+                results = new Map([...results.entries()].sort((a, b) => b[1] - a[1]));
 
-                sortedScores.forEach((value, key) => {
-                    if (index >= x) {
-                        return
+                for (let [key, value] of results.entries()) {
+                    if (retVal.size >= x || retVal.size + 1 === results.size) {
+                        // This endpoint is expensive so we must cache the response.
+                        response.set('Cache-Control', 'shared, s-max-age=1800'); // 30 minute
+                        response.send({
+                            result: Object.fromEntries(retVal)
+                        })
+                        response.end()
+                        break;
                     }
 
-                    index++
-                    results.push(r[key])
-                })
+                    let user = await User.findOne({where: {tokenKey: key}});
 
-                response.send(results)
-                response.end()
+                    if (user) {
+                        retVal.set(user.name, value)
+                    }
+                }
             }).catch(e => {
                 response.sendStatus(StatusCodes.InternalError)
                 response.end()

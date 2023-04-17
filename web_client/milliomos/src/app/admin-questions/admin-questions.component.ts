@@ -26,6 +26,7 @@ export class AdminQuestionsComponent implements OnInit {
   public importErrorMsg: string = '';
   public file: any;
   public Importeditems: Question[] = [];
+  public filter: string = '';
 
   public hostname: string = 'localhost';
 
@@ -347,5 +348,9 @@ export class AdminQuestionsComponent implements OnInit {
       .catch((err) => {
         this.loading = false;
       });
+  }
+
+  onCategoryChange(value: string) {
+    this.filter = value;
   }
 }

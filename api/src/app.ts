@@ -37,6 +37,11 @@ class App {
 
         this.app.use(bodyParser.json())
         this.app.use((req, res, next): void => {
+            if (req.method === 'GET' && req.path === '/scoreBoard/top'){
+                next()
+                return
+            }
+
             if (req.headers.tokenkey === undefined) {
                 res.status(StatusCodes.Unauthorized).send('No token')
                 res.end()

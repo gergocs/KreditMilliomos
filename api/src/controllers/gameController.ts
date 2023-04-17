@@ -3,7 +3,6 @@ import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
 import RunningGameStorage from "../utilites/RunningGameStorage"
-import {GameException} from "../exceptions/GameException";
 
 class GameController {
 
@@ -24,7 +23,7 @@ class GameController {
     startGame(request: Request, response: Response, next: NextFunction): void {
         let myCategory = request.headers.category
         let difficulty = request.headers.difficulty
-        let maxTimePerQuestion = request.headers.maxTimePerQuestion
+        let maxTimePerQuestion = request.headers.maxtimeperquestion
 
         if (!myCategory || typeof myCategory !== "string" || Array.isArray(myCategory) || myCategory.length > 255) {
             response.sendStatus(StatusCodes.NotFound)
@@ -45,7 +44,7 @@ class GameController {
                 .then(data => {
                     //if there's data in category it's valid
                     if (data != null || data != undefined) {
-                        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>myCategory, <number><unknown>difficulty, maxTimePerQuestion == "NaN" ? Infinity : Number(maxTimePerQuestion), ))
+                        response.sendStatus(RunningGameStorage.instance().startGame(<string>request.headers.tokenkey, <string>myCategory, <number><unknown>difficulty, maxTimePerQuestion == "NaN" ? Infinity : Number(maxTimePerQuestion),))
                         response.end()
                     } else {
                         response.sendStatus(StatusCodes.NotFound)
@@ -79,22 +78,50 @@ class GameController {
             question = RunningGameStorage.instance().evaluateGame(token, "")
         }
 
-        question.then(r => {
-            if (typeof r == "boolean") {
-                response.send({
-                    question: undefined,
-                    win: r
-                })
-            } else if (r instanceof Question) {
-                let q = JSON.parse(JSON.stringify(r))
-                q.answerCorrect = '';
-                response.send({
-                    question: q,
-                    win: undefined
-                })
-            }
+        if (!question) {
+            response.send({
+                question: undefined,
+                win: {
+                    time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
+                    level: RunningGameStorage.instance().getLevel(token),
+                    difficulty: RunningGameStorage.instance().getDifficulty(token),
+                    win: false
+                }
+            })
             response.end()
-        })
+        } else {
+            question.then(r => {
+                if (typeof r == "boolean") {
+                    response.send({
+                        question: undefined,
+                        win: {
+                            time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
+                            level: RunningGameStorage.instance().getLevel(token),
+                            difficulty: RunningGameStorage.instance().getDifficulty(token),
+                            win: r
+                        }
+                    })
+                } else if (r instanceof Question) {
+                    let q = JSON.parse(JSON.stringify(r))
+                    q.answerCorrect = '';
+                    response.send({
+                        question: q,
+                        win: undefined
+                    })
+                } else {
+                    response.send({
+                        question: undefined,
+                        win: {
+                            time: 0,
+                            level: 0,
+                            difficulty: 0,
+                            win: false
+                        }
+                    })
+                }
+                response.end()
+            })
+        }
 
     }
 
@@ -157,8 +184,23 @@ class GameController {
     giveUp(request: Request, response: Response, next: NextFunction): void {
         let token = <string>request.headers.tokenkey
         let save = (<string>request.headers.save).toLowerCase() == 'true'
+        let canGiveUp = RunningGameStorage.instance().giveUpGame(token, save)
 
-        response.sendStatus(RunningGameStorage.instance().giveUpGame(token, save) ? StatusCodes.Ok : StatusCodes.BadRequest)
+        if (!canGiveUp) {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+        } else {
+            response.send(response.send({
+                question: undefined,
+                win: {
+                    time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
+                    level: RunningGameStorage.instance().getLevel(token),
+                    difficulty: RunningGameStorage.instance().getDifficulty(token),
+                    win: true
+                }
+            }))
+        }
+
         response.end()
     }
 
@@ -166,9 +208,19 @@ class GameController {
         let token = <string>request.headers.tokenkey
         let save = (<string>request.headers.save).toLowerCase() == 'true'
 
+        response.status(StatusCodes.Ok)
+        response.send({
+            question: undefined,
+            win: {
+                time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
+                level: RunningGameStorage.instance().getLevel(token),
+                difficulty: RunningGameStorage.instance().getDifficulty(token),
+                win: RunningGameStorage.instance().getLevel(token) == 16
+            }
+        })
+
         RunningGameStorage.instance().endGame(token, save)
 
-        response.sendStatus(StatusCodes.Ok)
         response.end()
     }
 }

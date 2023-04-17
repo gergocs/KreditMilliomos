@@ -7,26 +7,47 @@
 
 <div class="content">
   <h2>Felhasználói profil</h2>
-  <div class="user-info">
-    <h2>Adatok</h2>
-    <form [formGroup]="updateForm">
-      <div class="input-box">
-        <label for="username">felhasználónév</label>
+  <div class="custom-row">
+    <div class="user-info">
+      <h2>Adatok</h2>
+      <form [formGroup]="updateForm">
+        <div class="input-box">
+          <label for="username">felhasználónév</label>
         <input id="username" value="{{this.userdata?.name}}" type="text" formControlName="username"/>
+        </div>
+        <div class="input-box">
+          <label for="email">e-mail cím</label>
+          <input id="email" class="disabled" readonly value="{{this.userdata?.email}}" type="text">
+        </div>
+        <div class="input-box">
+          <label for="firstName">vezetéknév</label>
+          <input id="firstName" value="{{this.userdata?.firstName}}" type="text" formControlName="firstName">
+        </div>
+        <div class="input-box">
+          <label for="lastName">keresztnév</label>
+          <input id="lastName" value="{{this.userdata?.lastName}}" type="text" formControlName="lastName">
+        </div>
+        <div class="checkbox-box">
+          <input *ngIf="skipIntro" type="checkbox" (change)="skipIntroChange($event)" checked>
+          <input *ngIf="!skipIntro" type="checkbox" (change)="skipIntroChange($event)">
+          Intro automatikus átugrása
+        </div>
+        <button (click)="updateuser()">Profil frissítése</button>
+      </form>
+    </div>
+
+    <div class="scoreboard">
+      <h2>Korábbi játszmák</h2>
+      <div class="list">
+        <div class="placed" *ngFor="let score of scores; let i = index">
+          <div class="data">
+            <div class="place">
+              #{{i + 1}}
+            </div>
+            {{score.category}} - {{score.level}} kredit - {{timeToString(score.time)}}
+          </div>
+        </div>
       </div>
-      <div class="input-box">
-        <label for="email">e-mail cím</label>
-        <input id="email" class="disabled" readonly value="{{this.userdata?.email}}" type="text">
-      </div>
-      <div class="input-box">
-        <label for="firstName">vezetéknév</label>
-        <input id="firstName" value="{{this.userdata?.firstName}}" type="text" formControlName="firstName">
-      </div>
-      <div class="input-box">
-        <label for="lastName">keresztnév</label>
-        <input id="lastName" value="{{this.userdata?.lastName}}" type="text" formControlName="lastName">
-      </div>
-      <button (click)="updateuser()">Profil frissítése</button>
-    </form>
+    </div>
   </div>
 </div>
