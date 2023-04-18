@@ -135,3 +135,25 @@
 .content .register .login a:hover {
   text-decoration: underline;
 }
+
+@media screen and (max-width: 480px) {
+  .content .register h2 {
+    
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .content .register .input-box{
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content .register .row .input-box {
+    width: 100%;
+  }
+
+  .content .register .button-holder {
+    text-align: center;
+  }
+}
