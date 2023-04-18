@@ -1,6 +1,32 @@
 @import "./intro.scss";
 @import "./chart.scss";
 
+.vago {
+  position: absolute;
+  left: 25px;
+  top: 0;
+  display: flex;
+  height: 120px;
+  z-index: -1;
+  transform: scaleX(-1);
+  animation: vagoin 20s;
+}
+
+@keyframes vagoin {
+  0% {
+    top:0;
+  }
+  30% {
+    top:-115px;
+  }
+  70% {
+    top: -115px;
+  }
+  100% {
+    top: 0%;
+  }
+}
+
 .content {
   padding-top: 60px;
   width: 100%;
@@ -12,6 +38,7 @@
   justify-content: center;
   align-items: center;
   background-color: #983630;
+  z-index: -2;
 }
 
 .content .title {
