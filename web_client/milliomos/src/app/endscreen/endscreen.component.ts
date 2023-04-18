@@ -13,7 +13,10 @@ export class EndscreenComponent implements OnInit, OnDestroy{
   time: string = ""
   level: number = 0
   eredmeny: string = ''
+  easteregg: boolean = false
   ngOnInit(): void {
+    if(Math.random() < 0.05){
+      this.easteregg = true}
 
     let win1 = window.localStorage.getItem("win");
     if(win1){

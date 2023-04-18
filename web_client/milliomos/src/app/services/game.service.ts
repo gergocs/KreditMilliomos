@@ -75,15 +75,9 @@ export class GameService {
   }
 
   async giveUp(uid: string, save: boolean) {
-    await this.http.post(this.hostname + 'game/giveUp', {}, {
+    return this.http.post<GameState>(this.hostname + 'game/giveUp', {}, {
       headers: new HttpHeaders().set('tokenkey', uid).set('save', save.toString()),
-    }).toPromise().then(r => {
-
-      //200 if give up
-    }).catch(e => {
-
-      //TODO: process error
-    });
+    }).toPromise()
   }
 
   async endGame(uid: any, save: boolean) {
