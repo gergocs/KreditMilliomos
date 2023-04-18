@@ -201,3 +201,11 @@
     transform: rotate(20deg);
   }
 }
+
+@media screen and(max-width: 480px){
+  .modal-content {
+    width: 100%;
+  }
+
+  
+}

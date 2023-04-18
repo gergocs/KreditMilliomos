@@ -164,3 +164,23 @@
 .content .lobby .menu button:hover {
   background-color: #ee8c1d;
 }
+
+@media screen and (max-width: 480px){
+  .content .title h2{
+    font-size: 24px;
+  }
+
+  .content .lobby .menu .difficulty .buttons {
+    display: block;
+  }
+
+  .content .lobby .menu a i {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 20px;
+    transition: 0.4s;
+  }
+}

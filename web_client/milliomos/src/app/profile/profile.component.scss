@@ -1,4 +1,4 @@
-@import '../app.component.scss';
+@import "../app.component.scss";
 
 nav {
   padding: 14px 22px;
@@ -183,8 +183,59 @@ nav button i {
   background-color: #f6b191;
 }
 
-@media screen and (min-width: 480px) {
-  .input-box {
-    width: 95%;
+@media screen and (max-width: 480px) {
+  nav {
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  nav button {
+    margin: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  nav button:first-of-type {
+    margin-right: 0;
+  }
+
+  .content {
+    padding: 1px 1px;
+    width: 100%;
+  }
+
+  .content h2 {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 1em;
+  }
+
+  .content .custom-row {
+    width: 100%;
+    display: block;
+  }
+
+  .content .user-info {
+    width: 100%;
+    text-align: center;
+  }
+
+  .content .user-info form .input-box label{
+    text-align: left;
+  }
+
+  .content .user-info form button {
+    text-align: center;
+  }
+
+  .content .scoreboard{
+    width: 100%;
+  }
+
+  .content .scoreboard h2{
+    text-align: center;
   }
 }
