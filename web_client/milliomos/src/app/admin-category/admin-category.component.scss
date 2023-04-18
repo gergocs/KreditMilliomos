@@ -1,4 +1,4 @@
-@import '../app.component.scss';
+@import "../app.component.scss";
 
 nav {
   width: 100%;
@@ -201,4 +201,43 @@ nav ul li a i {
   border-radius: 8px;
   transition: 0.5s;
   cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+  nav {
+    padding: 12px;
+  }
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  nav ul li {
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .content .box {
+    text-align: center;
+  }
+
+  .content .box .new-category-button {
+    float: none;
+  }
+
+  .new-category .content {
+    width: 95%;
+  }
+
+  .new-category .content h2 {
+    text-align: center;
+  }
+
+  .new-category .content .save-button {
+    text-align: center;
+  }
+
+  .new-category .content .new-category-button-holder {
+    text-align: center;
+  }
 }
