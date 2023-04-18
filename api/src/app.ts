@@ -10,6 +10,7 @@ import {StatusCodes} from "./utilites/StatusCodes";
 import {sequelize} from './db/sequelizeConnector'
 import User from "./models/user";
 import TrustedTokenHandler from "./utilites/trustedTokenHandler";
+import CacheHandler from "./utilites/cacheHandler";
 
 class App {
     public app: express.Application
@@ -30,7 +31,6 @@ class App {
     }
 
     private initializeMiddlewares(): void {
-
         this.app.use(cors({
             origin: '*' // TODO limit for only specific origins
         }))
@@ -60,6 +60,26 @@ class App {
                 }
             }
         })
+
+        this.app.use((request, response, next) => {
+            if (request.method !== 'GET'
+                || (!request.path.includes('/scoreBoard')
+                    && !request.path.includes('playableQuestionCategories')
+                    && !request.path.includes('allUsers')
+                    && !request.path.includes('allQuestion'))) {
+                return next()
+            }
+
+            const key = request.originalUrl
+            const cached = CacheHandler.getInstance().get(key)
+
+            if (cached) {
+                response.send(cached)
+            } else {
+                next()
+            }
+        })
+
         this.app.use((req, res, next): void => {
             if (!req.path.includes('admin')) {
                 next()

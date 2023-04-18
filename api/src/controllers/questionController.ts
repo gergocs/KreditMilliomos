@@ -3,6 +3,7 @@ import Question from '../models/question'
 import {sequelize} from '../db/sequelizeConnector'
 import {StatusCodes} from '../utilites/StatusCodes'
 import QuestionCategory from '../models/questionCategory'
+import CacheHandler from "../utilites/cacheHandler";
 
 class QuestionController {
 
@@ -70,6 +71,7 @@ class QuestionController {
     getAllQuestion(request: Request, response: Response, next: NextFunction) {
         sequelize.sync().then(() => {
             Question.findAll().then(data => {
+                CacheHandler.getInstance().set(request.originalUrl, data, 30) // cache for 30 seconds
                 response.send(data)
                 response.end()
             }).catch(error => {
@@ -138,6 +140,7 @@ class QuestionController {
                         }).finally(() => {
                             counter--;
                             if (counter == 0) {
+                                CacheHandler.getInstance().set(request.originalUrl, result, 120) // cache for 120 seconds
                                 response.send(result)
                                 response.end()
                             }
