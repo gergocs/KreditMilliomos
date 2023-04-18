@@ -14,11 +14,12 @@ nav ul {
 
 nav ul li {
   padding: 16px 32px;
+  
 }
 
 nav ul li a {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   color: #333333;
   font-size: 18px;
   font-weight: 600;
@@ -104,4 +105,45 @@ nav ul li a i {
 
 ::ng-deep .modal-content {
   width: 550px;
+}
+
+@media screen and(max-width: 480px) {
+  .content{
+    width: 500px;
+    padding: 10px 10px;
+    font-size: 12px;
+  }
+
+  .content .box h2{
+    text-align: center;
+    font-size: 14px;
+  }
+
+  nav{
+    width: 100%;
+    padding: 0;
+    
+  }
+
+  nav ul {
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+    text-align: center;
+    
+  }
+
+  nav ul li{
+    padding: 0.3em 0 0.3em 1em;
+    margin-bottom: 1em;
+    display: flex;
+  }
+
+  nav ul li a{
+    padding: 0;
+    font-size: 10px;
+    
+  }
+  
 }
