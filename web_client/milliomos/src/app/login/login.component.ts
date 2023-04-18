@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -30,10 +31,10 @@ export class LoginComponent implements OnInit {
     this.loading = false;
   }
 
-  async onGoogleLogin(){
+  async onGoogleLogin() {
     this.loading = true
-    await this.auth.GoogleAuth().catch(error=>{
-      this.loading=false;
+    await this.auth.GoogleAuth().catch(error => {
+      this.loading = false;
     })
   }
 
@@ -65,13 +66,13 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
     try {
-      await this.auth.login(email, password).catch(error=>{
+      await this.auth.login(email, password).catch(error => {
         this.error = true
         this.errorMsg = "Hibás e-mail cím vagy jelszó!"
-        this.loading=false
+        this.loading = false
       })
       //this.router.navigate(["/main"]);
-    } catch {}
+    } catch { }
   }
 
   async onNewPass() {
@@ -90,8 +91,17 @@ export class LoginComponent implements OnInit {
 
     try {
       await this.firebase.sendPasswordResetEmail(this.newpassemail)
-    } catch(e) {} finally {
+    } catch (e) { } finally {
       alert("A jelszó visszaállításához szükséges link elküldésre került a megadott e-mail címre!")
     }
   }
+
+  // Loading animation testing
+  /* templateLoading(){
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 4000);
+  } */
+
 }

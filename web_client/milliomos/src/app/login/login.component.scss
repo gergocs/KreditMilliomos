@@ -1,4 +1,4 @@
-@import '../app.component.scss';
+@import "../app.component.scss";
 
 .content {
   padding: 60px 0;
@@ -223,4 +223,18 @@
   border-radius: 8px;
   transition: 0.5s;
   cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+  .content .login h2 {
+    text-align: center;
+  }
+
+  .login-holder {
+    text-align: center;
+  }
+
+  .forgot-password {
+    text-align: center;
+  }
 }

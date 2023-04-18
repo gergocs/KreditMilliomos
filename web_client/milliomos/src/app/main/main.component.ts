@@ -61,4 +61,6 @@ export class MainComponent implements OnInit {
       this.userdata = JSON.parse(userdatas)
   }
   }
+
+  
 }
