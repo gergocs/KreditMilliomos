@@ -165,9 +165,9 @@
 .how-to-play .content {
   padding: 24px;
   margin: 25px auto;
-  width: 630px;
+  width: 750px;
   position: relative;
-  display: block;
+  display: flex;
   text-align: left;
   background-color: #ffffff;
   border: none;
@@ -197,6 +197,25 @@
   transition: 0.5s;
   cursor: pointer;
 }
+
+ .how-to-play .content .how-to-list li{
+  text-align: justify;
+    font-size: 18px;
+ }
+
+ .how-to-play .content .how-to-list h5{
+    font-size: 18px;
+    margin: 20px 0 20px 0;
+    text-align: center;
+    
+ }
+
+ .how-to-play .content .how-to-list p{
+    font-size: 16px;
+    float: right;
+    margin-bottom: 0;
+    font-style: italic;
+ }
 
 @media screen and (max-width: 480px) {
   .content {
@@ -244,5 +263,14 @@
     font-weight: 600;
     text-align: center;
   }
+
+  .how-to-play .content .how-to-list li{
+  text-align: justify;
+    font-size: 14px;
+ }
+
+ .how-to-play .content{
+  display: flex;
+ }
   
 }
