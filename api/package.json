@@ -17,6 +17,7 @@
     "express": "^4.16.4",
     "firebase-admin": "^11.5.0",
     "morgan": "~1.9.1",
+    "node-cache": "^5.1.2",
     "nodemailer": "^6.9.1",
     "pg": "^8.9.0",
     "pg-hstore": "^2.3.4",
