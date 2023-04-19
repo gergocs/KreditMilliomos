@@ -224,7 +224,13 @@ class RunningGameStorage {
                 return undefined
             }
 
-            return game.useSwitch()
+            try {
+                return game.useSwitch()
+            } catch (error) {
+                return undefined
+            }
+
+
         } catch (error) {
             throw new GameException('Error in RunninGameStorage:useSwitch method\n' + error)
         }

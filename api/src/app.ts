@@ -1,4 +1,4 @@
-import express from 'express'
+import express, {Application} from 'express'
 import * as bodyParser from 'body-parser'
 import * as admin from 'firebase-admin'
 import {type Auth, getAuth} from 'firebase-admin/auth'
@@ -13,7 +13,7 @@ import TrustedTokenHandler from "./utilites/trustedTokenHandler";
 import CacheHandler from "./utilites/cacheHandler";
 
 class App {
-    public app: express.Application
+    public app: Application
     public readonly port: number
     private readonly fireAuth: Auth
 
@@ -118,6 +118,23 @@ class App {
     }
 
     public listen(isHttps = false): void {
+        sequelize.validate().then(r => {
+            console.log('Database connection is valid')
+            sequelize.authenticate().then(r => {
+                console.log("Authenticated successfully")
+            }).catch(e => {
+                console.log("Failed to authenticate")
+                console.log(e)
+                process.exit()
+                return
+            })
+        }).catch(e => {
+            console.log('Database connection is invalid')
+            console.log(e)
+            process.exit()
+            return
+        })
+
         if (isHttps) {
             const options = {
                 key: readFileSync('/etc/letsencrypt/live/kreditmilliomos.mooo.com/privkey.pem'),
