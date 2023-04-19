@@ -124,7 +124,12 @@ class GameController {
                         }
                     })
                 }
+
                 response.end()
+            }).catch(err => {
+                response.sendStatus(StatusCodes.BadRequest)
+                response.end()
+                return
             })
         }
 
@@ -147,6 +152,10 @@ class GameController {
                         win: undefined
                     })
                 }
+            }).catch(error => {
+                response.sendStatus(StatusCodes.BadRequest)
+                response.end()
+                return
             })
         }
     }
@@ -173,7 +182,9 @@ class GameController {
         try {
             question = RunningGameStorage.instance().useHalf(token)
         } catch (e) {
-            response.send(StatusCodes.BadRequest)
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
         }
 
         if (!question) {
@@ -197,7 +208,7 @@ class GameController {
         } else {
             let level = RunningGameStorage.instance().getLevel(token)
 
-            if (!level){
+            if (!level) {
                 level = 0
             } else {
                 level--
