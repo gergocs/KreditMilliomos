@@ -195,15 +195,25 @@ class GameController {
             response.sendStatus(StatusCodes.BadRequest)
             response.end()
         } else {
-            response.send(response.send({
+            let level = RunningGameStorage.instance().getLevel(token)
+
+            if (!level){
+                level = 0
+            } else {
+                level--
+            }
+
+            response.send({
                 question: undefined,
                 win: {
                     time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
-                    level: RunningGameStorage.instance().getLevel(token),
+                    level: level,
                     difficulty: RunningGameStorage.instance().getDifficulty(token),
-                    win: true
+                    win: level != 0
                 }
-            }))
+            })
+
+            RunningGameStorage.instance().endGame(token, false)
         }
 
         response.end()

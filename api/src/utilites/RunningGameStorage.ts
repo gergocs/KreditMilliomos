@@ -109,7 +109,6 @@ class RunningGameStorage {
                 })
         }
 
-        this.runningGames.delete(token)
         return true
     }
 

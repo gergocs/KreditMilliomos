@@ -87,7 +87,7 @@ export class ScoreBoardController {
 
                     let user = await User.findOne({where: {tokenKey: key}});
 
-                    if (user) {
+                    if (user && !user.isAdmin) {
                         retVal.set(user.name, value)
                     }
                 }
