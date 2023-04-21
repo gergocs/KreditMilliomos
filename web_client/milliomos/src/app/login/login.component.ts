@@ -25,6 +25,13 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(public auth: AuthService, protected router: Router, public firebase: AngularFireAuth) {
+    let beRunning = this.auth.isBackEndRunning();
+
+    beRunning.then(r => {
+      if (!r) {
+        this.router.navigate(['/main']);
+      }
+    });
   }
 
   ngOnInit(): void {

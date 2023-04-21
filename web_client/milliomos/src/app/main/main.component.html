@@ -2,7 +2,7 @@
   <img src="../../assets/images/kreditmilliomos-red.png">
   <h2>Üdvözöllek a Kreditmilliomos kvízjáték oldalán!</h2>
   <p>A játék számos egyetemi tárgyból és vizsgából származó kérdést tartalmaz, így segít abban, hogy átfogóbban és hatékonyabban készülj fel vizsgáidra. Kvízünk szórakoztató és interaktív módja annak, hogy még jobban elsajátítsd a nehézséget okozó tananyagot.</p>
-  <div class="buttons">
+  <div class="buttons" *ngIf="beRunning">
     <button *ngIf="!this.loggedin" routerLink="/register">Regisztráció</button>
     <button *ngIf="!this.loggedin" routerLink="/login">Bejelentkezés</button>
     <button *ngIf="this.loggedin" routerLink="/profile">Profilom</button>

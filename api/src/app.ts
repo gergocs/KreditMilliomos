@@ -37,7 +37,7 @@ class App {
 
         this.app.use(bodyParser.json())
         this.app.use((req, res, next): void => {
-            if (req.method === 'GET' && req.path.includes('/scoreBoard/top')){
+            if (req.method === 'GET' && (req.path.includes('/scoreBoard/top') || req.path.includes('/health'))){
                 next()
                 return
             } else {
