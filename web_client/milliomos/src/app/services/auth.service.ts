@@ -60,6 +60,15 @@ export class AuthService {
     })
   }
 
+  async isBackEndRunning() {
+    try {
+      const res = await this.http.get(this.hostname + "health").toPromise();
+      return true;
+    } catch (e:any) {
+      return e.status === 200;
+    }
+  }
+
   async isAdmin(){
     try {
       if (this.user) {

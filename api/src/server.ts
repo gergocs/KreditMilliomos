@@ -5,6 +5,7 @@ import gameController from "./controllers/gameController";
 import * as dotenv from 'dotenv'
 import * as process from "process";
 import {ScoreBoardController} from "./controllers/scoreBoardController";
+import HealthController from './controllers/healthController';
 
 dotenv.config()
 
@@ -13,7 +14,8 @@ const app = new App(
         new UserController(),
         new QuestionController(),
         new gameController(),
-        new ScoreBoardController()
+        new ScoreBoardController(),
+        new HealthController()
     ],
     process.env.PORT || 8080
 )

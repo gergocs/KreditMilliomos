@@ -23,32 +23,45 @@ export class MainComponent implements OnInit {
     return 0;
   }
 
+  beRunning = false;
+
   public showForm: boolean = false;
 
   constructor(public auth: AuthService, protected router: Router, private scoreService: ScoreService) {
-    this.customFilter.addWords(...["szar", "fos"]);
-    
-    if (!auth.user?.emailVerified && auth.authState == 2) {
-      auth.user?.sendEmailVerification()
-      console.log(auth.user)
-      window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet! (Nézd meg a spam mappádat is!)");
-      auth.logout();
-    }
-    if (!window.localStorage.getItem("userdatas")){
-      auth.logout();
-    }
+    let beRunning = this.auth.isBackEndRunning();
 
-    this.scoreService.getTopX().subscribe(score => {
-      this.scores = new Map<string, number>();
-      let tmp = new Map<string, number>();
+    beRunning.then(r => {
+      this.beRunning = r;
 
-      // @ts-ignore
-      Object.entries(score.result).forEach((entry) => {
-        // @ts-ignore
-        tmp.set(this.customFilter.clean(entry[0]), <number>entry[1]);
-      });
-      this.scores = tmp;
-    });
+      if (!r){
+        localStorage.clear()
+        window.alert("Néhány óra múlva próbáld újra");
+      } else {
+        this.customFilter.addWords(...["szar", "fos"]);
+
+        if (!auth.user?.emailVerified && auth.authState == 2) {
+          auth.user?.sendEmailVerification()
+          console.log(auth.user)
+          window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet! (Nézd meg a spam mappádat is!)");
+          auth.logout();
+        }
+        if (!window.localStorage.getItem("userdatas")){
+          auth.logout();
+        }
+
+        this.scoreService.getTopX().subscribe(score => {
+          this.scores = new Map<string, number>();
+          let tmp = new Map<string, number>();
+
+          // @ts-ignore
+          Object.entries(score.result).forEach((entry) => {
+            // @ts-ignore
+            tmp.set(this.customFilter.clean(entry[0]), <number>entry[1]);
+          });
+          this.scores = tmp;
+        });
+      }
+    })
 
   }
 
@@ -62,5 +75,5 @@ export class MainComponent implements OnInit {
   }
   }
 
-  
+
 }
