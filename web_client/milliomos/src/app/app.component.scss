@@ -109,7 +109,11 @@
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 800px) {
+  .loading {
+    width: 65%;
+  }
+
   .loadingpic {
     width: 100%;
   }

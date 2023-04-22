@@ -26,34 +26,36 @@
   </label>
   <div class="box" style="margin-bottom: 32px;" id="file-display" *ngIf="importsVisible">
     <h2>Betöltött kérdések</h2>
-    <table>
-      <thead>
-        <tr>
-          <th style="width: 11%">kategória</th>
-          <th>kérdés</th>
-          <th style="width: 8%;">nehézség</th>
-          <th style="width: 13%;">válasz (A)</th>
-          <th style="width: 13%;">válasz (B)</th>
-          <th style="width: 13%;">válasz (C)</th>
-          <th style="width: 13%;">válasz (D)</th>
-          <th style="width: 8%;">helyes válasz</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody *ngFor="let item of Importeditems">
-        <tr>
-          <td>{{item.category}}</td>
-          <td>{{item.question}}</td>
-          <td>{{item.level}}</td>
-          <td>{{item.answerA}}</td>
-          <td>{{item.answerB}}</td>
-          <td>{{item.answerC}}</td>
-          <td>{{item.answerD}}</td>
-          <td>{{item.answerCorrect}}</td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+    <div style="width: 100%; overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 11%">kategória</th>
+            <th>kérdés</th>
+            <th style="width: 8%;">nehézség</th>
+            <th style="width: 13%;">válasz (A)</th>
+            <th style="width: 13%;">válasz (B)</th>
+            <th style="width: 13%;">válasz (C)</th>
+            <th style="width: 13%;">válasz (D)</th>
+            <th style="width: 8%;">helyes válasz</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let item of Importeditems">
+          <tr>
+            <td>{{item.category}}</td>
+            <td>{{item.question}}</td>
+            <td>{{item.level}}</td>
+            <td>{{item.answerA}}</td>
+            <td>{{item.answerB}}</td>
+            <td>{{item.answerC}}</td>
+            <td>{{item.answerD}}</td>
+            <td>{{item.answerCorrect}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <button (click)="this.save()" class="save-button">Betöltött kérdések mentése</button>
     <button (click)="this.delete()" class="delete-button">Betöltött kérdések törlése</button>
   </div>

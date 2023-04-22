@@ -2,34 +2,20 @@
 @import "./chart.scss";
 
 .vago {
+  height: 120px;
   position: absolute;
   left: 25px;
   top: 0;
   display: flex;
-  height: 120px;
-  z-index: -1;
   transform: scaleX(-1);
   animation: vagoin 20s;
-}
-
-@keyframes vagoin {
-  0% {
-    top:0;
-  }
-  30% {
-    top:-115px;
-  }
-  70% {
-    top: -115px;
-  }
-  100% {
-    top: 0%;
-  }
+  z-index: -1;
 }
 
 .content {
   padding-top: 60px;
   width: 100%;
+  min-height: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -371,44 +357,97 @@
   border: none;
 }
 
-@media screen and (max-width: 480px) {
-  .content .title h2 {
-    font-size: 24px;
+@keyframes vagoin {
+  0% {
+    top:0;
   }
 
+  30% {
+    top:-115px;
+  }
+
+  70% {
+    top: -115px;
+  }
+
+  100% {
+    top: 0%;
+  }
+}
+
+@media screen and (max-width: 1500px) {
+  .content .game .question {
+    margin-right: 30px;
+  }
+}
+
+@media screen and (max-width: 1380px) {
   .content .game {
-    width: 100%;
-    display: block;
-    padding: 1px;
+    padding: 60px 30px;
+  }
+}
+
+@media screen and (max-width: 1290px) {
+  .content .game {
+    flex-direction: column;
+    align-items: center;
   }
 
   .content .game .question {
-    width: 100%;
     margin: 0;
   }
 
-  .content .game .question .answers {
-    margin-right: 80px;
+  .content .game .sidebar {
+    margin-top: 25px;
+    width: 950px;
+  }
+
+  .content .game .sidebar .helps {
+    margin-bottom: 15px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .content .game .question,
+  .content .game .sidebar {
+    width: 100%;
   }
 
   .content .game .question .answers .answer {
     width: 100%;
   }
+}
 
-  .content .game .question .answers .answer::before {
-    top: 16px;
-    left: 0px;
-    font-size: 25px;
+@media screen and (max-width: 850px) {
+  .content .game .question .answers {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .content .title h2 {
+    font-size: 30px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .content .game .question {
+    padding: 16px 32px;
   }
 
-  .content .game .question button {
-    padding: 8px 16px;
+  .volume {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .content .title h2 {
+    font-size: 22px;
   }
 
-  .content .game .sidebar{
-    margin-top: 2em;
-    width: 100%;
+  .content .game .question {
+    padding: 12px 20px;
   }
-
-
 }
