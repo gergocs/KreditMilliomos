@@ -180,6 +180,20 @@ class RunningGameStorage {
         return game.time
     }
 
+    isTimeRunning(token: string): boolean {
+        if (!this.isGameRunning(token)) {
+            return false
+        }
+
+        let game = this.runningGames.get(<string>token)
+
+        if (!game) {
+            return false
+        }
+
+        return game.isTimerRunning
+    }
+
     getRemainingTime(token: string) {
         if (!this.isGameRunning(token)) {
             return -1
@@ -191,7 +205,7 @@ class RunningGameStorage {
             return -1
         }
 
-        return game.time - BigInt((new Date()).getTime())
+        return game.endOfQuestionTime - (new Date()).getTime()
     }
 
     useHalf(token: string): Question | undefined {

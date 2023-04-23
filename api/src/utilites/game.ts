@@ -9,7 +9,7 @@ class Game {
 
     private readonly _time: bigint /* start of (game) time represented in unix epoch */
     private readonly maxTimePerQuestion: number /* may time per Question */
-    private endOfQuestionTime: number /* time when the answer will be invalid */
+    private _endOfQuestionTime: number /* time when the answer will be invalid */
     private _question: Question | undefined /* current question */
     private _category: string /* current question */
     private half: boolean /* half the questions */
@@ -19,6 +19,7 @@ class Game {
     private _level: number /* current level */
     private previousQuestion: Array<string> /* previous questions */
     private _lastUpdate: number /* time when the current game has been interacted with */
+    private _isTimerRunning: boolean /* whether the gametimer is running */
 
     constructor(time: bigint, subject: string, difficulty: GameModes, maxTimePerQuestion: number, tokenKey: string) {
         this._time = time
@@ -30,7 +31,8 @@ class Game {
         this.difficulty = difficulty
         this._lastUpdate = new Date().getTime()
         this.previousQuestion = new Array<string>()
-        this.maxTimePerQuestion = (maxTimePerQuestion + 7) * 1000 // s to ms extra 7 seconds for music and similar things
+        this.maxTimePerQuestion = maxTimePerQuestion * 1000
+        this.isTimerRunning = false
 
         sequelize.sync()
             .then(() => {
@@ -49,6 +51,18 @@ class Game {
             .catch(error => {
                 this._level = 1;
             })
+    }
+
+    get endOfQuestionTime(): number {
+        return this._endOfQuestionTime;
+    }
+
+    get isTimerRunning(): boolean {
+        return this._isTimerRunning;
+    }
+
+    set isTimerRunning(value: boolean) {
+        this._isTimerRunning = value;
     }
 
     get time(): bigint {
@@ -76,6 +90,8 @@ class Game {
     }
 
     async evaluateGame(answer: string): Promise<Question | boolean> {
+        this._isTimerRunning = false
+
         if (!this.hasQuestion()) {
             return await this.generateQuestion();
         }
@@ -266,7 +282,8 @@ class Game {
                             this._question = rows[this.getRandomInt(0, count - 1)]
                             this.previousQuestion.push(this._question.question)
                             this._level += offset
-                            this.endOfQuestionTime = new Date().getTime() + this.maxTimePerQuestion // number + Infinity = Infinity
+                            this._endOfQuestionTime = new Date().getTime() + this.maxTimePerQuestion // number + Infinity = Infinity
+                            this._isTimerRunning = true
                             resolve(this._question)
                         })
                         .catch(error => {
@@ -284,7 +301,7 @@ class Game {
             throw new GameException("The game doesn't generated any questions!")
         }
 
-        return ((new Date()).getTime() < this.endOfQuestionTime) && answer.toLowerCase() === this._question.answerCorrect.toLowerCase()
+        return ((new Date()).getTime() < this._endOfQuestionTime) && answer.toLowerCase() === this._question.answerCorrect.toLowerCase()
     }
 
     private getRandomInt(min: number, max: number): number {

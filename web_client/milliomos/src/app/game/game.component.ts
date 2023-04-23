@@ -5,6 +5,7 @@ import {AuthService} from "../services/auth.service";
 import { Router } from '@angular/router';
 import { AnimationEvent } from '@angular/animations';
 import { trigger, transition, style, animate , state } from '@angular/animations';
+import {EventSourcePolyfill} from "event-source-polyfill";
 
 @Component({
   selector: 'app-game',
@@ -74,6 +75,8 @@ export class GameComponent implements OnInit, OnDestroy {
   animationState: string = 'rotationEnd';
   diff: number = 1;
   vago: boolean = false;
+
+  private eventSource: EventSourcePolyfill | undefined
   constructor(
     protected auth: AuthService,
     protected gameService: GameService,
@@ -452,6 +455,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   // Exit game code
   exitGame() {
+    this.eventSource?.close()
     this.backgroundMusic.pause()
     this.wrongAnswerSound.play()
     window.localStorage.removeItem('startedQuestion')
@@ -612,27 +616,36 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-startCountdown(){
-  if(this.startNum == 0){return}
+startCountdown() {
+  if (this.startNum === 0) {
+    return;
+  }
+
   this.currentNum = this.startNum;
-  clearInterval(this.refreshIntervalId)
   let eCountdown = document.getElementById('countdown')
-  if(eCountdown){
+
+  if (this.eventSource){
+    this.eventSource.close()
+  }
+
+  if (eCountdown) {
     eCountdown.textContent = this.currentNum.toString()
-    this.refreshIntervalId = setInterval(() =>{
-      setTimeout(function() { eCountdown?.classList.add('puffer')}, 800);
-      if (this.currentNum == 0){
-        clearInterval(this.refreshIntervalId)
-        setTimeout(()=> {
-        if(!this.submitted)
-            this.exitGame()
-        },1000)
+    this.eventSource = this.gameService.getTime(this.userid)
+    this.eventSource.onmessage = (data) => {
+      if (this.currentNum == 0) {
+        setTimeout(() => {
+          if (!this.submitted)
+            this.exitGame();
+        }, 1000)
       }
-      this.currentNum--
-      if(eCountdown){
-      eCountdown.textContent = (this.currentNum+1).toString()
-      eCountdown.classList.remove('puffer')}
-    },1000);
+
+      this.currentNum = Math.floor(data.data / 1000);
+
+      if (eCountdown) {
+        eCountdown.textContent = (this.currentNum + 1).toString();
+        eCountdown.classList.remove('puffer');
+      }
+    }
   }
 }
 
