@@ -135,3 +135,25 @@
 .content .register .login a:hover {
   text-decoration: underline;
 }
+
+@media screen and (max-width: 730px) {
+  .content .register {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .content .register .row {
+    flex-direction: column;
+  }
+
+  .content .register .row .input-box {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 525px) {
+  .content {
+    padding: 40px 0;
+  }
+}

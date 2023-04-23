@@ -6,7 +6,8 @@
   <ul>
     <li><a routerLink="/admin-users"><i class="material-icons">supervisor_account</i>Felhasználók kezelése</a></li>
     <li><a routerLink="/admin-category"><i class="material-icons">category</i>Kategóriák kezelése</a></li>
-    <li><a routerLink="/admin-questions" class="active"><i class="material-icons">help_outline</i>Kérdések kezelése</a></li>
+    <li><a routerLink="/admin-questions" class="active"><i class="material-icons">help_outline</i>Kérdések kezelése</a>
+    </li>
     <li><a (click)="this.authservice.logout()"><i class="material-icons">exit_to_app</i>Kijelentkezés</a></li>
   </ul>
 </nav>
@@ -17,53 +18,63 @@
       {{importErrorMsg}}
     </div>
     <img src="../../assets/images/folder.png">
-    <span class="title">Kattintsd ide a kérdéseket tartalmazó <span class="highlight">.csv fájl</span> feltöltéséhez!</span>
+    <span class="title">Kattintsd ide a kérdéseket tartalmazó <span class="highlight">.csv fájl</span>
+      feltöltéséhez!</span>
     <div class="line"></div>
     <input id="formFileSm" type="file" (change)="this.fileChanged($event)">
     <button type="button" (click)="this.load()">Betöltés</button>
   </label>
   <div class="box" style="margin-bottom: 32px;" id="file-display" *ngIf="importsVisible">
     <h2>Betöltött kérdések</h2>
-    <table>
-      <thead>
-        <tr>
-          <th style="width: 11%">kategória</th>
-          <th>kérdés</th>
-          <th style="width: 8%;">nehézség</th>
-          <th style="width: 13%;">válasz (A)</th>
-          <th style="width: 13%;">válasz (B)</th>
-          <th style="width: 13%;">válasz (C)</th>
-          <th style="width: 13%;">válasz (D)</th>
-          <th style="width: 8%;">helyes válasz</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody *ngFor="let item of Importeditems">
-        <tr>
-          <td>{{item.category}}</td>
-          <td>{{item.question}}</td>
-          <td>{{item.level}}</td>
-          <td>{{item.answerA}}</td>
-          <td>{{item.answerB}}</td>
-          <td>{{item.answerC}}</td>
-          <td>{{item.answerD}}</td>
-          <td>{{item.answerCorrect}}</td>
-          <td></td>
-        </tr>
-    </tbody>
-  </table>
-  <button (click)="this.save()" class="save-button" >Betöltött kérdések mentése</button>
-  <button (click)="this.delete()" class="delete-button" >Betöltött kérdések törlése</button>
+    <div style="width: 100%; overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 11%">kategória</th>
+            <th>kérdés</th>
+            <th style="width: 8%;">nehézség</th>
+            <th style="width: 13%;">válasz (A)</th>
+            <th style="width: 13%;">válasz (B)</th>
+            <th style="width: 13%;">válasz (C)</th>
+            <th style="width: 13%;">válasz (D)</th>
+            <th style="width: 8%;">helyes válasz</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let item of Importeditems">
+          <tr>
+            <td>{{item.category}}</td>
+            <td>{{item.question}}</td>
+            <td>{{item.level}}</td>
+            <td>{{item.answerA}}</td>
+            <td>{{item.answerB}}</td>
+            <td>{{item.answerC}}</td>
+            <td>{{item.answerD}}</td>
+            <td>{{item.answerCorrect}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button (click)="this.save()" class="save-button">Betöltött kérdések mentése</button>
+    <button (click)="this.delete()" class="delete-button">Betöltött kérdések törlése</button>
   </div>
 
   <div class="box">
-    <button (click)="showForm = true" class="new-question-button">Új kérdés</button>
-    <select #category (change)="onCategoryChange(category.value)">
-      <option [defaultSelected]=true [ngValue]="" value="all">Mind</option>
-      <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">{{category.category}}</option>
-    </select>
-
     <h2>Összes jelenlegi kérdés</h2>
+    <div class="new-question-button-holder">
+      <button (click)="showForm = true" class="new-question-button">Új kérdés</button>
+    </div>
+    <div class="select-holder">
+      <select #category (change)="onCategoryChange(category.value)">
+        <option [defaultSelected]=true [ngValue]="" value="all">Mind</option>
+        <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">
+          {{category.category}}
+        </option>
+      </select>
+    </div>
+
+
     <div style="width: 100%; overflow-x: auto;">
       <table>
         <thead>
@@ -81,15 +92,16 @@
         </thead>
         <tbody>
           <tr *ngFor="let question of allquestion | questionFilter:filter; let i = index" [attr.data-index]="i">
-              <td>{{question.category}}</td>
-              <td>{{question.question}}</td>
-              <td>{{question.level}}</td>
-              <td [ngClass]="{'correct' : question.answerCorrect=='A'}">{{question.answerA}}</td>
-              <td [ngClass]="{'correct' : question.answerCorrect=='B'}">{{question.answerB}}</td>
-              <td [ngClass]="{'correct' : question.answerCorrect=='C'}">{{question.answerC}}</td>
-              <td [ngClass]="{'correct' : question.answerCorrect=='D'}">{{question.answerD}}</td>
-              <td>{{question.answerCorrect}}</td>
-              <td><button class="material-icons" (click)="this.deleteexistingquestion(question.question,i)">delete</button></td>
+            <td>{{question.category}}</td>
+            <td>{{question.question}}</td>
+            <td>{{question.level}}</td>
+            <td [ngClass]="{'correct' : question.answerCorrect=='A'}">{{question.answerA}}</td>
+            <td [ngClass]="{'correct' : question.answerCorrect=='B'}">{{question.answerB}}</td>
+            <td [ngClass]="{'correct' : question.answerCorrect=='C'}">{{question.answerC}}</td>
+            <td [ngClass]="{'correct' : question.answerCorrect=='D'}">{{question.answerD}}</td>
+            <td>{{question.answerCorrect}}</td>
+            <td><button class="material-icons"
+                (click)="this.deleteexistingquestion(question.question,i)">delete</button></td>
           </tr>
         </tbody>
       </table>
@@ -100,45 +112,47 @@
 <div class="new-question" *ngIf="showForm">
   <div class="content">
     <form [formGroup]="questionForm" (ngSubmit)="onCreateQuestion()">
-        <h2>Új kérdés</h2>
-        <div class="row">
-          <div class="input-box">
-            <label for="category">kategória</label>
-            <select formControlName="category" required>
-              <option [defaultSelected]=true [ngValue]="">Válassz kategóriát!</option>
-              <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">{{category.category}}</option>
+      <h2>Új kérdés</h2>
+      <div class="row">
+        <div class="input-box">
+          <label for="category">kategória</label>
+          <select formControlName="category" required>
+            <option [defaultSelected]=true [ngValue]="">Válassz kategóriát!</option>
+            <option *ngFor="let category of allQuestionCategories; let i = index" [attr.data-index]="i">
+              {{category.category}}</option>
           </select>
-          </div>
-          <div class="input-box">
-              <label for="level">nehézség</label>
-              <input type="number" id="level" placeholder="1-15" formControlName="level" required>
-          </div>
-          <div class="input-box">
-            <label for="correctAnswer">helyes válasz</label>
-            <input type="text" id="correctAnswer" placeholder="A-D" formControlName="correctAnswer" required>
-          </div>
         </div>
         <div class="input-box">
-          <label for="question">kérdés</label>
-          <input type="textarea" id="question" placeholder="Mi legyen a kérdés?" formControlName="question" minlength="6" required>
+          <label for="level">nehézség</label>
+          <input type="number" id="level" placeholder="1-15" formControlName="level" required>
+        </div>
+        <div class="input-box">
+          <label for="correctAnswer">helyes válasz</label>
+          <input type="text" id="correctAnswer" placeholder="A-D" formControlName="correctAnswer" required>
+        </div>
       </div>
-        <div class="input-box">
-            <label for="answerA">válasz (A)</label>
-            <input type="text" id="answerA" placeholder="A válasz" formControlName="answerA" required>
-        </div>
-        <div class="input-box">
-            <label for="answerB">válasz (B)</label>
-            <input type="text" id="answerB" placeholder="B válasz" formControlName="answerB" required>
-        </div>
-        <div class="input-box">
-            <label for="answerC">válasz (C)</label>
-            <input type="text" id="answerC" placeholder="C válasz" formControlName="answerC" required>
-        </div>
-        <div class="input-box">
-            <label for="answerD">válasz (D)</label>
-            <input type="text" id="answerD" placeholder="D válasz" formControlName="answerD" required>
-        </div>
-        <button type="submit" class="save-button" id="submit_question_button">Mentés</button>
+      <div class="input-box">
+        <label for="question">kérdés</label>
+        <input type="textarea" id="question" placeholder="Mi legyen a kérdés?" formControlName="question" minlength="6"
+          required>
+      </div>
+      <div class="input-box">
+        <label for="answerA">válasz (A)</label>
+        <input type="text" id="answerA" placeholder="A válasz" formControlName="answerA" required>
+      </div>
+      <div class="input-box">
+        <label for="answerB">válasz (B)</label>
+        <input type="text" id="answerB" placeholder="B válasz" formControlName="answerB" required>
+      </div>
+      <div class="input-box">
+        <label for="answerC">válasz (C)</label>
+        <input type="text" id="answerC" placeholder="C válasz" formControlName="answerC" required>
+      </div>
+      <div class="input-box">
+        <label for="answerD">válasz (D)</label>
+        <input type="text" id="answerD" placeholder="D válasz" formControlName="answerD" required>
+      </div>
+      <button type="submit" class="save-button" id="submit_question_button">Mentés</button>
     </form>
     <button (click)="showForm = false" class="close"><i class="material-icons">close</i></button>
   </div>

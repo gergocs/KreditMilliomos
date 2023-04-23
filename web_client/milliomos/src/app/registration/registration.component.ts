@@ -26,7 +26,15 @@ export class RegistrationComponent implements OnInit {
     passwordAgain: new FormControl('')
   });
 
-  constructor(public auth: AuthService, @Inject(Router) private router: Router) { }
+  constructor(public auth: AuthService, @Inject(Router) private router: Router) {
+    let beRunning = this.auth.isBackEndRunning();
+
+    beRunning.then(r => {
+      if (!r) {
+        this.router.navigate(['/main']);
+      }
+    });
+  }
 
 
   ngOnInit(): void {

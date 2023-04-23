@@ -3,6 +3,7 @@ import {sequelize} from "../db/sequelizeConnector";
 import ScoreBoard from "../models/scoreBoard";
 import {StatusCodes} from "../utilites/StatusCodes";
 import User from "../models/user";
+import CacheHandler from "../utilites/cacheHandler";
 
 export class ScoreBoardController {
     public readonly path = '/scoreBoard'
@@ -73,8 +74,10 @@ export class ScoreBoardController {
 
                 for (let [key, value] of results.entries()) {
                     if (retVal.size >= x || retVal.size + 1 === results.size) {
-                        // This endpoint is expensive so we must cache the response.
-                        response.set('Cache-Control', 'shared, s-max-age=1800'); // 30 minute
+                        // This endpoint is expensive, so we must cache the response.
+                        CacheHandler.getInstance().set(request.originalUrl, {
+                            result: Object.fromEntries(retVal)
+                        }, 300) // cache for 5 minutes
                         response.send({
                             result: Object.fromEntries(retVal)
                         })
@@ -84,7 +87,7 @@ export class ScoreBoardController {
 
                     let user = await User.findOne({where: {tokenKey: key}});
 
-                    if (user) {
+                    if (user && !user.isAdmin) {
                         retVal.set(user.name, value)
                     }
                 }

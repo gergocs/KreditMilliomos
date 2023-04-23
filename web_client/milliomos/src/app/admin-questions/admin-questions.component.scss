@@ -339,3 +339,69 @@ nav ul li a i {
   transition: 0.5s;
   cursor: pointer;
 }
+
+@media screen and (max-width: 1150px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  .content {
+    padding: 0 60px 48px 60px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  nav {
+    padding: 12px 0;
+  }
+
+  .content {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .content .box .save-button {
+    margin: 20px 0;
+  }
+
+  .content .box .delete-button {
+    padding: 8px 41px;
+    margin: 0;
+  }
+
+  .new-question .content {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .new-question .content .row {
+    flex-direction: column;
+  }
+
+  .new-question .content .row .input-box {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 525px) {
+  .content {
+    padding: 0 12px 30px 12px;
+  }
+
+  .content .file-box {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .content .box .new-question-button {
+    float: initial;
+  }
+
+  .content .box select {
+    float: initial;
+    margin: 0;
+  }
+}

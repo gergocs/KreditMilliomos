@@ -25,6 +25,7 @@
   </div>
   <div class="game">
     <div class="question">
+      <img *ngIf="vago" class="vago" src="../../assets/images/vago.png">
       <div class="volume material-icons">
         volume_up
         <input type="range" min="0" max="100" [value]="hangero" #volume (input)="onVolumeChange(volume.value)">
@@ -83,17 +84,20 @@
     <div class="sidebar">
       <a (click)="exitGame()"><i class="material-icons">exit_to_app</i></a>
       <div class="helps">
-        <div class="help" id="halving_help">
+        <div *ngIf="!helps[0] || !helps[1] || !helps[2]" class="help" id="halving_help">
           <i class="material-icons" (click)="use_halving()">balance</i>
           <div id="halving_line" class="line" hidden></div>
         </div>
-        <div class="help" id="group_help">
+        <div *ngIf="!helps[0] || !helps[1] || !helps[2]" class="help" id="group_help">
           <i class="material-icons" (click)="use_audience()">group</i>
           <div id="group_line" class="line" hidden></div>
         </div>
-        <div class="help" id="skip_help">
+        <div *ngIf="!helps[0] || !helps[1] || !helps[2]" class="help" id="skip_help">
           <i class="material-icons" (click)="use_skip()">cached</i>
           <div id="skip_line" class="line" hidden></div>
+        </div>
+        <div *ngIf="helps[0] && helps[1] && helps[2]" class="help" >
+          <i class="material-icons" (click)="giveup()">outlined_flag</i>
         </div>
       </div>
       <ul>

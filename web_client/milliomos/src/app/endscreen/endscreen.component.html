@@ -1,8 +1,9 @@
 <div class="wrapper">
-  <div class="head"></div>
-  <div class="mouth"></div>
-  <div class="eye"></div>
-  <div class="eye2"></div>
+  <div *ngIf="!easteregg" class="head"></div>
+  <img *ngIf="easteregg" class="head" src="../../assets/images/easteregg.png">
+  <div *ngIf="!easteregg" [ngStyle]="this.win.win ? {'border-width': '0 0 0.2vw 0', 'top': '15.5%'} : {'border-width': '0.2vw 0 0 0', 'top': '17%'}" class="mouth"></div>
+  <div *ngIf="!easteregg" class="eye"></div>
+  <div *ngIf="!easteregg" class="eye2"></div>
   <div class="torso"></div>
   <div class="leftarm"></div>
   <div class="rightarm"></div>

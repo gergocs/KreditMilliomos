@@ -1,4 +1,4 @@
-@import '../app.component.scss';
+@import "../app.component.scss";
 
 nav {
   padding: 14px 22px;
@@ -62,7 +62,12 @@ nav button i {
 }
 
 .content .user-info h2 {
+  margin: 0;
   margin-bottom: 24px;
+  color: #333333;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: left;
 }
 
 .content .user-info form .input-box {
@@ -181,4 +186,68 @@ nav button i {
 
 .content .scoreboard .list .placed:nth-child(3) .data .place {
   background-color: #f6b191;
+}
+
+@media screen and (max-width: 1420px) {
+    .content {
+      padding: 24px 30px;
+    }
+}
+
+@media screen and (max-width: 1330px) {
+  .content h2 {
+    margin-bottom: -15px;
+  }
+
+  .content .custom-row {
+    flex-direction: column;
+  }
+
+  .content .user-info {
+    width: 100%;
+  }
+
+  .content .scoreboard {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  nav {
+    justify-content: center;
+  }
+
+  .content {
+    padding: 24px 18px;
+  }
+
+  .content h2 {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .content .scoreboard .list .placed {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  nav {
+    flex-direction: column;
+  }
+
+  nav button {
+    padding: 12px 28px;
+    margin: 0;
+    width: 210px;
+  }
+
+  nav button:first-of-type {
+    margin: 0;
+  }
+
+  nav button:nth-of-type(2) {
+    margin-top: 5px;
+  }
 }

@@ -6,7 +6,7 @@
   <div [formGroup]="loginForm" class="login">
     <h2>Bejelentkezés</h2>
     <div *ngIf="error" class="alert alert-danger" role="alert">
-        {{errorMsg}}
+      {{errorMsg}}
     </div>
     <div class="input-box">
       <label for="logemail">e-mail cím</label>
@@ -19,20 +19,26 @@
     <div class="forgot-password">
       <a (click)="isNewPassClicked = true">Elfelejtetted a jelszavad?</a>
     </div>
-    <button class="login-button" type="submit" (click)="this.onLoginClicked(email.value, password.value)">Bejelentkezés</button>
+    <div class="login-holder">
+      <button class="login-button" type="submit"
+        (click)="this.onLoginClicked(email.value, password.value)">Bejelentkezés</button>
+    </div>
     <div class="separator">
       <div class="line"></div>
       <div class="text">vagy</div>
       <div class="line"></div>
     </div>
     <div class="google">
-      <button (click)="this.onGoogleLogin()"><img src="../../assets/images/google-logo.png"> Folytatás Google-fiókkal</button>
+      <button (click)="this.onGoogleLogin()"><img src="../../assets/images/google-logo.png"> Folytatás
+        Google-fiókkal</button>
+
     </div>
     <div class="registration">
       Nincs még fiókod? <a routerLink="/register">Regisztrálj!</a>
     </div>
   </div>
 </div>
+
 
 <div class="new-password" *ngIf="isNewPassClicked">
   <div class="new-password-content">

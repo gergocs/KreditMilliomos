@@ -29,8 +29,6 @@
   border-style: solid;
   border-color: red;
   border-radius: 100%;
-  border-width: 0 0 0.2vw 0;
-  top: 15.5%;
   left: 20%;
   z-index: -1;
   display: block;
@@ -71,7 +69,6 @@
   top: 23%;
   left: 20.5%;
   background-color: black;
-
 }
 
 .leftleg2 {
@@ -162,8 +159,12 @@
 }
 
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .resultdiv {
@@ -185,26 +186,26 @@
   background-color: #983630;
 }
 
-#first{
+#first {
   left: 35%;
-  top:3%;
+  top: 3%;
 }
 
-#second{
+#second {
   left: 35%;
-  top:23%;
+  top: 23%;
 }
 
-#third{
+#third {
   left: 35%;
-  top:43%;
+  top: 43%;
 }
 
-#result{
+#result {
   width: 19%;
-  height:10%;
+  height: 10%;
   left: 35%;
-  top:63%;
+  top: 63%;
 }
 
 #okbutton {
@@ -213,15 +214,58 @@
   background-color: #efa044;
   color: #ffffff;
   font-size: 1vw;
-  border:none;
+  border: none;
   border-radius: 50px;
   left: 55%;
   top: 58%;
   width: 10%;
-  height:10%;
+  height: 10%;
   transition: background-color 0.5s;
 }
 
 #okbutton:hover {
   background-color: #ee8c1d;
+}
+
+@media screen and (max-width: 480px) {
+  .wrapper {
+    width: 100%;
+    height: 35%;
+  }
+
+  .resultdiv {
+    font-size: 1em;
+    border-radius: 2em;
+    width: 40%;
+    height: 20%;
+  }
+
+  #first {
+    left: 35%;
+    top: -5%;
+  }
+
+  #second {
+    left: 37%;
+    top: 25%;
+  }
+  #third {
+    left: 40%;
+    top: 50%;
+  }
+
+  #result {
+    width: 30%;
+    height: 20%;
+    left: 35%;
+    top: 75%;
+  }
+
+  #okbutton {
+    font-size: 1em;
+    top: 100%;
+    left: 10%;
+    width: 30%;
+    height: 20%;
+  }
 }

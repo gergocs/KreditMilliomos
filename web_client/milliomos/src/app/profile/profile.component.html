@@ -1,4 +1,5 @@
-<div [hidden]="!loading" class="loading"><img class="loadingpic" src="assets/images/kreditmilliomos-red.png" alt="Loading_animation"></div>
+<div [hidden]="!loading" class="loading"><img class="loadingpic" src="assets/images/kreditmilliomos-red.png"
+    alt="Loading_animation"></div>
 
 <nav>
   <button (click)="redirectToLobby()"><i class="material-icons">play_arrow</i> Játék indítása</button>
@@ -13,7 +14,7 @@
       <form [formGroup]="updateForm">
         <div class="input-box">
           <label for="username">felhasználónév</label>
-        <input id="username" value="{{this.userdata?.name}}" type="text" formControlName="username"/>
+          <input id="username" value="{{this.userdata?.name}}" type="text" formControlName="username" />
         </div>
         <div class="input-box">
           <label for="email">e-mail cím</label>
@@ -32,7 +33,9 @@
           <input *ngIf="!skipIntro" type="checkbox" (change)="skipIntroChange($event)">
           Intro automatikus átugrása
         </div>
-        <button (click)="updateuser()">Profil frissítése</button>
+        <div class="update-user-button-holder">
+          <button (click)="updateuser()">Profil frissítése</button>
+        </div>
       </form>
     </div>
 

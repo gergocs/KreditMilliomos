@@ -1,9 +1,21 @@
-@import './intro.scss';
-@import './chart.scss';
+@import "./intro.scss";
+@import "./chart.scss";
+
+.vago {
+  height: 120px;
+  position: absolute;
+  left: 25px;
+  top: 0;
+  display: flex;
+  transform: scaleX(-1);
+  animation: vagoin 20s;
+  z-index: -1;
+}
 
 .content {
   padding-top: 60px;
   width: 100%;
+  min-height: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -12,6 +24,7 @@
   justify-content: center;
   align-items: center;
   background-color: #983630;
+  z-index: -2;
 }
 
 .content .title {
@@ -45,42 +58,42 @@
 }
 
 .content .game .question #countdown {
-	font-family: 'Roboto Condensed', sans-serif;
-	width: 200px;
-	height: 100px;
-	position: absolute;
-	left: 50%;
-	top: 10%;
-	margin-left: -100px;
-	margin-top: -35px;
-	color: #333333;
-	font-size: 60px;
-	text-align: center;
-	font-weight: bold;
-	font-style: italic;
-	-webkit-opacity: 1.0;
-	-moz-opacity: 1.0;
-	opacity: 1.0;
-	transition: opacity 0.2s ease;
-	-moz-transition: opacity 0.2s ease;
-	-ms-transition: opacity 0.2s ease;
-	-o-transition: opacity 0.2s ease;
-	perspective: 1000;
-	backface-visibility: hidden;
+  font-family: "Roboto Condensed", sans-serif;
+  width: 200px;
+  height: 100px;
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  margin-left: -100px;
+  margin-top: -35px;
+  color: #333333;
+  font-size: 60px;
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  -moz-transition: opacity 0.2s ease;
+  -ms-transition: opacity 0.2s ease;
+  -o-transition: opacity 0.2s ease;
+  perspective: 1000;
+  backface-visibility: hidden;
 
-	&.puffer {
-		-webkit-opacity: 0;
-		-moz-opacity: 0;
-		opacity: 0;
-		transform: scale(1.6,1.6);
-		-moz-transform: scale(1.6,1.6);
-		-ms-transform: scale(1.6,1.6);
-		-o-transform: scale(1.6,1.6);
-		transition: all 0.2s ease-out;
-		-moz-transition: all 0.2s ease-out;
-		-ms-transition: all 0.2s ease-out;
-		-o-transition: all 0.2s ease-out;
-	}
+  &.puffer {
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    opacity: 0;
+    transform: scale(1.6, 1.6);
+    -moz-transform: scale(1.6, 1.6);
+    -ms-transform: scale(1.6, 1.6);
+    -o-transform: scale(1.6, 1.6);
+    transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+  }
 }
 
 .content .game .question h3 {
@@ -169,19 +182,19 @@
 }
 
 .content .game .question .answers #answerA .answer::before {
-  content: 'A';
+  content: "A";
 }
 
 .content .game .question .answers #answerB .answer::before {
-  content: 'B';
+  content: "B";
 }
 
 .content .game .question .answers #answerC .answer::before {
-  content: 'C';
+  content: "C";
 }
 
 .content .game .question .answers #answerD .answer::before {
-  content: 'D';
+  content: "D";
 }
 
 .content .game .question .answers .answer:not(.disabled):hover {
@@ -306,7 +319,7 @@
 }
 
 .content .game .sidebar ul li {
-  height: calc(100%/15);
+  height: calc(100% / 15);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -342,4 +355,99 @@
 
 .content .game .sidebar ul li:first-child {
   border: none;
+}
+
+@keyframes vagoin {
+  0% {
+    top:0;
+  }
+
+  30% {
+    top:-115px;
+  }
+
+  70% {
+    top: -115px;
+  }
+
+  100% {
+    top: 0%;
+  }
+}
+
+@media screen and (max-width: 1500px) {
+  .content .game .question {
+    margin-right: 30px;
+  }
+}
+
+@media screen and (max-width: 1380px) {
+  .content .game {
+    padding: 60px 30px;
+  }
+}
+
+@media screen and (max-width: 1290px) {
+  .content .game {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .content .game .question {
+    margin: 0;
+  }
+
+  .content .game .sidebar {
+    margin-top: 25px;
+    width: 950px;
+  }
+
+  .content .game .sidebar .helps {
+    margin-bottom: 15px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .content .game .question,
+  .content .game .sidebar {
+    width: 100%;
+  }
+
+  .content .game .question .answers .answer {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .content .game .question .answers {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .content .title h2 {
+    font-size: 30px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .content .game .question {
+    padding: 16px 32px;
+  }
+
+  .volume {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .content .title h2 {
+    font-size: 22px;
+  }
+
+  .content .game .question {
+    padding: 12px 20px;
+  }
 }

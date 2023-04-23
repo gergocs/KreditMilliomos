@@ -109,7 +109,6 @@ class RunningGameStorage {
                 })
         }
 
-        this.runningGames.delete(token)
         return true
     }
 
@@ -181,6 +180,20 @@ class RunningGameStorage {
         return game.time
     }
 
+    isTimeRunning(token: string): boolean {
+        if (!this.isGameRunning(token)) {
+            return false
+        }
+
+        let game = this.runningGames.get(<string>token)
+
+        if (!game) {
+            return false
+        }
+
+        return game.isTimerRunning
+    }
+
     getRemainingTime(token: string) {
         if (!this.isGameRunning(token)) {
             return -1
@@ -192,7 +205,7 @@ class RunningGameStorage {
             return -1
         }
 
-        return game.time - BigInt((new Date()).getTime())
+        return game.endOfQuestionTime - (new Date()).getTime()
     }
 
     useHalf(token: string): Question | undefined {
@@ -225,7 +238,13 @@ class RunningGameStorage {
                 return undefined
             }
 
-            return game.useSwitch()
+            try {
+                return game.useSwitch()
+            } catch (error) {
+                return undefined
+            }
+
+
         } catch (error) {
             throw new GameException('Error in RunninGameStorage:useSwitch method\n' + error)
         }
@@ -291,6 +310,20 @@ class RunningGameStorage {
         } catch (error) {
             throw new GameException('Error in RunninGameStorage:isGameRunning method\n' + error)
         }
+    }
+
+    getQuestion(token: string): string | undefined {
+        if (!this.isGameRunning(token)) {
+            return undefined
+        }
+
+        let game = this.runningGames.get(<string>token)
+
+        if (!game) {
+            return undefined
+        }
+
+        return game.question?.answerCorrect
     }
 }
 

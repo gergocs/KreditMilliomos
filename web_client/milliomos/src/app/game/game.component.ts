@@ -5,6 +5,7 @@ import {AuthService} from "../services/auth.service";
 import { Router } from '@angular/router';
 import { AnimationEvent } from '@angular/animations';
 import { trigger, transition, style, animate , state } from '@angular/animations';
+import {EventSourcePolyfill} from "event-source-polyfill";
 
 @Component({
   selector: 'app-game',
@@ -73,6 +74,9 @@ export class GameComponent implements OnInit, OnDestroy {
 
   animationState: string = 'rotationEnd';
   diff: number = 1;
+  vago: boolean = false;
+
+  private eventSource: EventSourcePolyfill | undefined
   constructor(
     protected auth: AuthService,
     protected gameService: GameService,
@@ -269,6 +273,21 @@ export class GameComponent implements OnInit, OnDestroy {
         this.userCanSubmit = true;
         break;
     }
+
+    if(Math.random() <= 0.025){
+      this.vago = true
+      setTimeout(() => {
+        this.vago = false
+      }, 20000);
+    }
+
+  }
+
+
+  setBackgroundColor() {
+    let body = document.getElementsByTagName("body")[0];
+    if (body)
+      body.style.backgroundColor = "#f5ebea";
   }
 
   // Submit a choice
@@ -280,6 +299,9 @@ export class GameComponent implements OnInit, OnDestroy {
     if (!this.userCanSubmit) {
       return;
     }
+
+    clearInterval(this.refreshIntervalId) // timer stop
+
     this.submitted = true
     this.userCanSelect = false;
     this.userCanSubmit = false;
@@ -298,7 +320,7 @@ export class GameComponent implements OnInit, OnDestroy {
       }, index * 40);
     }
 
-    await new Promise(f => setTimeout(f, 5000))
+    await new Promise(f => setTimeout(f, 1000))
 
     this.gameService.evaluateGame(this.userid, this.getAnswer()).then(async r => {
       if (!r) {
@@ -315,9 +337,15 @@ export class GameComponent implements OnInit, OnDestroy {
             document.getElementsByClassName('answer-selected') as HTMLCollectionOf<HTMLElement>,
           );
           if(!r.win.win){
+            let correctdiv = document.getElementById('answer' + (r.win.correct ? r.win.correct : ""))
+            if(correctdiv){
+            correctdiv.style.backgroundColor = "#51dc35"
+            correctdiv.style.borderColor = "#51dc35"}
             selected[0].style.backgroundColor = "#ef0d00"
             selected[0].style.borderColor = "#ef0d00";
-            this.wrongAnswerSound.play()}
+            this.wrongAnswerSound.play()
+            await new Promise(f => setTimeout(f,3333))
+          }
           else {
             selected[0].style.backgroundColor = "#51dc35"
             selected[0].style.borderColor = "#51dc35"
@@ -328,6 +356,7 @@ export class GameComponent implements OnInit, OnDestroy {
               if(gamestate){
                 if(gamestate.win){
                   window.localStorage.setItem("win",JSON.stringify(gamestate.win))
+                  this.setBackgroundColor();
                   this.router.navigateByUrl("/endscreen")
                 }}
           })
@@ -426,6 +455,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   // Exit game code
   exitGame() {
+    this.eventSource?.close()
     this.backgroundMusic.pause()
     this.wrongAnswerSound.play()
     window.localStorage.removeItem('startedQuestion')
@@ -435,6 +465,7 @@ export class GameComponent implements OnInit, OnDestroy {
       if(gamestate){
         if(gamestate.win){
           window.localStorage.setItem("win",JSON.stringify(gamestate.win))
+          this.setBackgroundColor();
           this.router.navigateByUrl("/endscreen")
         }}
     })
@@ -585,27 +616,53 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-startCountdown(){
-  if(this.startNum == 0){return}
+startCountdown() {
+  if (this.startNum === 0) {
+    return;
+  }
+
   this.currentNum = this.startNum;
-  clearInterval(this.refreshIntervalId)
   let eCountdown = document.getElementById('countdown')
-  if(eCountdown){
+
+  if (this.eventSource){
+    this.eventSource.close()
+  }
+
+  if (eCountdown) {
     eCountdown.textContent = this.currentNum.toString()
-    this.refreshIntervalId = setInterval(() =>{
-      setTimeout(function() { eCountdown?.classList.add('puffer')}, 800);
-      if (this.currentNum == 0){
-        clearInterval(this.refreshIntervalId)
-        setTimeout(()=> {
-        if(!this.submitted)
-            this.exitGame()
-        },1000)
+    this.eventSource = this.gameService.getTime(this.userid)
+    this.eventSource.onmessage = (data) => {
+      if (this.currentNum == 0) {
+        setTimeout(() => {
+          if (!this.submitted)
+            this.exitGame();
+        }, 1000)
       }
-      this.currentNum--
-      if(eCountdown){
-      eCountdown.textContent = (this.currentNum+1).toString()
-      eCountdown.classList.remove('puffer')}
-    },1000);
+
+      this.currentNum = Math.floor(data.data / 1000);
+
+      if (eCountdown) {
+        eCountdown.textContent = (this.currentNum + 1).toString();
+        eCountdown.classList.remove('puffer');
+      }
+    }
   }
 }
+
+giveup(){
+  if(this.userid)
+  this.gameService.giveUp(this.userid, true).then(gamestate =>{
+    if(gamestate){
+      if(gamestate.win){
+        window.localStorage.removeItem('startedQuestion')
+        window.localStorage.removeItem('helps')
+        window.localStorage.removeItem('diff')
+
+        window.localStorage.setItem("win",JSON.stringify(gamestate.win))
+        this.setBackgroundColor();
+        this.router.navigateByUrl("/endscreen")
+      }}
+  })
+}
+
 }

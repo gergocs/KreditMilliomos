@@ -10,40 +10,44 @@
     </div>
     <div class="input-box">
       <label for="username">felhasználónév<span>*</span></label>
-      <input id="username" type="text" formControlName="username" #nickname/>
+      <input id="username" type="text" formControlName="username" #nickname />
     </div>
     <div class="input-box">
       <label for="email">e-mail cím<span>*</span></label>
-      <input id="email" type="text" formControlName="email" class="form-control" #email/>
+      <input id="email" type="text" formControlName="email" class="form-control" #email />
     </div>
     <div class="row">
       <div class="input-box">
         <label for="lastName">vezetéknév<span>*</span></label>
-        <input id="lastName" type="text" formControlName="lastName" #firstname/>
+        <input id="lastName" type="text" formControlName="lastName" #firstname />
       </div>
       <div class="input-box">
         <label for="firstName">keresztnév<span>*</span></label>
-        <input id="firstName" type="text" formControlName="firstName" #lastname/>
+        <input id="firstName" type="text" formControlName="firstName" #lastname />
       </div>
     </div>
     <div class="row">
       <div class="input-box">
         <label for="password">jelszó<span>*</span></label>
-        <input id="password" type="password" formControlName="password" #password/>
+        <input id="password" type="password" formControlName="password" #password />
       </div>
       <div class="input-box">
         <label for="passwordAgain">jelszó megerősítése<span>*</span></label>
-        <input id="passwordAgain" type="password" formControlName="passwordAgain" #passwordagain/>
+        <input id="passwordAgain" type="password" formControlName="passwordAgain" #passwordagain />
       </div>
     </div>
-    <button class="register-button" (click)="this.onRegisterClicked(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value);">Regisztráció</button>
+    <div class="button-holder">
+      <button class="register-button"
+        (click)="this.onRegisterClicked(email.value, nickname.value, firstname.value, lastname.value, password.value, passwordagain.value);">Regisztráció</button>
+    </div>
     <div class="separator">
       <div class="line"></div>
       <div class="text">vagy</div>
       <div class="line"></div>
     </div>
     <div class="google">
-      <button (click)="auth.GoogleAuth()"><img src="../../assets/images/google-logo.png"> Folytatás Google-fiókkal</button>
+      <button (click)="auth.GoogleAuth()"><img src="../../assets/images/google-logo.png"> Folytatás
+        Google-fiókkal</button>
     </div>
     <div class="login">
       Van már fiókod? <a routerLink="/login">Jelentkezz be!</a>
@@ -53,18 +57,18 @@
 
 
 
-    <div class="form-group">
+<div class="form-group">
 
-    </div>
-    <br>
-    <div class="form-group">
+</div>
+<br>
+<div class="form-group">
 
-    </div>
-    <br>
-    <div class="form-group">
+</div>
+<br>
+<div class="form-group">
 
-    </div>
-    <br>
-    <div class="form-group">
+</div>
+<br>
+<div class="form-group">
 
-    </div>
+</div>

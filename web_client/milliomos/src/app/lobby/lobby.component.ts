@@ -15,6 +15,7 @@ export class LobbyComponent implements OnInit {
   public userid: string | undefined;
   public allQuestionCategories: QuestionCategory[] = []
   time: number = 60;
+  loading: boolean = true
 
   constructor(
     protected router: Router,
@@ -37,11 +38,13 @@ export class LobbyComponent implements OnInit {
       this.allQuestionCategories.forEach(qc => {
         qc.category = decodeURIComponent(qc.category)
       })
+      this.loading = false
   },(error:any)=>{
     let qcat: QuestionCategory = {
       category: "Hiba",
     }
     this.allQuestionCategories.push(qcat)
+    this.loading = false
   })
   }
 

@@ -2,7 +2,7 @@
   <img src="../../assets/images/kreditmilliomos-red.png">
   <h2>Üdvözöllek a Kreditmilliomos kvízjáték oldalán!</h2>
   <p>A játék számos egyetemi tárgyból és vizsgából származó kérdést tartalmaz, így segít abban, hogy átfogóbban és hatékonyabban készülj fel vizsgáidra. Kvízünk szórakoztató és interaktív módja annak, hogy még jobban elsajátítsd a nehézséget okozó tananyagot.</p>
-  <div class="buttons">
+  <div class="buttons" *ngIf="beRunning">
     <button *ngIf="!this.loggedin" routerLink="/register">Regisztráció</button>
     <button *ngIf="!this.loggedin" routerLink="/login">Bejelentkezés</button>
     <button *ngIf="this.loggedin" routerLink="/profile">Profilom</button>
@@ -32,7 +32,25 @@
 <div class="how-to-play" *ngIf="showForm">
   <div class="content">
     <h2>Hogyan kell a játékot játszani?</h2>
-    Hamarosan...
+    <ol class="how-to-list">
+      <li>Amennyiben még nem vagy tagja közösségünknek, lehetősged van regisztrálni a "Regisztráció" gombra kattintva.</li>
+      <li>A regisztrálást követően, a "Bejelentkezés" oldalon tudsz bejelentkezni.</li>
+      <li>Bejelentkezés után, a saját profilod tárul eléd. Ezen az oldalon le tudod ellenőrizni adataidat, valamint ha hibát észlelsz, javíthatod.</li>
+      <li>A jobb felső sarokban található "Játék indítása" gombra kattintva, bekerülsz a Lobby-ba.</li>
+      <li>A lobbyban kiválaszthatod, hogy milyen kategóriában szeretnél játszani, milyen nehézségi szinten, illetve hogy mennyi gondolkozási időt szánsz egy-egy kérdésre.</li>
+      <li>A "Játék indítása" gombra kattintva indul el a játék. </li>
+      <li>A játék során 15 kérdésre kell helyesen válaszolnod ahhoz, hogy elvidd a 15 kredites fődíjat. Minden helyes válasz 1 kreditet ér.</li>
+      <li>Amennyiben rossz választ addsz be, a legnagyobb elért garantált nyereményt kapod meg.</li>
+      <li>Rendelkezésre állnak segítségek is:</li>
+        <ul style="list-style-type: none">
+          <li id="felezes"> Felezés</li>
+          <li id="szavazas"> "Közönség" szavazás</li>
+          <li id="newq"> Kérdés cseréje</li>
+        </ul>
+      <li>Ezeket a segítségeket csak egyszer használhatod el játékonként. Amennyiben már nincs több segítséged, esélyed van megállni (<i class="material-icons">outlined_flag</i>).</li>
+      <li>Megállás esetén nem csak a garantált nyeremény, hanem az összes eddig összegyüjtött kredit üti a markod.</li>
+    </ol>
+    <h2>Jó szórakozást kívánunk!</h2>
     <button (click)="showForm = false" class="close"><i class="material-icons">close</i></button>
   </div>
 </div>

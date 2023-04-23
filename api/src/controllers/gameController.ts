@@ -60,19 +60,31 @@ class GameController {
         })
     }
 
-    getTime(request: Request, response: Response, next: NextFunction) {
-        response.send({
-            time: <number>RunningGameStorage.instance().getTime(<string>request.headers.tokenkey),
-            remainingTime: <number>RunningGameStorage.instance().getRemainingTime(<string>request.headers.tokenkey)
-        })
+    async getTime(request: Request, response: Response, next: NextFunction) {
+        response.writeHead(200, {
+            'Content-Type': 'text/event-stream',
+            'Connection': 'keep-alive',
+            'Cache-Control': 'no-cache'
+        });
+
+        response.flushHeaders()
+
+        response.write('retry: 1000\n\n') // retry every 1 second
+
+        while (RunningGameStorage.instance().isTimeRunning(<string>request.headers.tokenkey)) {
+            response.write(`data: ${Math.abs(Number(RunningGameStorage.instance().getRemainingTime(<string>request.headers.tokenkey)))}\n\n`)
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec delay
+        }
     }
 
     evaluateGame(request: Request, response: Response, next: NextFunction): void {
         let token = <string>request.headers.tokenkey
         let answer = <string>request.headers.answer
         let question
+        let prevQuestion: string | undefined
 
         if (RunningGameStorage.instance().hasQuestion(token)) {
+            prevQuestion = RunningGameStorage.instance().getQuestion(token)
             question = RunningGameStorage.instance().evaluateGame(token, answer)
         } else {
             question = RunningGameStorage.instance().evaluateGame(token, "")
@@ -85,7 +97,8 @@ class GameController {
                     time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
                     level: RunningGameStorage.instance().getLevel(token),
                     difficulty: RunningGameStorage.instance().getDifficulty(token),
-                    win: false
+                    win: false,
+                    correct: prevQuestion
                 }
             })
             response.end()
@@ -98,7 +111,8 @@ class GameController {
                             time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
                             level: RunningGameStorage.instance().getLevel(token),
                             difficulty: RunningGameStorage.instance().getDifficulty(token),
-                            win: r
+                            win: r,
+                            correct: prevQuestion
                         }
                     })
                 } else if (r instanceof Question) {
@@ -115,11 +129,17 @@ class GameController {
                             time: 0,
                             level: 0,
                             difficulty: 0,
-                            win: false
+                            win: false,
+                            correct: undefined
                         }
                     })
                 }
+
                 response.end()
+            }).catch(err => {
+                response.sendStatus(StatusCodes.BadRequest)
+                response.end()
+                return
             })
         }
 
@@ -142,6 +162,10 @@ class GameController {
                         win: undefined
                     })
                 }
+            }).catch(error => {
+                response.sendStatus(StatusCodes.BadRequest)
+                response.end()
+                return
             })
         }
     }
@@ -168,7 +192,9 @@ class GameController {
         try {
             question = RunningGameStorage.instance().useHalf(token)
         } catch (e) {
-            response.send(StatusCodes.BadRequest)
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
         }
 
         if (!question) {
@@ -190,15 +216,25 @@ class GameController {
             response.sendStatus(StatusCodes.BadRequest)
             response.end()
         } else {
-            response.send(response.send({
+            let level = RunningGameStorage.instance().getLevel(token)
+
+            if (!level) {
+                level = 0
+            } else {
+                level--
+            }
+
+            response.send({
                 question: undefined,
                 win: {
                     time: Date.now() - Number(RunningGameStorage.instance().getTime(token)),
-                    level: RunningGameStorage.instance().getLevel(token),
+                    level: level,
                     difficulty: RunningGameStorage.instance().getDifficulty(token),
-                    win: true
+                    win: level != 0
                 }
-            }))
+            })
+
+            RunningGameStorage.instance().endGame(token, false)
         }
 
         response.end()
