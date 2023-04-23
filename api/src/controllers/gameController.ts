@@ -60,11 +60,21 @@ class GameController {
         })
     }
 
-    getTime(request: Request, response: Response, next: NextFunction) {
-        response.send({
-            time: <number>RunningGameStorage.instance().getTime(<string>request.headers.tokenkey),
-            remainingTime: <number>RunningGameStorage.instance().getRemainingTime(<string>request.headers.tokenkey)
-        })
+    async getTime(request: Request, response: Response, next: NextFunction) {
+        response.writeHead(200, {
+            'Content-Type': 'text/event-stream',
+            'Connection': 'keep-alive',
+            'Cache-Control': 'no-cache'
+        });
+
+        response.flushHeaders()
+
+        response.write('retry: 1000\n\n') // retry every 1 second
+
+        while (RunningGameStorage.instance().isTimeRunning(<string>request.headers.tokenkey)) {
+            response.write(`data: ${Math.abs(Number(RunningGameStorage.instance().getRemainingTime(<string>request.headers.tokenkey)))}\n\n`)
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec delay
+        }
     }
 
     evaluateGame(request: Request, response: Response, next: NextFunction): void {

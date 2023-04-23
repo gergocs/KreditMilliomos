@@ -1,10 +1,12 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {GameState} from '../models/gameState';
 import {Time} from "../models/time";
 import {Question} from "../models/question";
 import {Audience} from "../models/audience";
+import {Observable} from "rxjs";
+import {EventSourcePolyfill} from 'event-source-polyfill';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +14,7 @@ import {Audience} from "../models/audience";
 export class GameService {
   hostname: string;
 
-  constructor(protected http: HttpClient, protected auth: AngularFireAuth) {
+  constructor(protected http: HttpClient, protected auth: AngularFireAuth, private _zone: NgZone) {
     if (location.hostname == 'localhost') {
       this.hostname = 'http://localhost:8080/';
     } else {
@@ -37,16 +39,13 @@ export class GameService {
     });
   }
 
-  async getTime(uid: any) {
-    await this.http.get<Time>(this.hostname + 'game/getTime', {
-      headers: new HttpHeaders().set('tokenkey', uid),
-    }).toPromise().then(r => {
+  getTime(uid: any) {
+      const eventSource = new EventSourcePolyfill(this.hostname + 'game/getTime', {headers: {'tokenkey': uid}, heartbeatTimeout: 1800000});
+      eventSource.onerror = (event) => {
+        eventSource.close()
+      }
 
-      return r;
-    }).catch(e => {
-
-      //TODO: process error
-    });
+      return eventSource
   }
 
   // Needs proper implementation
@@ -63,7 +62,7 @@ export class GameService {
   }
 
   async useSwitch(uid: string) {
-    return await this.http.get<{question: Question, win: boolean | undefined}>(this.hostname + 'game/useSwitch', {
+    return await this.http.get<{ question: Question, win: boolean | undefined }>(this.hostname + 'game/useSwitch', {
       headers: new HttpHeaders().set('tokenkey', uid),
     }).toPromise()
   }
