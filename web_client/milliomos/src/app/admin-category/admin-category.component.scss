@@ -203,41 +203,38 @@ nav ul li a i {
   cursor: pointer;
 }
 
-@media screen and (max-width: 480px) {
-  nav {
-    padding: 12px;
-  }
+@media screen and (max-width: 1150px) {
   nav ul {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  nav ul li {
-    width: 100%;
-    padding: 12px;
-    text-align: center;
+    flex-direction: column;
   }
 
-  .content .box {
-    text-align: center;
+  .content {
+    padding: 0 60px 48px 60px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  nav {
+    padding: 12px 0;
   }
 
+  .content {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+@media screen and (max-width: 750px) {
   .content .box .new-category-button {
-    float: none;
+    float: initial;
   }
 
   .new-category .content {
     width: 95%;
   }
+}
 
-  .new-category .content h2 {
-    text-align: center;
-  }
-
-  .new-category .content .save-button {
-    text-align: center;
-  }
-
-  .new-category .content .new-category-button-holder {
-    text-align: center;
+@media screen and (max-width: 525px) {
+  .content {
+    padding: 0 12px 30px 12px;
   }
 }

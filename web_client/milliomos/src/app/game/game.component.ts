@@ -280,6 +280,13 @@ export class GameComponent implements OnInit, OnDestroy {
 
   }
 
+
+  setBackgroundColor() {
+    let body = document.getElementsByTagName("body")[0];
+    if (body)
+      body.style.backgroundColor = "#f5ebea";
+  }
+
   // Submit a choice
   async submit() {
     if (this.getAnswer() == 'None') {
@@ -334,7 +341,7 @@ export class GameComponent implements OnInit, OnDestroy {
             selected[0].style.backgroundColor = "#ef0d00"
             selected[0].style.borderColor = "#ef0d00";
             this.wrongAnswerSound.play()
-            await new Promise(f => setTimeout(f,3333))  
+            await new Promise(f => setTimeout(f,3333))
           }
           else {
             selected[0].style.backgroundColor = "#51dc35"
@@ -346,6 +353,7 @@ export class GameComponent implements OnInit, OnDestroy {
               if(gamestate){
                 if(gamestate.win){
                   window.localStorage.setItem("win",JSON.stringify(gamestate.win))
+                  this.setBackgroundColor();
                   this.router.navigateByUrl("/endscreen")
                 }}
           })
@@ -453,6 +461,7 @@ export class GameComponent implements OnInit, OnDestroy {
       if(gamestate){
         if(gamestate.win){
           window.localStorage.setItem("win",JSON.stringify(gamestate.win))
+          this.setBackgroundColor();
           this.router.navigateByUrl("/endscreen")
         }}
     })
@@ -637,6 +646,7 @@ giveup(){
         window.localStorage.removeItem('diff')
 
         window.localStorage.setItem("win",JSON.stringify(gamestate.win))
+        this.setBackgroundColor();
         this.router.navigateByUrl("/endscreen")
       }}
   })

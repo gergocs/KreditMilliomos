@@ -136,24 +136,24 @@
   text-decoration: underline;
 }
 
-@media screen and (max-width: 480px) {
-  .content .register h2 {
-    
-    font-size: 18px;
-    text-align: center;
+@media screen and (max-width: 730px) {
+  .content .register {
+    width: 90%;
   }
+}
 
-  .content .register .input-box{
-    margin-bottom: 16px;
-    display: flex;
+@media screen and (max-width: 600px) {
+  .content .register .row {
     flex-direction: column;
   }
 
   .content .register .row .input-box {
     width: 100%;
   }
+}
 
-  .content .register .button-holder {
-    text-align: center;
+@media screen and (max-width: 525px) {
+  .content {
+    padding: 40px 0;
   }
 }

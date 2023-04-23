@@ -225,16 +225,28 @@
   cursor: pointer;
 }
 
-@media screen and (max-width: 480px) {
-  .content .login h2 {
-    text-align: center;
+@media screen and (max-width: 730px) {
+  .content .login {
+    width: 90%;
   }
 
-  .login-holder {
-    text-align: center;
+  .new-password-content {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .content .login .row {
+    flex-direction: column;
   }
 
-  .forgot-password {
-    text-align: center;
+  .content .login .row .input-box {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 525px) {
+  .content {
+    padding: 40px 0;
   }
 }

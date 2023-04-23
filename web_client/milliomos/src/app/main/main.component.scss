@@ -28,6 +28,10 @@
   text-align: center;
 }
 
+.content .buttons {
+  display: flex;
+}
+
 .content button:first-of-type {
   padding: 16px 32px;
   margin: 14px 24px 24px 0;
@@ -131,6 +135,8 @@
 }
 
 .content .scoreboard .list .placed .score {
+  display: flex;
+  align-items: center;
   color: #333333;
   font-size: 16px;
   font-weight: 500;
@@ -165,9 +171,9 @@
 .how-to-play .content {
   padding: 24px;
   margin: 25px auto;
-  width: 750px;
+  width: 630px;
   position: relative;
-  display: flex;
+  display: block;
   text-align: left;
   background-color: #ffffff;
   border: none;
@@ -181,13 +187,18 @@
   font-weight: 600;
 }
 
+
+.how-to-play .content ol li {
+  margin: 5px 0;
+}
+
 .how-to-play .content .close {
   padding: 0;
   margin: 0;
+  width: fit-content;
   position: absolute;
   right: 10px;
   top: 10px;
-  bottom: auto;
   background-color: #ffffff;
   color: #333333;
   font-size: 16px;
@@ -198,94 +209,49 @@
   cursor: pointer;
 }
 
- .how-to-play .content .how-to-list li{
-  text-align: justify;
-    font-size: 18px;
- }
-
- .how-to-play .content .how-to-list h5{
-    font-size: 18px;
-    margin: 20px 0 20px 0;
-    text-align: center;
-    
- }
-
- .how-to-play .content .how-to-list p{
-    font-size: 16px;
-    float: right;
-    margin-bottom: 0;
-    font-style: italic;
- }
-
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 1000px) {
   .content {
-    width: 100%;
-    text-align: center;
-    padding: 12px 0 6px 0;
-  }
-
-  .buttons button {
-    display: block;
-    margin-bottom: 1em;
-  }
-
-  .content button:first-of-type {
-    margin-right: 0;
-  }
-
-  .how-to-play .content {
-    padding: 24px;
-    margin: 1em auto;
-    width: 90%;
-    height: auto;
-    position: relative;
-    display: block;
-    text-align: justify;
-    background-color: #ffffff;
-    border: none;
-    border-radius: 1em;
+    padding: 40px 0;
   }
 
   .content .scoreboard {
-    padding: 24px;
     margin-top: 20px;
-    display: flex;
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 835px) {
+  .content p {
+    width: 90%;
+  }
+
+  .content a {
+    position: absolute;
+  }
+}
+
+@media screen and (max-width: 730px) {
+  .how-to-play .content {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .content .scoreboard .list .placed {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 525px) {
+  .content .buttons {
     flex-direction: column;
-    width: 80%;
-    background-color: #ffffff;
-    border-radius: 16px;
   }
 
-  .content .scoreboard h2 {
-    margin: 0;
-    color: #333333;
-    font-size: 15px;
-    font-weight: 600;
-    text-align: center;
+  .content button:first-of-type {
+    margin: 5px 0;
   }
 
-  .how-to-play .content .how-to-list li{
-  text-align: justify;
-    font-size: 14px;
- }
-
- .how-to-play .content{
-  display: flex;
- }
-  
-}
-
-#felezes:before{
-  content: 'balance';
-  font-family: 'Material Icons';
-}
-
-#szavazas:before{
-  content: 'group';
-  font-family: 'Material Icons';
-}
-
-#newq:before{
-  content: 'cached';
-  font-family: 'Material Icons';
+  .how-to-play .content {
+    padding: 12px;
+  }
 }
