@@ -2,6 +2,7 @@ import express, {Application} from 'express'
 import * as bodyParser from 'body-parser'
 import * as admin from 'firebase-admin'
 import {type Auth, getAuth} from 'firebase-admin/auth'
+
 const serviceAccount = require('../kreditmilliomos-firebase-adminsdk-77e37-136a215381.json')
 import cors from 'cors'
 import {readFileSync} from 'fs'
@@ -37,7 +38,10 @@ class App {
 
         this.app.use(bodyParser.json())
         this.app.use((req, res, next): void => {
-            if (req.method === 'GET' && (req.path.includes('/scoreBoard/top') || req.path.includes('/health'))){
+            if (req.method === 'GET'
+                && (req.path.includes('/scoreBoard/top')
+                    || req.path.includes('/health')
+                    || req.path.includes('/achievements'))) {
                 next()
                 return
             } else {
@@ -47,7 +51,7 @@ class App {
                     return
                 }
 
-                if (TrustedTokenHandler.instance().isValidToken(req.headers.tokenkey as string)){
+                if (TrustedTokenHandler.instance().isValidToken(req.headers.tokenkey as string)) {
                     next()
                 } else {
                     this.fireAuth.getUser(req.headers.tokenkey as string).then(r => {
@@ -83,7 +87,7 @@ class App {
         this.app.use((req, res, next): void => {
             if (!req.path.includes('admin')) {
                 next()
-            }else{
+            } else {
                 const tokenKey = req.headers.tokenkey
 
                 sequelize.sync()

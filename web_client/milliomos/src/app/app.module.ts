@@ -25,6 +25,8 @@ import { AdminCategoryComponent } from './admin-category/admin-category.componen
 import {MatSliderModule} from "@angular/material/slider";
 import { QuestionFilterPipe } from './pipes/question-filter.pipe';
 import { EndscreenComponent } from './endscreen/endscreen.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -56,7 +58,9 @@ import { EndscreenComponent } from './endscreen/endscreen.component';
     MatIconModule,
     MatButtonModule,
     MatSliderModule,
-    FormsModule
+    FormsModule,
+    MatProgressBarModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,7 +1,9 @@
 <div class="wrapper">
   <div *ngIf="!easteregg" class="head"></div>
   <img *ngIf="easteregg" class="head" src="../../assets/images/easteregg.png">
-  <div *ngIf="!easteregg" [ngStyle]="this.win.win ? {'border-width': '0 0 0.2vw 0', 'top': '15.5%'} : {'border-width': '0.2vw 0 0 0', 'top': '17%'}" class="mouth"></div>
+  <div *ngIf="!easteregg"
+       [ngStyle]="this.win.win ? {'border-width': '0 0 0.2vw 0', 'top': '15.5%'} : {'border-width': '0.2vw 0 0 0', 'top': '17%'}"
+       class="mouth"></div>
   <div *ngIf="!easteregg" class="eye"></div>
   <div *ngIf="!easteregg" class="eye2"></div>
   <div class="torso"></div>
@@ -9,9 +11,94 @@
   <div class="rightarm"></div>
   <div class="leftleg2"></div>
   <div class="rightleg2"></div>
-  <div class="resultdiv" id="first" hidden >{{winDifficulty}} fokozaton</div>
+  <div class="resultdiv" id="first" hidden>{{winDifficulty}} fokozaton</div>
   <div class="resultdiv" id="second" hidden>{{time}}</div>
   <div class="resultdiv" id="third" hidden>{{level}} kreditet szereztél</div>
-  <div class="resultdiv" id="result" >{{eredmeny}}</div>
+  <div class="resultdiv" id="result">{{eredmeny}}</div>
   <button id="okbutton" type="submit" hidden routerLink="/lobby">Befejezés</button>
+
+  <div class="content">
+    <!-- ELEMENTS FOR ANIMATION: -->
+    <div class="achievement">
+      <div class="animation">
+        <div class="circle">
+          <div class="img trophy_animate trophy_img">
+            <img class="trophy_1" src="https://dl.dropboxusercontent.com/s/k0n14tzcl4q61le/trophy_full.svg"/>
+            <img class="trophy_2" src="https://dl.dropboxusercontent.com/s/cd4k1h6w1c8an9j/trophy_no_handles.svg"/>
+          </div>
+          <div class="img xbox_img">
+            <img src="assets/images/kreditmilliomos-red.png"/>
+          </div>
+          <div class="brilliant-wrap">
+            <div class="brilliant">
+            </div>
+          </div>
+        </div>
+        <div class="banner-outer">
+          <div class="banner">
+            <div class="achieve_disp">
+                            <span class="unlocked">
+
+                            </span>
+              <div class="score_disp">
+                <div class="gamerscore">
+                  <img width="20px" src="https://dl.dropboxusercontent.com/s/gdqf5amvjkx9rfb/G.svg?dl=0"/>
+                  <span class="acheive_score"></span>
+                </div>
+                <span class="hyphen_sep">-</span>
+                <span class="achiev_name"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="statsContainer">
+  <div class="stats">
+    <mat-card class="mat-card-content">
+      <mat-card-content class="mat-card-content">
+        <h2>Game</h2>
+        <section>
+          <mat-progress-bar
+            mode="buffer"
+            color="warn"
+            [value]="oldGame"
+            [bufferValue]="game"
+          ></mat-progress-bar>
+        </section>
+
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-card-content">
+      <mat-card-content class="mat-card-content">
+        <h2>Kredit</h2>
+        <section>
+          <mat-progress-bar
+            mode="buffer"
+            color="warn"
+            [value]="oldKredit"
+            [bufferValue]="kredit"
+          ></mat-progress-bar>
+        </section>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="mat-card-content">
+      <mat-card-content>
+        <h2>Győzelem</h2>
+        <section>
+          <mat-progress-bar
+            mode="buffer"
+            color="warn"
+            [value]="oldWinCounter"
+            [bufferValue]="winCounter"
+          ></mat-progress-bar>
+        </section>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

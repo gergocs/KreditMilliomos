@@ -22,7 +22,15 @@ export class ScoreService {
     return this.http.get<Score[]>(this.hostname + "scoreBoard", {headers: new HttpHeaders().set("tokenkey", uid).set("istoken", "true")});
   }
 
-  getTopX(x = 10){
+  getTopX(x = 10) {
     return this.http.get(this.hostname + "scoreBoard/top", {headers: new HttpHeaders().set("topx", x.toString())});
+  }
+
+  getAchievements(names: string[], uid = "") {
+    return this.http.get(this.hostname + "achievements", {headers: new HttpHeaders().set("tokens", JSON.stringify(names)).set("tokenkey", uid)});
+  }
+
+  getAchievementStatus(uid: string) {
+    return this.http.get(this.hostname + "achievements/status", {headers: new HttpHeaders().set("tokenkey", uid)});
   }
 }
