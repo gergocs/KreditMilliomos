@@ -28,6 +28,7 @@ export class ProfileComponent implements OnInit {
   skipIntro: Boolean | null = false;
 
   scores: Score[] = [];
+  achievements = new Map<string, string>()
 
   constructor(public router: Router, private auth: AuthService, private scoreService: ScoreService) {
     let userdatas = window.localStorage.getItem("userdatas")
@@ -61,6 +62,18 @@ export class ProfileComponent implements OnInit {
         return Number(a.time.valueOf()) - Number(b.time.valueOf());
       });
     })
+
+    if (this.userdata) {
+      this.scoreService.getAchievements([], this.userdata.tokenKey).subscribe(achievements => {
+        this.achievements = new Map<string, string>();
+
+        // @ts-ignore
+        Object.entries(achievements).forEach((entry) => {
+          // @ts-ignore
+          this.achievements.set(entry[1], "assets/images/achievements/" + entry[1] + ".svg")
+        });
+      })
+    }
   }
 
   ngOnInit(): void {

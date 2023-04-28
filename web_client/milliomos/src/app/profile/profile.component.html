@@ -39,7 +39,7 @@
       </form>
     </div>
 
-    <div class="scoreboard">
+    <div class="scoreboard middle">
       <h2>Korábbi játszmák</h2>
       <div class="list">
         <div class="placed" *ngFor="let score of scores; let i = index">
@@ -48,6 +48,20 @@
               #{{i + 1}}
             </div>
             {{score.category}} - {{score.level}} kredit - {{timeToString(score.time)}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scoreboard">
+      <h2>Kitüntetések</h2>
+      <div class="list">
+        <div class="placed" *ngFor="let achievement of achievements | keyvalue">
+          <div class="data">
+            <div class="place">
+              <img [src]=achievement.value [alt]=achievement.key width="25px">
+            </div>
+            {{achievement.key}}
           </div>
         </div>
       </div>

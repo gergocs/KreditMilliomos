@@ -17,6 +17,7 @@ export class MainComponent implements OnInit {
   loggedin: boolean =false
   userdata: UserModell | undefined
   scores = new Map<string, number>();
+  achievements = new Map<string, Map<string, string>>();
   customFilter = new Filter({ placeHolder: 'x'});
   // Preserve original property order
   originalOrder = (a: KeyValue<string, number>, b: KeyValue<string, number>): number => {
@@ -58,7 +59,28 @@ export class MainComponent implements OnInit {
             // @ts-ignore
             tmp.set(this.customFilter.clean(entry[0]), <number>entry[1]);
           });
+
           this.scores = tmp;
+
+          this.scoreService.getAchievements(Array.from(this.scores.keys())).subscribe(achievements => {
+            this.achievements = new Map<string, Map<string, string>>();
+
+            // @ts-ignore
+            Object.entries(achievements).forEach((entry) => {
+              // @ts-ignore
+              let array = entry[1];
+              let val = new Map<string, string>();
+
+              for (let i = 0; i < array.length; i++) {
+                  val.set(array[i], "assets/images/achievements/" + array[i] + ".svg")
+              }
+
+              // @ts-ignore
+              this.achievements.set(this.customFilter.clean(entry[0]), val);
+            });
+          })
+
+
         });
       }
     })
