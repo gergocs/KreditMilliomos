@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { MainComponent } from './main/main.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { AdminUsersComponent } from './admin-users/admin-users.component';
-import { ProfileComponent } from './profile/profile.component';
-import { LobbyComponent } from './lobby/lobby.component';
-import { GameComponent } from './game/game.component';
-import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
-import {DataprivacyComponent} from "./dataprivacy/dataprivacy.component";
+import { LoginComponent } from './components/login/login.component';
+import { MainComponent } from './components/main/main.component';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { AdminUsersComponent } from './components/admin-users/admin-users.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { LobbyComponent } from './components/lobby/lobby.component';
+import { GameComponent } from './components/game/game.component';
+import { AdminQuestionsComponent } from './components/admin-questions/admin-questions.component';
+import {DataprivacyComponent} from "./components/dataprivacy/dataprivacy.component";
 import {AngularFireAuthGuard, redirectUnauthorizedTo} from "@angular/fire/compat/auth-guard";
-import { AdminCategoryComponent } from './admin-category/admin-category.component';
-import {EndscreenComponent} from "./endscreen/endscreen.component";
+import { AdminCategoryComponent } from './components/admin-category/admin-category.component';
+import {EndscreenComponent} from "./components/endscreen/endscreen.component";
 
 const redirectUnauthorizedToLanding = () => redirectUnauthorizedTo(['login']);
 

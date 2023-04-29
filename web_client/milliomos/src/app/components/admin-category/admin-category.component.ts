@@ -3,9 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { QuestionCategory } from '../models/questionCategory';
-import { AuthService } from '../services/auth.service';
-import { QuestionService } from '../services/question.service';
+import { QuestionCategory } from '../../models/questionCategory';
+import { AuthService } from '../../services/auth.service';
+import { QuestionService } from '../../services/question.service';
 
 @Component({
   selector: 'app-admin-category',

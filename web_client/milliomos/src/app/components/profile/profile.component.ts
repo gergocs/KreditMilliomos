@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserModell } from '../models/usermodell';
-import { AuthService } from '../services/auth.service';
-import {Score} from "../models/score";
-import {ScoreService} from "../services/score.service";
+import { UserModell } from '../../models/usermodell';
+import { AuthService } from '../../services/auth.service';
+import {Score} from "../../models/score";
+import {ScoreService} from "../../services/score.service";
 import {KeyValue} from "@angular/common";
 
 @Component({

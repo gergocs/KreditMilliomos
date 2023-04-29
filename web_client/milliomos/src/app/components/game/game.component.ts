@@ -1,7 +1,7 @@
 import {Component, OnInit, HostListener, OnDestroy} from '@angular/core';
-import {Question} from '../models/question';
-import {GameService} from '../services/game.service';
-import {AuthService} from "../services/auth.service";
+import {Question} from '../../models/question';
+import {GameService} from '../../services/game.service';
+import {AuthService} from "../../services/auth.service";
 import { Router } from '@angular/router';
 import { AnimationEvent } from '@angular/animations';
 import { trigger, transition, style, animate , state } from '@angular/animations';

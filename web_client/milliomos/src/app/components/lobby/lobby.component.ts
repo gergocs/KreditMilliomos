@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { QuestionCategory } from '../models/questionCategory';
-import { AuthService } from '../services/auth.service';
-import { GameService } from '../services/game.service';
-import { QuestionService } from '../services/question.service';
+import { QuestionCategory } from '../../models/questionCategory';
+import { AuthService } from '../../services/auth.service';
+import { GameService } from '../../services/game.service';
+import { QuestionService } from '../../services/question.service';
 
 @Component({
   selector: 'app-lobby',

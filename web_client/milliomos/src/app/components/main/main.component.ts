@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserModell } from '../models/usermodell';
-import { AuthService } from '../services/auth.service';
-import {ScoreService} from "../services/score.service";
+import { UserModell } from '../../models/usermodell';
+import { AuthService } from '../../services/auth.service';
+import {ScoreService} from "../../services/score.service";
 import { KeyValue } from '@angular/common';
 import {filter} from "rxjs";
 
