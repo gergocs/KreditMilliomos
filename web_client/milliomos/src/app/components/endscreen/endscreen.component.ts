@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ScoreService} from '../services/score.service';
-import {AuthService} from "../services/auth.service";
+import {ScoreService} from '../../services/score.service';
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-endscreen',

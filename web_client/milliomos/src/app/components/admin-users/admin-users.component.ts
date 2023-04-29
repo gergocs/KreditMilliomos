@@ -2,11 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { QuestionService } from '../services/question.service';
+import { AuthService } from '../../services/auth.service';
+import { QuestionService } from '../../services/question.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserModell } from '../models/usermodell';
+import { UserModell } from '../../models/usermodell';
 
 @Component({
   selector: 'app-admin',
