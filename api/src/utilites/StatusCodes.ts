@@ -11,6 +11,7 @@ export enum StatusCodes {
 
     IAmATeaPod = 418,
     UnprocessableContent = 422,
+    TooEarly = 425,
 
     // 500 - ServerError
     InternalError = 500,

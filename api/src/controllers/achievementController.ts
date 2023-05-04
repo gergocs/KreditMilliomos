@@ -97,9 +97,13 @@ class AchievementController {
             return
         }
 
-        await new Promise(resolve => setTimeout(resolve, 1000)); // TODO move this code to frontend
-
         let map = CacheHandler.getInstance().get(token + 'achievements')
+
+        if (!map) {
+            response.sendStatus(StatusCodes.TooEarly)
+            response.end()
+            return
+        }
 
         response.send({
             result: Object.fromEntries(map)

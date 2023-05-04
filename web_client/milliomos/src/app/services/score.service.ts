@@ -30,7 +30,8 @@ export class ScoreService {
     return this.http.get(this.hostname + "achievements", {headers: new HttpHeaders().set("tokens", JSON.stringify(names)).set("tokenkey", uid)});
   }
 
-  getAchievementStatus(uid: string) {
+  async getAchievementStatus(uid: string) {
+    await new Promise(resolve => setTimeout(resolve, 2000));
     return this.http.get(this.hostname + "achievements/status", {headers: new HttpHeaders().set("tokenkey", uid)});
   }
 }
