@@ -66,11 +66,19 @@ export class ProfileComponent implements OnInit {
     if (this.userdata) {
       this.scoreService.getAchievements([], this.userdata.tokenKey).subscribe(achievements => {
         this.achievements = new Map<string, string>();
+        let counter = 0;
 
         // @ts-ignore
         Object.entries(achievements).forEach((entry) => {
           // @ts-ignore
-          this.achievements.set(entry[1], "assets/images/achievements/" + entry[1] + ".svg")
+          if (entry[1] != "" && entry[1] != undefined && entry[1] != null) {
+            this.achievements.set(entry[1], "assets/images/achievements/" + entry[1] + ".svg")
+            counter++;
+
+            if (counter >= 10){
+              return;
+            }
+          }
         });
       })
     }

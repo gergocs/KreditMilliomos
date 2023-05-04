@@ -17,6 +17,7 @@ class App {
     public app: Application
     public readonly port: number
     private readonly fireAuth: Auth
+    private readonly whitelist = ['https://kreditmilliomos.web.app', 'http://localhost:4200']
 
     constructor(controllers, port) {
         this.app = express()
@@ -33,7 +34,13 @@ class App {
 
     private initializeMiddlewares(): void {
         this.app.use(cors({
-            origin: '*' // TODO limit for only specific origins
+            origin: (origin, callback) => {
+                if (!origin || this.whitelist.indexOf(origin) === -1) {
+                    callback(new Error('Not allowed by CORS'))
+                } else {
+                    callback(null, true)
+                }
+            }
         }))
 
         this.app.use(bodyParser.json())

@@ -38,83 +38,86 @@ export class EndscreenComponent implements OnInit, OnDestroy {
     let uid = this.auth.user?.uid
 
     if (uid) {
-      this.scoreService.getAchievementStatus(uid).subscribe(async data => {
-        // @ts-ignore
-        for (const entry of Object.entries(data.result)) {
+      this.scoreService.getAchievementStatus(uid).then(r => {
+        r.subscribe(async data => {
           // @ts-ignore
-          console.log(entry[0], entry[1])
-          if (entry[0] === 'achievements') {
-            let array = JSON.parse(<string>entry[1])
-            for (let i = 0; i < array.length; i++) {
-              if (array[i].includes('Games')) {
-                this.onAchievement('Játék', array[i].substr(0, 3))
-              } else if (array[i].includes('Kredit')) {
-                this.onAchievement('Kredit', array[i].substr(0, 3))
-              } else if (array[i].includes('win')) {
-                this.onAchievement('Győzelem', array[i].substr(0, 3))
-              } else if (array[i].includes('level5')) {
-                this.onAchievement('5-ös szint', '')
-              } else if (array[i].includes('level10')) {
-                this.onAchievement('10-es szint', '')
-              } else if (array[i].includes('level15')) {
-                this.onAchievement('15-es szint', '')
-              } else {
-                //TODO category
+          for (const entry of Object.entries(data.result)) {
+            // @ts-ignore
+            console.log(entry[0], entry[1])
+            if (entry[0] === 'achievements') {
+              let array = JSON.parse(<string>entry[1])
+              for (let i = 0; i < array.length; i++) {
+                if (array[i].includes('Games')) {
+                  this.onAchievement('Játék', array[i].substr(0, 3))
+                } else if (array[i].includes('Kredit')) {
+                  this.onAchievement('Kredit', array[i].substr(0, 3))
+                } else if (array[i].includes('win')) {
+                  this.onAchievement('Győzelem', array[i].substr(0, 3))
+                } else if (array[i].includes('level5')) {
+                  this.onAchievement('5-ös szint', '')
+                } else if (array[i].includes('level10')) {
+                  this.onAchievement('10-es szint', '')
+                } else if (array[i].includes('level15')) {
+                  this.onAchievement('15-es szint', '')
+                } else {
+                  //TODO category
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 12000));
               }
-
-              await new Promise(resolve => setTimeout(resolve, 12000));
+            } else if (entry[0] === 'kredit') {
+              this.kredit = Number(entry[1]);
+            } else if (entry[0] === 'oldKredit') {
+              this.oldKredit = Number(entry[1]);
+            } else if (entry[0] === 'game') {
+              this.game = Number(entry[1]);
+              this.oldGame = this.game - 1;
+            } else if (entry[0] === 'win') {
+              this.winCounter = Number(entry[1]);
+            } else if (entry[0] === 'oldWin') {
+              this.oldWinCounter = Number(entry[1]);
+            } else if (entry[0] === 'kreditLevel') {
+              this.kreditLevel = Number(entry[1]);
+            } else if (entry[0] === 'gameLevel') {
+              this.gameLevel = Number(entry[1]);
+            } else if (entry[0] === 'winLevel') {
+              this.winLevel = Number(entry[1]);
             }
-          } else if (entry[0] === 'kredit') {
-            this.kredit = Number(entry[1]);
-          } else if (entry[0] === 'oldKredit') {
-            this.oldKredit = Number(entry[1]);
-          } else if (entry[0] === 'game') {
-            this.game = Number(entry[1]);
-            this.oldGame = this.game - 1;
-          } else if (entry[0] === 'win') {
-            this.winCounter = Number(entry[1]);
-          } else if (entry[0] === 'oldWin') {
-            this.oldWinCounter = Number(entry[1]);
-          } else if (entry[0] === 'kreditLevel') {
-            this.kreditLevel = Number(entry[1]);
-          } else if (entry[0] === 'gameLevel') {
-            this.gameLevel = Number(entry[1]);
-          } else if (entry[0] === 'winLevel') {
-            this.winLevel = Number(entry[1]);
           }
-        }
 
-        this.kredit = this.mapValueInRange(this.kredit, this.kreditLevel,
-          this.kreditLevel === 0 ?
-            100 : this.kreditLevel === 100 ?
-              500 : 999)
+          this.kredit = this.mapValueInRange(this.kredit, this.kreditLevel,
+            this.kreditLevel === 0 ?
+              100 : this.kreditLevel === 100 ?
+                500 : 999)
 
-        this.oldKredit = this.mapValueInRange(this.oldKredit, this.kreditLevel,
-          this.kreditLevel === 0 ?
-            100 : this.kreditLevel === 100 ?
-              500 : 999)
+          this.oldKredit = this.mapValueInRange(this.oldKredit, this.kreditLevel,
+            this.kreditLevel === 0 ?
+              100 : this.kreditLevel === 100 ?
+                500 : 999)
 
-        this.game = this.mapValueInRange(this.game, this.gameLevel,
-          this.gameLevel === 0 ?
-            30 : this.gameLevel === 30 ?
-              60 : 90)
+          this.game = this.mapValueInRange(this.game, this.gameLevel,
+            this.gameLevel === 0 ?
+              30 : this.gameLevel === 30 ?
+                60 : 90)
 
-        this.oldGame = this.mapValueInRange(this.oldGame, this.gameLevel,
-          this.gameLevel === 0 ?
-            30 : this.gameLevel === 30 ?
-              60 : 90)
+          this.oldGame = this.mapValueInRange(this.oldGame, this.gameLevel,
+            this.gameLevel === 0 ?
+              30 : this.gameLevel === 30 ?
+                60 : 90)
 
-        this.winCounter = this.mapValueInRange(this.winCounter, this.winLevel,
-          this.winLevel === 0 ?
-            10 : this.winLevel === 10 ?
-              50 : 99)
+          this.winCounter = this.mapValueInRange(this.winCounter, this.winLevel,
+            this.winLevel === 0 ?
+              10 : this.winLevel === 10 ?
+                50 : 99)
 
-        this.oldWinCounter = this.mapValueInRange(this.oldWinCounter, this.winLevel,
-          this.winLevel === 0 ?
-            10 : this.winLevel === 10 ?
-              50 : 99)
+          this.oldWinCounter = this.mapValueInRange(this.oldWinCounter, this.winLevel,
+            this.winLevel === 0 ?
+              10 : this.winLevel === 10 ?
+                50 : 99)
+        })
       })
     }
+
 
     if (win1) {
       this.win = JSON.parse(win1);
