@@ -167,7 +167,7 @@ class RunningGameStorage {
                             console.error('Failed to save game: ', error)
                         })
                 })
-        } else if(!!game) {
+        } else if (!!game) {
             this.handleAchievements(token, <string>game?.category, game?.level - 1)
         }
 
@@ -339,13 +339,6 @@ class RunningGameStorage {
             ScoreBoard.findAndCountAll({
                 where: {tokenKey: token}
             }).then(async ({count, rows}) => {
-                if (!CacheHandler.getInstance().get('storedAchievements')) {
-                    CacheHandler.getInstance().set('storedAchievements',
-                        await QuestionCategory.findAll(),
-                        300) // 300 seconds
-                }
-
-                let achievements = CacheHandler.getInstance().get('storedAchievements')
                 let userAchievements = await Achievement.findOne({where: {tokenKey: token}})
                 let achievementArray = new Array<string>()
 
@@ -359,21 +352,17 @@ class RunningGameStorage {
                 }
 
                 let prevAchievementArray = JSON.parse(JSON.stringify(achievementArray))
-
                 let categoryLvl1 = 'lvl1'
                 let categoryLvl2 = 'lvl2'
                 let categoryLvl3 = 'lvl3'
-
                 let categoryNumber = this.categoryChecker(rows, <string>category)
 
-                if (!achievementArray.includes(category + categoryLvl1)
-                    && achievements.includes(category) && categoryNumber === 1) {
+
+                if (!achievementArray.includes(category + categoryLvl1) && categoryNumber === 1) {
                     achievementArray.push(category + categoryLvl1)
-                } else if (!achievementArray.includes(category + categoryLvl2)
-                    && achievements.includes(category) && categoryNumber === 2) {
+                } else if (!achievementArray.includes(category + categoryLvl2) && categoryNumber === 2) {
                     achievementArray.push(category + categoryLvl2)
-                } else if (!achievementArray.includes(category + categoryLvl3)
-                    && achievements.includes(category) && categoryNumber === 3) {
+                } else if (!achievementArray.includes(category + categoryLvl3) && categoryNumber === 3) {
                     achievementArray.push(category + categoryLvl3)
                 }
 
@@ -500,11 +489,11 @@ class RunningGameStorage {
                 data.set("winLevel", '0')
 
                 for (let i = 0; i < achievementArray.length; i++) {
-                    if (achievementArray[i].includes('Kredit')){
+                    if (achievementArray[i].includes('Kredit')) {
                         data.set("kreditLevel", achievementArray[i].substring(0, 3))
-                    } else if (achievementArray[i].includes('Games')){
+                    } else if (achievementArray[i].includes('Games')) {
                         data.set("gameLevel", achievementArray[i].substring(0, 2))
-                    } else if (achievementArray[i].includes('win')){
+                    } else if (achievementArray[i].includes('win')) {
                         data.set("winLevel", achievementArray[i].substring(0, 2))
                     }
                 }

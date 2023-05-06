@@ -42,8 +42,6 @@ export class EndscreenComponent implements OnInit, OnDestroy {
         r.subscribe(async data => {
           // @ts-ignore
           for (const entry of Object.entries(data.result)) {
-            // @ts-ignore
-            console.log(entry[0], entry[1])
             if (entry[0] === 'achievements') {
               let array = JSON.parse(<string>entry[1])
               for (let i = 0; i < array.length; i++) {
@@ -60,10 +58,10 @@ export class EndscreenComponent implements OnInit, OnDestroy {
                 } else if (array[i].includes('level15')) {
                   this.onAchievement('15-es szint', '')
                 } else {
-                  //TODO category
+                  this.onAchievement(decodeURIComponent(array[i].substr(0, array[i].length - 4)), array[i].substr(array[i].length - 4));
                 }
 
-                await new Promise(resolve => setTimeout(resolve, 12000));
+                await new Promise(resolve => setTimeout(resolve, 13000));
               }
             } else if (entry[0] === 'kredit') {
               this.kredit = Number(entry[1]);

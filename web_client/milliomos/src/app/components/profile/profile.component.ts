@@ -72,8 +72,14 @@ export class ProfileComponent implements OnInit {
         Object.entries(achievements).forEach((entry) => {
           // @ts-ignore
           if (entry[1] != "" && entry[1] != undefined && entry[1] != null) {
-            this.achievements.set(entry[1], "assets/images/achievements/" + entry[1] + ".svg")
-            counter++;
+            entry[1].forEach((value: string) => {
+              this.achievements.set(decodeURIComponent(value), "assets/images/achievements/" + decodeURIComponent(value) + ".svg")
+              counter++;
+
+              if (counter >= 10){
+                return;
+              }
+            })
 
             if (counter >= 10){
               return;

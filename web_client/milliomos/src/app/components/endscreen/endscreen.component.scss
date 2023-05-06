@@ -1,3 +1,7 @@
+$bgColor: #983630;
+$tmpBgColor: #efa044;
+$bgHoverColor: rgba(239, 160, 68, 0.65);
+
 .wrapper {
   width: 70%;
   height: 20%;
@@ -270,19 +274,19 @@
   }
 }
 
-.content{
+.content {
   height: 100vh;
   display: flex;
   justify-content: center;
 }
 
-.content-settings{
+.content-settings {
   max-width: 420px;
   width: 100%;
   padding: 40px 20px;
 }
 
-.content-settings__input{
+.content-settings__input {
   display: block;
   width: 100%;
   border: none;
@@ -290,12 +294,12 @@
   padding: 8px 12px;
   border-bottom: 2px #eee solid;
   margin-bottom: 8px;
-  outline: none!important;
+  outline: none !important;
   transition: border-color .2s ease-in-out;
 }
 
-.content-settings__input:focus{
-  border-color: #39960C
+.content-settings__input:focus {
+  border-color: $bgColor;
 }
 
 .content-settings__check {
@@ -332,11 +336,11 @@
   background-color: #ccc;
 }
 
-.content-settings__check input:checked + label::before{
-  background-color: #39960C;
+.content-settings__check input:checked + label::before {
+  background-color: $bgColor;
 }
 
-.content-settings__check label{
+.content-settings__check label {
   font-size: 16px;
   line-height: 24px;
   display: block;
@@ -368,36 +372,36 @@
   transform: rotate(45deg);
 }
 
-.content-settings__button{
+.content-settings__button {
   display: block;
   width: 100%;
   border: none;
-  background: #39960C;
+  background: $bgColor;
   color: #fff;
   font-size: 16px;
   padding: 8px 12px;
   cursor: pointer;
   transition: background-color .2s ease-in-out, color .2s ease-in-out;
-  outline: none!important;
+  outline: none !important;
 }
 
-.content-settings__button[disabled]{
+.content-settings__button[disabled] {
   opacity: 0.8;
   cursor: not-allowed;
-  color: #333!important;
-  background-color: #eee!important;
+  color: #333 !important;
+  background-color: #eee !important;
 }
 
-.content-settings__button:hover{
-  background: #40a90e;
+.content-settings__button:hover {
+  background: $bgHoverColor;
 }
 
-.content-settings__button:active{
-  background-color: #32830a;
+.content-settings__button:active {
+  background-color: $tmpBgColor;
   color: #fff;
 }
 
-.achievement *{
+.achievement * {
   box-sizing: border-box;
 }
 
@@ -478,19 +482,19 @@
   }
   11% {
     transform: translate(0);
-    background-color: #39960C;
+    background-color: $bgColor;
   }
   24% {
     transform: translateX(-140px);
-    background-color: #42ae0e;
+    background-color: $tmpBgColor;
   }
   85% {
     transform: translateX(-140px);
-    background-color: #42ae0e;
+    background-color: $tmpBgColor;
   }
   89% {
     transform: translateX(0);
-    background-color: #39960C;
+    background-color: $bgColor
   }
   94% {
     transform: scale(1);
@@ -509,7 +513,6 @@
     transform: scale(0.1);
   }
 }
-
 
 
 @keyframes trophy_animate_opacity {
@@ -539,7 +542,7 @@
   }
   19% {
     opacity: 1;
-    transform: scale3d(1,1,1);
+    transform: scale3d(1, 1, 1);
   }
   23% {
     opacity: 0;
@@ -657,7 +660,7 @@
   z-index: 102;
 }
 
-.rare .trophy_img{
+.rare .trophy_img {
   display: none;
 }
 
@@ -668,7 +671,7 @@
   opacity: 0;
   margin: 0 auto;
   border-radius: 100%;
-  background: #39960C;
+  background: $bgColor;
   position: relative;
   overflow: hidden;
   z-index: 4;
@@ -679,7 +682,7 @@
   opacity: 0;
   width: 75px;
   height: 75px;
-  background-color: #40a90e;
+  background-color: $tmpBgColor;
   position: absolute;
   top: 0;
   left: 0;
@@ -692,7 +695,7 @@
   opacity: 0;
   width: 75px;
   height: 75px;
-  background-color: #32830a;
+  background-color: $bgHoverColor;
   position: absolute;
   top: 0;
   left: 0;
@@ -700,11 +703,11 @@
   display: block;
 }
 
-.rare .circle::after{
+.rare .circle::after {
   z-index: -1;
 }
 
-.rare  .circle::before{
+.rare .circle::before {
   z-index: -1;
 }
 
@@ -748,7 +751,7 @@
   justify-content: center;
   right: 0;
   margin: 0 auto;
-  background: #39960C;
+  background: $bgColor;
   overflow: hidden;
   border-radius: 100px;
 }
@@ -869,11 +872,11 @@
   line-height: 24px;
 }
 
-.rare .brilliant-wrap{
+.rare .brilliant-wrap {
   display: block;
 }
 
-.brilliant-wrap{
+.brilliant-wrap {
   display: none;
   height: 75px;
   width: 75px;
@@ -902,17 +905,17 @@
   }
 }
 
-@keyframes brilliant-wrap{
-  0%, 20%{
+@keyframes brilliant-wrap {
+  0%, 20% {
     opacity: 0;
   }
-  20.00001%{
+  20.00001% {
     opacity: 1;
   }
   90% {
     opacity: 1;
   }
-  95%{
+  95% {
     opacity: 0;
   }
 }
@@ -939,4 +942,12 @@
   bottom: 5%;
   left: 10%;
   z-index: -1;
+}
+
+mat-card {
+  width: fit-content;
+}
+
+mat-progress-bar {
+  width: 500px !important;
 }

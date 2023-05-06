@@ -4,7 +4,6 @@ import {sequelize} from "../db/sequelizeConnector";
 import Achievement from "../models/achievement";
 import {Op} from "sequelize";
 import User from "../models/user";
-import user from "../models/user";
 import CacheHandler from "../utilites/cacheHandler";
 
 class AchievementController {
