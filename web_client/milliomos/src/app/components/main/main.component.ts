@@ -42,7 +42,6 @@ export class MainComponent implements OnInit {
 
         if (!auth.user?.emailVerified && auth.authState == 2) {
           auth.user?.sendEmailVerification()
-          console.log(auth.user)
           window.alert("A bejelentkezéshez meg kell erősítened az e-mail címedet! (Nézd meg a spam mappádat is!)");
           auth.logout();
         }
@@ -58,11 +57,11 @@ export class MainComponent implements OnInit {
           Object.entries(score.result).forEach((entry) => {
             // @ts-ignore
             tmp.set(this.customFilter.clean(entry[0]), <number>entry[1]);
+            // @ts-ignore
+            this.scores.set(this.customFilter.clean(decodeURIComponent(entry[0])), <number>entry[1]);
           });
 
-          this.scores = tmp;
-
-          this.scoreService.getAchievements(Array.from(this.scores.keys())).subscribe(achievements => {
+          this.scoreService.getAchievements(Array.from(tmp.keys())).subscribe(achievements => {
             this.achievements = new Map<string, Map<string, string>>();
 
             // @ts-ignore
@@ -72,11 +71,11 @@ export class MainComponent implements OnInit {
               let val = new Map<string, string>();
 
               for (let i = 0; i < array.length; i++) {
-                  val.set(array[i], "assets/images/achievements/" + array[i] + ".svg")
+                  val.set(decodeURIComponent(array[i]), "assets/images/achievements/" + decodeURIComponent(array[i]) + ".svg")
               }
 
               // @ts-ignore
-              this.achievements.set(this.customFilter.clean(entry[0]), val);
+              this.achievements.set(this.customFilter.clean(decodeURIComponent(entry[0])), val);
             });
           })
 
