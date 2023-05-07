@@ -188,6 +188,21 @@ nav button i {
   background-color: #f6b191;
 }
 
+.place2 {
+  padding: 7px 6px 7px 7px;
+  margin-right: 16px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #efeefc;
+  border-radius: 50px;
+}
+
 @media screen and (max-width: 1420px) {
     .content {
       padding: 24px 30px;
