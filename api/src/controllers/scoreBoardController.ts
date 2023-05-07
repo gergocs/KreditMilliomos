@@ -33,7 +33,9 @@ export class ScoreBoardController {
             ScoreBoard.findAll(isTokenNeeded ? {
                     where: {
                         tokenKey: token
-                    }
+                    },
+                    limit: 10,
+                    order: [['createdAt', 'DESC']]
                 } : undefined
             ).then(r => {
                 response.send(r)
