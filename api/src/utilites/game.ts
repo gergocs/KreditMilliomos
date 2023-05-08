@@ -260,18 +260,16 @@ class Game {
     private generateQuestion(offset = 1): Promise<Question> {
         this._lastUpdate = new Date().getTime()
 
-        // TODO: _level = 16
         if (this._level === 16) {
             throw new GameException("", true)
         }
 
         return new Promise<Question>((resolve) => {
-            // TODO: catch sequelize errors
             sequelize.sync()
                 .then(() => {
                     Question.findAndCountAll({
                         where: {
-                            level: (!this._question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this._question.level + offset), 15))), // TODO: Check if this is good
+                            level: (!this._question ? (Math.max((this.difficulty * 5), 1)) : (Math.min((this._question.level + offset), 15))),
                             category: this.category,
                             question: {
                                 [Op.notIn]: this.previousQuestion

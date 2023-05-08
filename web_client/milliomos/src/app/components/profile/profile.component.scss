@@ -1,0 +1,272 @@
+@import "../../app.component.scss";
+
+nav {
+  padding: 14px 22px;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: #983630;
+}
+
+nav button {
+  padding: 12px 28px;
+  display: flex;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: 0.5s;
+}
+
+nav button:hover {
+  background-color: #ebebeb;
+}
+
+nav button:first-of-type {
+  margin-right: 25px;
+}
+
+nav button i {
+  margin-right: 5px;
+}
+
+.content {
+  padding: 48px 60px;
+  overflow: hidden;
+}
+
+.content h2 {
+  color: #333333;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.content .custom-row {
+  display: flex;
+}
+
+.content .user-info {
+  padding: 24px;
+  margin-top: 32px;
+  margin-right: 60px;
+  width: 50%;
+  height: fit-content;
+  background-color: #ffffff;
+  border-radius: 16px;
+}
+
+.content .user-info h2 {
+  margin: 0;
+  margin-bottom: 24px;
+  color: #333333;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.content .user-info form .input-box {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content .user-info form .input-box label {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.content .user-info form .input-box input {
+  padding: 16px 24px;
+  margin: 8px 0;
+  display: inline-block;
+  color: #333333;
+  border: 2px solid #e1def9;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.content .user-info form .input-box input::placeholder {
+  color: #333333;
+  opacity: 0.3;
+}
+
+.content .user-info form .input-box input.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.content .user-info form button {
+  padding: 16px 32px;
+  margin: 14px 0 24px 0;
+  background-color: #efa044;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: 0.5s;
+}
+
+.content .user-info form button:hover {
+  background-color: #ee8c1d;
+}
+
+.content .scoreboard {
+  padding: 24px;
+  margin-top: 32px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  background-color: #ffffff;
+  border-radius: 16px;
+}
+
+.content .scoreboard h2 {
+  margin: 0;
+  color: #333333;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.content .scoreboard .list {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.content .scoreboard .list .placed {
+  padding: 24px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid #e1def9;
+  border-radius: 16px;
+}
+
+.content .scoreboard .list .placed .data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.content .scoreboard .list .placed .data .place {
+  padding: 7px 6px 7px 7px;
+  margin-right: 16px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #efeefc;
+  border-radius: 50px;
+}
+
+.content .scoreboard .list .placed:first-child .data .place {
+  background-color: #ffd54b;
+}
+
+.content .scoreboard .list .placed:nth-child(2) .data .place {
+  background-color: #e1e1e2;
+}
+
+.content .scoreboard .list .placed:nth-child(3) .data .place {
+  background-color: #f6b191;
+}
+
+.place2 {
+  padding: 7px 6px 7px 7px;
+  margin-right: 16px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #efeefc;
+  border-radius: 50px;
+}
+
+@media screen and (max-width: 1420px) {
+    .content {
+      padding: 24px 30px;
+    }
+}
+
+@media screen and (max-width: 1330px) {
+  .content h2 {
+    margin-bottom: -15px;
+  }
+
+  .content .custom-row {
+    flex-direction: column;
+  }
+
+  .content .user-info {
+    width: 100%;
+  }
+
+  .content .scoreboard {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  nav {
+    justify-content: center;
+  }
+
+  .content {
+    padding: 24px 18px;
+  }
+
+  .content h2 {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .content .scoreboard .list .placed {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  nav {
+    flex-direction: column;
+  }
+
+  nav button {
+    padding: 12px 28px;
+    margin: 0;
+    width: 210px;
+  }
+
+  nav button:first-of-type {
+    margin: 0;
+  }
+
+  nav button:nth-of-type(2) {
+    margin-top: 5px;
+  }
+}
+
+.middle {
+  margin-right: 60px;
+}

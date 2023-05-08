@@ -1,0 +1,208 @@
+@import "../../app.component.scss";
+
+
+.content {
+  padding: 60px 0 0 0;
+  width: 100%;
+  min-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #983630;
+  overflow: hidden;
+}
+
+.content .title {
+  left: auto;
+}
+
+.content .title h2 {
+  color: #ffffff;
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.content .lobby {
+  padding: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.content .lobby .menu {
+  padding: 32px 64px;
+  width: 1150px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 16px;
+}
+
+.content .lobby .menu a {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.content .lobby .menu a i {
+  color: #333333;
+  font-size: 20px;
+  transition: 0.4s;
+}
+
+.content .lobby .menu h3 {
+  margin-top: 30px;
+  color: #333333;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.content .lobby .menu .category {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content .lobby .menu .category label {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.content .lobby .menu .category select {
+  padding: 16px 24px;
+  margin: 8px 0;
+  width: 250px;
+  display: inline-block;
+  color: #333333;
+  background-color: #ffffff;
+  border: 2px solid #e1def9;
+  border-radius: 8px;
+  outline: none;
+  appearance: none;
+  box-sizing: border-box;
+}
+
+.content .lobby .menu .difficulty {
+  margin: 25px;
+}
+
+.content .lobby .menu .difficulty label {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.content .lobby .menu .difficulty .buttons {
+  display: flex;
+}
+
+.content .lobby .menu .difficulty .buttons button {
+  padding: 16px 32px;
+  margin: 14px 12px 24px 12px;
+  width: 250px;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 18px;
+  font-weight: 500;
+  border: 2px solid #efa044;
+  border-radius: 8px;
+  transition: background-color 0.5s;
+}
+
+.content .lobby .menu .difficulty .buttons button:hover {
+  color: #ffffff;
+  background-color: #efa044;
+}
+
+.content .lobby .menu .difficulty .buttons button.active {
+  color: #ffffff;
+  background-color: #efa044;
+}
+
+.content .lobby .menu .time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content .lobby .menu .time label {
+  margin-bottom: 8px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.content .lobby .menu .time span {
+  margin-top: 5px;
+  font-size: 18px;
+}
+
+.content .lobby .menu button {
+  padding: 16px 32px;
+  margin: 40px 0 30px 0;
+  background-color: #efa044;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: 0.5s;
+}
+
+.content .lobby .menu button:hover {
+  background-color: #ee8c1d;
+}
+
+@media screen and (max-width: 1100px) {
+  .content .lobby .menu {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .content .lobby .menu .difficulty .buttons {
+    flex-direction: column;
+  }
+
+  .content .lobby .menu .difficulty .buttons button {
+    margin: 14px 12px 0 12px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .content .title h2 {
+    font-size: 30px;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .content .lobby {
+    padding: 30px;
+  }
+
+  .content .lobby .menu {
+    padding: 16px 32px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .content .title h2 {
+    font-size: 22px;
+  }
+}

@@ -21,18 +21,81 @@ class QuestionController {
     }
 
     createQuestion(request: Request, response: Response, next: NextFunction) {
-        //TODO validate input
+        let category = request.body.category
+
+        if (typeof category !== 'string') {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
+        }
+
+        let question = request.body.question
+
+        if (typeof question !== 'string') {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
+        }
+
+        let level = Number(request.body.level)
+
+        if (level < 1 || level > 15 || isNaN(level)) {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
+        }
+
+        let answerA = request.body.answerA
+
+        if (typeof answerA !== 'string') {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
+        }
+
+        let answerB = request.body.answerB
+
+        if (typeof answerB !== 'string') {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
+        }
+
+        let answerC = request.body.answerC
+
+        if (typeof answerC !== 'string') {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
+        }
+
+        let answerD = request.body.answerD
+
+        if (typeof answerD !== 'string') {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
+        }
+
+        let answerCorrect = request.body.answerCorrect
+
+        if (typeof answerCorrect !== 'string') {
+            response.sendStatus(StatusCodes.BadRequest)
+            response.end()
+            return
+        }
+
         sequelize.sync()
             .then(() => {
                 Question.create({
-                    category: request.body.category as string,
-                    question: request.body.question as string,
-                    level: request.body.level as number,
-                    answerA: request.body.answerA as string,
-                    answerB: request.body.answerB as string,
-                    answerC: request.body.answerC as string,
-                    answerD: request.body.answerD as string,
-                    answerCorrect: request.body.answerCorrect as string
+                    category: category,
+                    question: question,
+                    level: level,
+                    answerA: answerA,
+                    answerB: answerB,
+                    answerC: answerC,
+                    answerD: answerD,
+                    answerCorrect: answerCorrect
                 })
                     .then(data => {
                         response.sendStatus(StatusCodes.Ok)
@@ -71,7 +134,7 @@ class QuestionController {
     getAllQuestion(request: Request, response: Response, next: NextFunction) {
         sequelize.sync().then(() => {
             Question.findAll().then(data => {
-                CacheHandler.getInstance().set(request.originalUrl, data, 30) // cache for 30 seconds
+                CacheHandler.getInstance().set(request.originalUrl, data, 15) // cache for 15 seconds
                 response.send(data)
                 response.end()
             }).catch(error => {
@@ -134,7 +197,7 @@ class QuestionController {
                                 category: r.category
                             }
                         }).then(count => {
-                            if (count >= 15) { //TODO: Maybe change value
+                            if (count >= 15) {
                                 result.push(r);
                             }
                         }).finally(() => {

@@ -3,28 +3,30 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { LoginComponent } from './login/login.component';
-import { MainComponent } from './main/main.component';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { LoginComponent } from './components/login/login.component';
+import { MainComponent } from './components/main/main.component';
 import { environment } from '../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AdminUsersComponent } from './admin-users/admin-users.component';
+import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
-import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import {MatButtonModule} from "@angular/material/button";
-import { ProfileComponent } from './profile/profile.component';
-import { LobbyComponent } from './lobby/lobby.component';
-import { GameComponent } from './game/game.component';
-import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
-import { DataprivacyComponent } from './dataprivacy/dataprivacy.component';
-import { AdminCategoryComponent } from './admin-category/admin-category.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { LobbyComponent } from './components/lobby/lobby.component';
+import { GameComponent } from './components/game/game.component';
+import { AdminQuestionsComponent } from './components/admin-questions/admin-questions.component';
+import { DataprivacyComponent } from './components/dataprivacy/dataprivacy.component';
+import { AdminCategoryComponent } from './components/admin-category/admin-category.component';
 import {MatSliderModule} from "@angular/material/slider";
 import { QuestionFilterPipe } from './pipes/question-filter.pipe';
-import { EndscreenComponent } from './endscreen/endscreen.component';
+import { EndscreenComponent } from './components/endscreen/endscreen.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -56,7 +58,9 @@ import { EndscreenComponent } from './endscreen/endscreen.component';
     MatIconModule,
     MatButtonModule,
     MatSliderModule,
-    FormsModule
+    FormsModule,
+    MatProgressBarModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

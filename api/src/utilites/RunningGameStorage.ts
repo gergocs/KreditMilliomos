@@ -5,6 +5,10 @@ import {GameModes} from "./gameModes";
 import Question from "../models/question";
 import {sequelize} from "../db/sequelizeConnector";
 import {GameException} from "../exceptions/GameException"
+import CacheHandler from "./cacheHandler";
+import Achievement from "../models/achievement";
+import QuestionCategory from "../models/questionCategory";
+import Achievements from "./achievements";
 
 class RunningGameStorage {
     private static runningGameStorage: RunningGameStorage
@@ -156,11 +160,15 @@ class RunningGameStorage {
                         category: <string>category,
                         level: <number>level,
                         time: <bigint>time
+                    }).then(() => {
+                        this.handleAchievements(token, category, level)
                     })
                         .catch((error) => {
                             console.error('Failed to save game: ', error)
                         })
                 })
+        } else if (!!game) {
+            this.handleAchievements(token, <string>game?.category, game?.level - 1)
         }
 
         this.runningGames.delete(token)
@@ -324,6 +332,231 @@ class RunningGameStorage {
         }
 
         return game.question?.answerCorrect
+    }
+
+    private handleAchievements(token: string, category: string, level: number) {
+        sequelize.sync().then(() => {
+            ScoreBoard.findAndCountAll({
+                where: {tokenKey: token}
+            }).then(async ({count, rows}) => {
+                let userAchievements = await Achievement.findOne({where: {tokenKey: token}})
+                let achievementArray = new Array<string>()
+
+                if (userAchievements) {
+                    achievementArray = userAchievements.achievement
+                } else {
+                    await Achievement.create({
+                        tokenKey: token,
+                        achievement: achievementArray
+                    })
+                }
+
+                let prevAchievementArray = JSON.parse(JSON.stringify(achievementArray))
+                let categoryLvl1 = 'lvl1'
+                let categoryLvl2 = 'lvl2'
+                let categoryLvl3 = 'lvl3'
+                let categoryNumber = this.categoryChecker(rows, <string>category)
+
+
+                if (!achievementArray.includes(category + categoryLvl1) && categoryNumber === 1) {
+                    achievementArray.push(category + categoryLvl1)
+                } else if (!achievementArray.includes(category + categoryLvl2) && categoryNumber === 2) {
+                    achievementArray.push(category + categoryLvl2)
+                } else if (!achievementArray.includes(category + categoryLvl3) && categoryNumber === 3) {
+                    achievementArray.push(category + categoryLvl3)
+                }
+
+                if (count >= Achievements.multipleGamesLvl3 && !achievementArray.includes(Achievements.multipleGamesLvl3 + "+ Games")) {
+                    if (achievementArray.includes(Achievements.multipleGamesLvl2 + "+ Games")) {
+                        let index = achievementArray.indexOf(Achievements.multipleGamesLvl2 + "+ Games")
+
+                        if (index !== -1) {
+                            achievementArray.splice(index, 1)
+                        }
+                    }
+
+                    achievementArray.push(Achievements.multipleGamesLvl3 + "+ Games")
+                } else if (count >= Achievements.multipleGamesLvl2
+                    && !achievementArray.includes(Achievements.multipleGamesLvl2 + "+ Games")
+                    && !achievementArray.includes(Achievements.multipleGamesLvl3 + "+ Games")) {
+                    if (achievementArray.includes(Achievements.multipleGamesLvl1 + "+ Games")) {
+                        let index = achievementArray.indexOf(Achievements.multipleGamesLvl1 + "+ Games")
+
+                        if (index !== -1) {
+                            achievementArray.splice(index, 1)
+                        }
+                    }
+
+                    achievementArray.push(Achievements.multipleGamesLvl2 + "+ Games")
+                } else if (count >= Achievements.multipleGamesLvl1
+                    && !achievementArray.includes(Achievements.multipleGamesLvl1 + "+ Games")
+                    && !achievementArray.includes(Achievements.multipleGamesLvl2 + "+ Games")
+                    && !achievementArray.includes(Achievements.multipleGamesLvl3 + "+ Games")) {
+                    achievementArray.push(Achievements.multipleGamesLvl1 + "+ Games")
+                }
+
+                let kreditCounter = 0
+                let winCounter = 0
+
+                for (let i = 0; i < rows.length; i++) {
+                    kreditCounter += rows[i].level
+                    if (rows[i].level == 15) {
+                        winCounter++
+                    }
+                }
+
+                if (kreditCounter >= Achievements.KreditLvl3 && !achievementArray.includes(Achievements.KreditLvl3 + "+ Kredit")) {
+                    if (achievementArray.includes(Achievements.KreditLvl2 + "+ Kredit")) {
+                        let index = achievementArray.indexOf(Achievements.KreditLvl2 + "+ Kredit")
+
+                        if (index !== -1) {
+                            achievementArray.splice(index, 1)
+                        }
+                    }
+
+                    achievementArray.push(Achievements.KreditLvl3 + "+ Kredit")
+                } else if (kreditCounter >= Achievements.KreditLvl2
+                    && !achievementArray.includes(Achievements.KreditLvl2 + "+ Kredit")
+                    && !achievementArray.includes(Achievements.KreditLvl3 + "+ Kredit")) {
+                    if (achievementArray.includes(Achievements.KreditLvl1 + "+ Kredit")) {
+                        let index = achievementArray.indexOf(Achievements.KreditLvl1 + "+ Kredit")
+
+                        if (index !== -1) {
+                            achievementArray.splice(index, 1)
+                        }
+                    }
+
+                    achievementArray.push(Achievements.KreditLvl2 + "+ Kredit")
+                } else if (kreditCounter >= Achievements.KreditLvl1
+                    && !achievementArray.includes(Achievements.KreditLvl1 + "+ Kredit")
+                    && !achievementArray.includes(Achievements.KreditLvl2 + "+ Kredit")
+                    && !achievementArray.includes(Achievements.KreditLvl3 + "+ Kredit")) {
+                    achievementArray.push(Achievements.KreditLvl1 + "+ Kredit")
+                }
+
+
+                if (winCounter >= Achievements.WinLvl3 && !achievementArray.includes(Achievements.WinLvl3 + "+ win")) {
+                    if (achievementArray.includes(Achievements.WinLvl2 + "+ win")) {
+                        let index = achievementArray.indexOf(Achievements.WinLvl2 + "+ win")
+
+                        if (index !== -1) {
+                            achievementArray.splice(index, 1)
+                        }
+                    }
+
+                    achievementArray.push(Achievements.WinLvl3 + "+ win")
+                } else if (winCounter >= Achievements.WinLvl2
+                    && !achievementArray.includes(Achievements.WinLvl2 + "+ win")
+                    && !achievementArray.includes(Achievements.WinLvl3 + "+ win")) {
+                    if (achievementArray.includes(Achievements.WinLvl1 + "+ win")) {
+                        let index = achievementArray.indexOf(Achievements.WinLvl1 + "+ win")
+
+                        if (index !== -1) {
+                            achievementArray.splice(index, 1)
+                        }
+                    }
+
+                    achievementArray.push(Achievements.WinLvl2 + "+ win")
+                } else if (winCounter >= Achievements.WinLvl1
+                    && !achievementArray.includes(Achievements.WinLvl1 + "+ win")
+                    && !achievementArray.includes(Achievements.WinLvl2 + "+ win")
+                    && !achievementArray.includes(Achievements.WinLvl3 + "+ win")) {
+                    achievementArray.push(Achievements.WinLvl1 + "+ win")
+                }
+
+
+                if (!achievementArray.includes("level5") && this.levelChecker(rows, Achievements.Level5)) {
+                    achievementArray.push("level5")
+                }
+
+                if (!achievementArray.includes("level10") && this.levelChecker(rows, Achievements.Level10)) {
+                    achievementArray.push("level10")
+                }
+
+                if (!achievementArray.includes("level15") && this.levelChecker(rows, Achievements.Level15)) {
+                    achievementArray.push("level15")
+                }
+
+                let data = new Map<string, string>()
+
+                data.set("kredit", String(kreditCounter))
+                data.set("oldKredit", String(kreditCounter - level))
+                data.set("game", String(count))
+                data.set("win", String(winCounter))
+                data.set("oldWin", String(winCounter - Number(level === 15)))
+                data.set("kreditLevel", '0')
+                data.set("gameLevel", '0')
+                data.set("winLevel", '0')
+
+                for (let i = 0; i < achievementArray.length; i++) {
+                    if (achievementArray[i].includes('Kredit')) {
+                        data.set("kreditLevel", achievementArray[i].substring(0, 3))
+                    } else if (achievementArray[i].includes('Games')) {
+                        data.set("gameLevel", achievementArray[i].substring(0, 2))
+                    } else if (achievementArray[i].includes('win')) {
+                        data.set("winLevel", achievementArray[i].substring(0, 2))
+                    }
+                }
+
+                let difference = achievementArray.filter(x => !prevAchievementArray.includes(x));
+
+                if (difference.length != 0) {
+                    data.set("achievements", JSON.stringify(difference))
+                }
+
+                CacheHandler.getInstance().set(token + 'achievements', data, 10000)
+
+                await Achievement.update({
+                    achievement: achievementArray
+                }, {
+                    where: {
+                        tokenKey: token
+                    }
+                })
+            })
+        }).catch(err => {
+
+        })
+    }
+
+    private categoryChecker(scoreBoard: ScoreBoard[], category: string): number {
+        let counter = 0;
+
+        for (let i = 0; i < scoreBoard.length; i++) {
+            if (scoreBoard[i].category === category) {
+                counter++;
+            }
+
+            if (counter >= Achievements.CategoryLvl3) {
+                break;
+            }
+        }
+
+        if (counter >= Achievements.CategoryLvl3) {
+            return 3
+        } else if (counter >= Achievements.CategoryLvl2) {
+            return 2
+        } else if (counter >= Achievements.CategoryLvl1) {
+            return 1
+        }
+
+        return 0
+    }
+
+    private levelChecker(scoreBoard: ScoreBoard[], level: number): boolean {
+        let counter = 0
+
+        for (let i = 0; i < scoreBoard.length; i++) {
+            if (scoreBoard[i].level >= level) {
+                counter++
+            }
+
+            if (counter >= 15) {
+                return true
+            }
+        }
+
+        return false
     }
 }
 
