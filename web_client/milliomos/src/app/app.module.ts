@@ -27,6 +27,7 @@ import { QuestionFilterPipe } from './pipes/question-filter.pipe';
 import { EndscreenComponent } from './components/endscreen/endscreen.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatCardModule} from "@angular/material/card";
+import { BadWordPipe } from './pipes/bad-word.pipe';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import {MatCardModule} from "@angular/material/card";
     AdminCategoryComponent,
     QuestionFilterPipe,
     EndscreenComponent,
+    BadWordPipe,
   ],
   imports: [
     BrowserAnimationsModule,

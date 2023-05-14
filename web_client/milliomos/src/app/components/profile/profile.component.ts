@@ -168,4 +168,8 @@ export class ProfileComponent implements OnInit {
   }
 
   protected readonly decodeURI = decodeURI;
+
+  redirectToHome() {
+    this.router.navigate(['/']);
+  }
 }

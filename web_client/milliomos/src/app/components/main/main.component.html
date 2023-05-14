@@ -17,7 +17,7 @@
           <div class="place">
             #{{i + 1}}
           </div>
-          {{item.key}}
+          {{item.key | badWord}}
           <div *ngFor="let achievement of achievements.get(item.key) | keyvalue">
             <img [src]="achievement.value" [alt]="achievement.key" width="25px">
           </div>

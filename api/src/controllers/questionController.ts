@@ -134,7 +134,6 @@ class QuestionController {
     getAllQuestion(request: Request, response: Response, next: NextFunction) {
         sequelize.sync().then(() => {
             Question.findAll().then(data => {
-                CacheHandler.getInstance().set(request.originalUrl, data, 15) // cache for 15 seconds
                 response.send(data)
                 response.end()
             }).catch(error => {
