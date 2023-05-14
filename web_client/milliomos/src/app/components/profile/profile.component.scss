@@ -28,12 +28,8 @@ nav button:hover {
   background-color: #ebebeb;
 }
 
-nav button:first-of-type {
+nav button {
   margin-right: 25px;
-}
-
-nav button i {
-  margin-right: 5px;
 }
 
 .content {
@@ -204,9 +200,9 @@ nav button i {
 }
 
 @media screen and (max-width: 1420px) {
-    .content {
-      padding: 24px 30px;
-    }
+  .content {
+    padding: 24px 30px;
+  }
 }
 
 @media screen and (max-width: 1330px) {

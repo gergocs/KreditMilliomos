@@ -146,7 +146,7 @@ class UserController {
             .then(() => {
                 User.findAll().then(
                     users => {
-                        CacheHandler.getInstance().set(request.originalUrl, users, 60) // cache for 60 seconds
+                        CacheHandler.getInstance().set(request.originalUrl, users, 15) // cache for 15 seconds
                         response.send(users)
                         response.end()
                     }

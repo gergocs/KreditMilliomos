@@ -76,13 +76,11 @@ class App {
             if (request.method !== 'GET'
                 || (!request.path.includes('/scoreBoard')
                     && !request.path.includes('playableQuestionCategories')
-                    && !request.path.includes('allUsers')
-                    && !request.path.includes('allQuestion'))) {
+                    && !request.path.includes('allUsers'))) {
                 return next()
             }
 
-            const key = request.originalUrl
-            const cached = CacheHandler.getInstance().get(key)
+            const cached = CacheHandler.getInstance().get(request.originalUrl)
 
             if (cached) {
                 response.send(cached)
