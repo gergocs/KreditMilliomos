@@ -218,6 +218,6 @@ export class EndscreenComponent implements OnInit, OnDestroy {
       retVal = max;
     }
 
-    return retVal * 100;
+    return Math.abs(retVal * 100);
   }
 }
