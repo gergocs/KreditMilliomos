@@ -59,32 +59,39 @@ class UserController {
                 if (!email || email.length == 0 || email == "undefined" || typeof email !== "string" || Array.isArray(email)) {
                     response.sendStatus(StatusCodes.BadRequest)
                     response.end()
+                    return
                 }
+
                 email = <string>email
 
-                if (!RegExPatterns.emailValidatorPattern.test(email)) {
+                if (!RegExPatterns.emailValidatorPattern.test(decodeURIComponent(email))) {
                     response.sendStatus(StatusCodes.BadRequest)
                     response.end()
+                    return
                 }
 
                 if (!tokenKey || tokenKey.length != 28) {
                     response.sendStatus(StatusCodes.BadRequest)
                     response.end()
+                    return
                 }
 
                 if (!name || name.length == 0 || name == "undefined") {
                     response.sendStatus(StatusCodes.BadRequest)
                     response.end()
+                    return
                 }
 
                 if (!firstName || firstName.length == 0 || firstName == "undefined") {
                     response.sendStatus(StatusCodes.BadRequest)
                     response.end()
+                    return
                 }
 
                 if (!lastName || lastName.length == 0 || lastName == "undefined") {
                     response.sendStatus(StatusCodes.BadRequest)
                     response.end()
+                    return
                 }
 
                 User.create({
@@ -98,15 +105,18 @@ class UserController {
                     .then(user => {
                         response.sendStatus(StatusCodes.Ok)
                         response.end()
+                        return
                     })
                     .catch(error => {
                         response.sendStatus(StatusCodes.InternalError)
                         response.end()
+                        return
                     })
             })
             .catch(error => {
                 response.sendStatus(StatusCodes.ServiceUnavailable)
                 response.end()
+                return
             })
     }
 

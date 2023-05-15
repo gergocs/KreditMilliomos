@@ -127,7 +127,12 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    await this.auth.signInWithEmailAndPassword(email, password)
+    try {
+      await this.auth.signInWithEmailAndPassword(email, password)
+    } catch (error) {
+      return new Promise((resolve, reject) => {reject();});
+    }
+
     return await this.getUserData()
   }
 
@@ -200,11 +205,14 @@ export class AuthService {
     if (password != passwordagain) {
       return
     }
+     try {
+
     await this.auth.createUserWithEmailAndPassword(email, password).then(async cred => {
       if (!this.user)
         return
 
       let token = this.user.uid;
+
       let header = new HttpHeaders()
         .set("tokenkey", token)
         .set("email", encodeURIComponent(email))
@@ -228,6 +236,9 @@ export class AuthService {
         return new Promise((resolve, reject) => {reject();}) //tesztre var TODO
       })
     });
+     } catch (e) {
+      console.log(e);
+     }
   }
 
   async updateuser(userdata: UserModell){
