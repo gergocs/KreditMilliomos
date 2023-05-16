@@ -416,9 +416,17 @@
   .content .game .question .answers .answer {
     width: 100%;
   }
+
+  .content .game .question .chart-modal .modal-content {
+    width: 80%;
+  }
 }
 
 @media screen and (max-width: 850px) {
+  .content .game .question #countdown {
+    top: 7%;
+  }
+
   .content .game .question .answers {
     margin-bottom: 25px;
     display: flex;
@@ -439,6 +447,10 @@
 
   .volume {
     display: none;
+  }
+
+  .content .game .question .chart-modal {
+    display: none !important;
   }
 }
 

@@ -125,6 +125,12 @@ export class GameComponent implements OnInit, OnDestroy {
     })}
   }
 
+  setAnswerFont(length: number, answer: String) {
+    let answerDiv = document.getElementById('answer' + answer + 'Length');
+    if (length >= 80 && answerDiv)
+      answerDiv.style.fontSize = "13px";
+  }
+
   decodeCurrentQuestion(){
     if(this.currentQuestion){
     this.currentQuestion.category = decodeURIComponent(this.currentQuestion.category)
@@ -134,6 +140,10 @@ export class GameComponent implements OnInit, OnDestroy {
     this.currentQuestion.answerB = decodeURIComponent(this.currentQuestion.answerB)
     this.currentQuestion.answerC = decodeURIComponent(this.currentQuestion.answerC)
     this.currentQuestion.answerD = decodeURIComponent(this.currentQuestion.answerD)
+    this.setAnswerFont(this.currentQuestion.answerA.length, "A");
+    this.setAnswerFont(this.currentQuestion.answerB.length, "B");
+    this.setAnswerFont(this.currentQuestion.answerC.length, "C");
+    this.setAnswerFont(this.currentQuestion.answerD.length, "D");
     this.currentQuestion.answerCorrect = decodeURIComponent(this.currentQuestion.answerCorrect)
     }
   }
@@ -339,8 +349,12 @@ export class GameComponent implements OnInit, OnDestroy {
           if(!r.win.win){
             let correctdiv = document.getElementById('answer' + (r.win.correct ? r.win.correct : ""))
             if(correctdiv){
-            correctdiv.style.backgroundColor = "#51dc35"
-            correctdiv.style.borderColor = "#51dc35"}
+              correctdiv.style.backgroundColor = "#51dc35";
+              let correctdivborder = correctdiv.getElementsByClassName("answer")[0] as HTMLElement;
+              if (correctdivborder) {
+                correctdivborder.style.borderColor = "#51dc35";
+              }
+            }
             selected[0].style.backgroundColor = "#ef0d00"
             selected[0].style.borderColor = "#ef0d00";
             this.wrongAnswerSound.play()

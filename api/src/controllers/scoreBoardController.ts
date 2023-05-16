@@ -79,7 +79,7 @@ export class ScoreBoardController {
                         // This endpoint is expensive, so we must cache the response.
                         CacheHandler.getInstance().set(request.originalUrl, {
                             result: Object.fromEntries(retVal)
-                        }, 300) // cache for 5 minutes
+                        }, 15) // cache for 15 seconds
                         response.send({
                             result: Object.fromEntries(retVal)
                         })

@@ -2,6 +2,7 @@
     alt="Loading_animation"></div>
 
 <nav>
+  <button (click)="redirectToHome()"><i class="material-icons">home</i> Kezdőoldal</button>
   <button (click)="redirectToLobby()"><i class="material-icons">play_arrow</i> Játék indítása</button>
   <button (click)="onLogoutPress()"><i class="material-icons">exit_to_app</i> Kijelentkezés</button>
 </nav>
@@ -39,7 +40,7 @@
       </form>
     </div>
 
-    <div class="scoreboard middle">
+    <div class="scoreboard">
       <h2>Korábbi játszmák</h2>
       <div class="list">
         <div class="placed" *ngFor="let score of scores; let i = index">
@@ -58,7 +59,7 @@
       <div class="list">
         <div class="placed" *ngFor="let achievement of achievements | keyvalue">
           <div class="data">
-            <div class="place2">
+            <div class="achievement-image">
               <img [src]=achievement.value [alt]=achievement.key width="25px">
             </div>
             {{achievement.key}}

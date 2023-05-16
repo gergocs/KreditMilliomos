@@ -58,9 +58,9 @@
 
 <div class="statsContainer">
   <div class="stats">
-    <mat-card class="mat-card-content">
+    <mat-card class="mat-card-content" *ngIf="oldGame < 90">
       <mat-card-content class="mat-card-content">
-        <h2>Game</h2>
+        <h2>Játékok</h2>
         <section>
           <mat-progress-bar
             mode="buffer"
@@ -73,7 +73,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="mat-card-content">
+    <mat-card class="mat-card-content" *ngIf="oldKredit < 999">
       <mat-card-content class="mat-card-content">
         <h2>Kredit</h2>
         <section>
@@ -87,9 +87,9 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="mat-card-content">
+    <mat-card class="mat-card-content" *ngIf="oldWinCounter < 99">
       <mat-card-content>
-        <h2>Győzelem</h2>
+        <h2>Győzelemek</h2>
         <section>
           <mat-progress-bar
             mode="buffer"

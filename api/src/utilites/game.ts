@@ -260,7 +260,7 @@ class Game {
     private generateQuestion(offset = 1): Promise<Question> {
         this._lastUpdate = new Date().getTime()
 
-        if (this._level === 16) {
+        if (this._level === 16 && offset !== 0) {
             throw new GameException("", true)
         }
 
