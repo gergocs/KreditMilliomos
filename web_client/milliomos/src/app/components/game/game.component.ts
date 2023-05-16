@@ -284,7 +284,7 @@ export class GameComponent implements OnInit, OnDestroy {
         break;
     }
 
-    if(Math.random() <= 0.025){
+    if(Math.random() <= 0.25){
       this.vago = true
       setTimeout(() => {
         this.vago = false
